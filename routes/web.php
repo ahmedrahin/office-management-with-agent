@@ -171,3 +171,8 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'check.status']], f
     // agent
     Route::resource('agent', AgentController::class);
 });
+
+
+Route::group(['prefix' => '/agent', 'middleware' => ['auth', 'check.status']], function(){
+
+});

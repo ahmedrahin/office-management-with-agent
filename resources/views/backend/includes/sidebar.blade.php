@@ -28,7 +28,7 @@
                     </a>
                 </li>
 
-                <li class="menu-title">Admin Management</li>
+                <li class="menu-title">Admin & Agent Management</li>
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
@@ -38,6 +38,17 @@
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{route('admin.admin-management.create')}}"> <i class="ri-arrow-right-s-fill"></i> Add New</a></li>
                         <li><a href="{{route('admin.admin-management.index')}}"><i class="ri-arrow-right-s-fill"></i> Show All</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="dripicons-user-group"></i>
+                        <span>Agents</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{route('agent.create')}}"> <i class="ri-arrow-right-s-fill"></i> Add New</a></li>
+                        <li><a href="{{route('agent.index')}}"><i class="ri-arrow-right-s-fill"></i> Show All</a></li>
                     </ul>
                 </li>
 

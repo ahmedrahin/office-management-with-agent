@@ -5,76 +5,7 @@
 
 @section('page-css')
     <link href="{{asset('backend/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}" rel="stylesheet">
-    <style>
-        .AppBody {
-            border: 3px dotted #d1d6d6;
-            height: 220px;
-            width: 100%;
-            background-color: #fff;
-            border-radius: 5px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            position: relative;
-        }
-        .AppBody.active {
-            border: 3px solid #0f9cf3;
-        }
-        .icon {
-            font-size: 33px;
-            color: #0f9cf3;
-        }
-        .AppBody h3 {
-            font-size: 18px;
-            font-weight: 600;
-            color: #333;
-        }
-        .AppBody span {
-            font-size: 16px;
-            font-weight: 500;
-            color: #333;
-            margin: 0;
-        }
-        .AppBody button {
-            padding: 10px 25px;
-            font-size: 17px;
-            font-weight: 500;
-            border: none;
-            outline: none;
-            background: #fff;
-            color: #0f9cf3;
-            border-radius: 5px;
-            cursor: pointer;    
-        }
-        .AppBody img{
-            height: 100%;
-            width: 100%;
-            object-fit: cover;
-            border-radius: 5px;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 11;
-        }
-        .cancell {
-            font-weight: 800;
-            font-size: 18px;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            /* background: red; */
-            color: red;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-           cursor: pointer;
-           z-index: 12;
-        }
-    </style>
+   
 @endsection
 
 @section('body-content')

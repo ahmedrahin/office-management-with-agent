@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->foreignId('employee_id')->nullable()->constrained('employees')->onDelete('cascade');
+            // $table->foreignId('employee_id')->nullable()->constrained('employees')->onDelete('cascade');
             // $table->foreignId('agent_id')->nullable()->constrained('agents')->onDelete('cascade');
             
             $table->string('role_id')->nullable();

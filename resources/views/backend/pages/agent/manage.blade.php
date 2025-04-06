@@ -1,6 +1,6 @@
 @extends('backend.layout.template')
 @section('page-title')
-    <title>Manage Employee || {{ \App\Models\Settings::site_title() }}</title>
+    <title>All Agent List || {{ \App\Models\Settings::site_title() }}</title>
 @endsection
 
 @section('page-css')
@@ -26,7 +26,7 @@
                         <div class="page-title">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="{{url('/')}}">{{ \App\Models\Settings::site_title() }}</a></li>
-                                <li class="breadcrumb-item active">Manage Employee</li>
+                                <li class="breadcrumb-item active">All Agent List</li>
                             </ol>
                         </div>
 
@@ -42,10 +42,10 @@
 
                             <h4 class="card-title" style="display: flex;justify-content: space-between;align-items:center;">
                                 <div>
-                                    Manage Employee
+                                    All Agent List
                                 </div>
                                 <div>
-                                    <a href="{{ route('add.employees') }}" class="btn btn-primary">Add New</a>
+                                    <a href="{{ route('agent.create') }}" class="btn btn-primary">Add New</a>
                                 </div>
                             </h4>
                             <div class="data">
@@ -60,11 +60,9 @@
                                                 <th>Sl.</th>
                                                 <th class="text-center">Image</th>
                                                 <th>Name</th>
-                                                <th>#ID</th>
                                                 <th>Email</th>
                                                 <th>Phone No.</th>
-                                                <th>Salary</th>
-                                                <th>Position</th>
+                                                <th>Created_at</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -84,27 +82,11 @@
                                                         @endif
                                                     </td>
                                                     <td>{{$employee->name}}</td>
-                                                    <td class="text-center">
-                                                        <span class="badge bg-primary">{{ $employee->employee_office_id }}</span>
-                                                    </td>
+                                                    
                                                     <td>{{$employee->email}}</td>
                                                     <td>{{$employee->phone}}</td>
                                                     
-                                                    <td>
-                                                        @if( !is_null($employee->salary) )
-                                                            {{$employee->salary . "tk"}} 
-                                                        @else
-                                                            <div style="text-align: center">-</div>
-                                                        @endif
-                                                    </td>
-                                
-                                                    <td>
-                                                        @if( !is_null($employee->position) )
-                                                            {{$employee->position}} 
-                                                        @else
-                                                            <div style="text-align: center">-</div>
-                                                        @endif
-                                                    </td>
+                                                    <td>{{ \Carbon\Carbon::parse($employee->created_at)->format('d M, Y') }}</td>
                                                     <td class="action">
                                                         <button>
                                                             <a href="{{route('edit.employees',$employee->id)}}">
