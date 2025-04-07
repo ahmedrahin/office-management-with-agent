@@ -119,20 +119,31 @@
                 </li>
 
                 <li class="menu-title">Student Registation</li>
-                <li>
+                {{-- <li>
                     <a href="{{route('student-registration.index')}}" style="padding-bottom: 0;"> <i class="ri-arrow-right-s-fill"></i>Register Student</a>
                 </li>
                 <li>
                     <a href="{{route('student-registration.create')}}"> <i class="ri-arrow-right-s-fill"></i>Register Form</a>
-                </li>
+                </li> --}}
 
-                <li class="menu-title">Course Management</li>
+                {{-- <li class="menu-title">Course Management</li>
                 <li>
                     <a href="{{route('course.index')}}" style="padding-bottom: 0;"> <i class="ri-arrow-right-s-fill"></i>Course List</a>
                 </li>
                 <li>
                     <a href="{{route('assign-course.index', [date('Y'), (Carbon::now()->format('M'))])}}" style="padding-bottom: 0;"> <i class="ri-arrow-right-s-fill"></i>Enroll Course</a>
+                </li> --}}
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="ri-creative-commons-nc-line"></i>
+                        <span>Countries</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{route('country.create')}}"> <i class="ri-arrow-right-s-fill"></i> Add New Country</a></li>
+                        <li><a href="{{route('country.index')}}"><i class="ri-arrow-right-s-fill"></i> All Country List</a></li>
+                    </ul>
                 </li>
+
 
                 <li class="menu-title">PLATFORM SETTINGS</li>
                 <li>

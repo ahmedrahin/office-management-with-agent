@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Illuminate\Auth\AuthenticationException;
 
 class Handler extends ExceptionHandler
 {
@@ -17,6 +18,18 @@ class Handler extends ExceptionHandler
         'password',
         'password_confirmation',
     ];
+
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        // Check which guard failed
+        $guard = $exception->guards()[0] ?? null;
+
+        if ($guard === 'agent') {
+            return redirect()->guest(route('agent.login'));
+        }
+
+        return redirect()->guest(route('login')); // default for users
+    }
 
     /**
      * Register the exception handling callbacks for the application.

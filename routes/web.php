@@ -14,6 +14,7 @@ use App\Http\Controllers\AdminController\CourseController;
 use App\Http\Controllers\AdminController\AssignController;
 use App\Http\Controllers\AdminController\ScheduleController;
 use App\Http\Controllers\AdminController\AgentController;
+use App\Http\Controllers\AdminController\CountryController;
 use App\Models\Employees;
 
 /*
@@ -170,9 +171,7 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'check.status']], f
 
     // agent
     Route::resource('agent', AgentController::class);
-});
 
-
-Route::group(['prefix' => '/agent', 'middleware' => ['auth', 'check.status']], function(){
-
+    // country
+    Route::resource('country', CountryController::class);
 });
