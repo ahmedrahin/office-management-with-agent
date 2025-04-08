@@ -1,6 +1,6 @@
 @extends('backend.layout.template')
 @section('page-title')
-    <title>Edit University || {{ \App\Models\Settings::site_title() }}</title>
+    <title>Edit Subject || {{ \App\Models\Settings::site_title() }}</title>
 @endsection
 
 @section('page-css')
@@ -21,7 +21,7 @@
                         <div class="page-title">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="{{ url('/') }}">{{ \App\Models\Settings::site_title() }}</a></li>
-                                <li class="breadcrumb-item active">Edit University</li>
+                                <li class="breadcrumb-item active">Edit Subject</li>
                             </ol>
                         </div>
 
@@ -36,24 +36,24 @@
                         <div class="card-body">
                             <h4 class="card-title" style="display: flex;justify-content: space-between;align-items:center;">
                                 <div>
-                                    Edit University
+                                    Edit Subject
                                 </div>
                                 <div>
-                                    <a href="{{ route('university.index') }}" class="btn btn-primary addnew"> <i class="ri-arrow-left-line"></i> All University</a>
+                                    <a href="{{ route('subject.index') }}" class="btn btn-primary addnew"> <i class="ri-arrow-left-line"></i> All Subject</a>
                                 </div>
                             </h4>
 
-                            <form action="{{route('university.update', $data->id)}}" method="POST" class="needs-validation" novalidate>
+                            <form action="{{route('subject.update', $data->id)}}" method="POST" class="needs-validation" novalidate>
                                 @csrf
                                 @method('PUT')
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="mb-3">
-                                            <label for="emp" class="form-label">Country</label>
-                                            <select name="country_id" class="form-control select2" required>
-                                                <option value="">Select a country</option>
-                                               @foreach ($countries as $country)
-                                                   <option value="{{ $country->id }}" {{ $data->country_id == $country->id ? 'selected' : '' }} >{{ $country->name }}</option>
+                                            <label for="emp" class="form-label">University</label>
+                                            <select name="university_id" class="form-control select2" required>
+                                                <option value="">Select a university</option>
+                                               @foreach ($universitys as $university)
+                                                   <option value="{{ $university->id }}" {{ $data->university_id == $university->id ? 'selected' : '' }} >{{ $university->name }}</option>
                                                @endforeach
                                             </select>
                                             <div id="emp" class="invalid-feedback"></div>
@@ -61,8 +61,15 @@
                                     </div>
                                     <div class="col-12">
                                         <div class="mb-3">
-                                            <label for="validationName" class="form-label">University Name</label>
-                                            <input type="text" class="form-control" id="validationName" placeholder="University Name" name="name" value="{{ $data->name }}" required>
+                                            <label for="validationName" class="form-label">Subject Name</label>
+                                            <input type="text" class="form-control" id="validationName" placeholder="Subject Name" name="name" value="{{ $data->name }}" required>
+                                            <div class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="mb-3">
+                                            <label for="validationName" class="form-label">Processing Fees</label>
+                                            <input type="text" class="form-control" placeholder="Processing Fees" name="price" value="{{ $data->price }}" required>
                                             <div class="invalid-feedback"></div>
                                         </div>
                                     </div>
@@ -144,7 +151,7 @@
                             input.addClass('form-control');
                             input.next('.invalid-feedback').html(value); 
 
-                            if (key === 'country_id') {
+                            if (key === 'university_id') {
                                 $('#emp').html(value);
                             }
                         });

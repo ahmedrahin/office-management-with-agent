@@ -118,14 +118,22 @@
                     </ul>
                 </li>
 
-                <li class="menu-title">Student Registation</li>
-                {{-- <li>
-                    <a href="{{route('student-registration.index')}}" style="padding-bottom: 0;"> <i class="ri-arrow-right-s-fill"></i>Register Student</a>
-                </li>
+                <li class="menu-title">Abroad Setup Management</li>
                 <li>
-                    <a href="{{route('student-registration.create')}}"> <i class="ri-arrow-right-s-fill"></i>Register Form</a>
-                </li> --}}
-
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="ri-creative-commons-nc-line"></i>
+                        <span>Student Management</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li>
+                            <a href="{{route('student-registration.create')}}"> <i class="ri-arrow-right-s-fill"></i>Add new student</a>
+                        </li>
+                        <li>
+                            <a href="{{route('student-registration.index')}}" style="padding-bottom: 0;"> <i class="ri-arrow-right-s-fill"></i>Register Student</a>
+                        </li>
+                    </ul>
+                </li>
+                
                 {{-- <li class="menu-title">Course Management</li>
                 <li>
                     <a href="{{route('course.index')}}" style="padding-bottom: 0;"> <i class="ri-arrow-right-s-fill"></i>Course List</a>
@@ -133,6 +141,8 @@
                 <li>
                     <a href="{{route('assign-course.index', [date('Y'), (Carbon::now()->format('M'))])}}" style="padding-bottom: 0;"> <i class="ri-arrow-right-s-fill"></i>Enroll Course</a>
                 </li> --}}
+
+                <li class="menu-title">Placement Settings</li>
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="ri-creative-commons-nc-line"></i>
@@ -175,6 +185,8 @@
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{route('university.create')}}"> <i class="ri-arrow-right-s-fill"></i> Add New University</a></li>
                         <li><a href="{{route('university.index')}}"><i class="ri-arrow-right-s-fill"></i> All University List</a></li>
+                        <li><a href="{{route('subject.create')}}"><i class="ri-arrow-right-s-fill"></i> Add New Subject</a></li>
+                        <li><a href="{{route('subject.index')}}"><i class="ri-arrow-right-s-fill"></i> All Subject List</a></li>
                     </ul>
                 </li>
 

@@ -18,6 +18,7 @@ use App\Http\Controllers\AdminController\CountryController;
 use App\Http\Controllers\AdminController\JobTypeController;
 use App\Http\Controllers\AdminController\TouristController;
 use App\Http\Controllers\AdminController\UniversityController;
+use App\Http\Controllers\AdminController\SubjectController;
 use App\Models\Employees;
 
 /*
@@ -191,4 +192,8 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'check.status']], f
     // university
     Route::resource('university', UniversityController::class);
     Route::put('university-status/{id}', [UniversityController::class, 'activeStatus'])->name('university.status');
+
+    // subject
+    Route::resource('subject', SubjectController::class);
+    Route::put('subject-status/{id}', [SubjectController::class, 'activeStatus'])->name('subject.status');
 });

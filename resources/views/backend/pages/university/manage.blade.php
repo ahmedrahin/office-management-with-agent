@@ -1,6 +1,6 @@
 @extends('backend.layout.template')
 @section('page-title')
-    <title>All University List || {{ \App\Models\Settings::site_title() }}</title>
+    <title>All Subject List || {{ \App\Models\Settings::site_title() }}</title>
 @endsection
 
 @section('page-css')
@@ -26,7 +26,7 @@
                         <div class="page-title">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="{{url('/')}}">{{ \App\Models\Settings::site_title() }}</a></li>
-                                <li class="breadcrumb-item active">All University List</li>
+                                <li class="breadcrumb-item active">All Subject List</li>
                             </ol>
                         </div>
 
@@ -42,10 +42,10 @@
 
                             <h4 class="card-title" style="display: flex;justify-content: space-between;align-items:center;">
                                 <div>
-                                    All University List
+                                    All Subject List
                                 </div>
                                 <div>
-                                    <a href="{{ route('university.create') }}" class="btn btn-primary addnew"> <i class="ri-add-line"></i> Add New</a>
+                                    <a href="{{ route('subject.create') }}" class="btn btn-primary addnew"> <i class="ri-add-line"></i> Add New</a>
                                 </div>
                             </h4>
                             <div class="data">
@@ -58,12 +58,12 @@
                                         <thead>
                                             <tr>
                                                 <th>Sl.</th>
-                                                <th>Name</th>
-                                                <th class="text-center">Country Name</th>
+                                                <th>Subject Name</th>
+                                                <th class="text-center">University Name</th>
                                                 <th class="text-center">Created_at</th>
                                                 <th class="text-center">Created_by</th>
                                                 <th class="text-center">Total Assign</th>
-                                                <th class="text-center">Total Subject</th>
+                                                <th class="text-center">Fees</th>
                                                 <th class="text-center">Status</th>
                                                 <th>Action</th>
                                             </tr>
@@ -78,8 +78,8 @@
                                                     <td>{{$counter++}}</td>
                                                     <td>{{$v->name}}</td>
                                                     <td class="text-center">
-                                                        <a href="{{ route('country.show', $v->country->id) }}" target="_blank">
-                                                            {{ $v->country->name }}
+                                                        <a href="{{ route('university.show', $v->university->id) }}" target="_blank">
+                                                            {{ $v->university->name }}
                                                         </a>
                                                     </td>
                                                     <td class="text-center">{{ \Carbon\Carbon::parse($v->created_at)->format('d M, Y') }}</td>
@@ -89,7 +89,7 @@
                                                         </a>
                                                     </td>
                                                     <td class="text-center"></td>
-                                                    <td class="text-center"></td>
+                                                    <td class="text-center">{{ $v->price }}</td>
                                                     <td align="middle">
                                                         @php
                                                             $switchId = 'switch' . $counter;
@@ -104,7 +104,7 @@
                                                     </td>
                                                     <td class="action">
                                                         <button>
-                                                            <a href="{{route('university.edit',$v->id)}}">
+                                                            <a href="{{route('subject.edit',$v->id)}}">
                                                                 <i class="ri-edit-2-fill"></i>
                                                             </a>
                                                         </button>
@@ -140,7 +140,7 @@
                 // Send AJAX request
                 $.ajax({
                     type: 'PUT',
-                    url: '/admin/university-status/' + id, 
+                    url: '/admin/subject-status/' + id, 
                     data: {
                         _token: '{{ csrf_token() }}',
                         status: status
