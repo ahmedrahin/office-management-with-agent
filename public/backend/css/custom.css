@@ -249,3 +249,31 @@ button[type="submit"]{
    cursor: pointer;
    z-index: 12;
 }
+.addnew {
+    display: flex
+;
+    align-items: center;
+    gap: 6px;
+}
+
+.addnew i {
+    font-size: 20px;
+}
+
+input[type="checkbox"]{
+    opacity: 0;
+}
+input[switch]:checked+label:after {
+    left: 52px !important;
+}
+input[switch]+label:after {
+    height: 17px !important;
+    width: 17px !important;
+    top: 3px !important;
+    left: 4px !important;
+}
+input[switch]+label{
+    width: 73px !important;
+    height: 24px !important;
+    margin-bottom: 0;
+}

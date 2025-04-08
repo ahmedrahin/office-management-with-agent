@@ -15,6 +15,9 @@ use App\Http\Controllers\AdminController\AssignController;
 use App\Http\Controllers\AdminController\ScheduleController;
 use App\Http\Controllers\AdminController\AgentController;
 use App\Http\Controllers\AdminController\CountryController;
+use App\Http\Controllers\AdminController\JobTypeController;
+use App\Http\Controllers\AdminController\TouristController;
+use App\Http\Controllers\AdminController\UniversityController;
 use App\Models\Employees;
 
 /*
@@ -171,7 +174,21 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'check.status']], f
 
     // agent
     Route::resource('agent', AgentController::class);
+    Route::put('agent-status/{id}', [AgentController::class, 'activeStatus'])->name('agent.status');
 
     // country
     Route::resource('country', CountryController::class);
+    Route::put('country-status/{id}', [CountryController::class, 'activeStatus'])->name('country.status');
+
+    // job
+    Route::resource('job', JobTypeController::class);
+    Route::put('job-status/{id}', [JobTypeController::class, 'activeStatus'])->name('job.status');
+
+    // tourist
+    Route::resource('tourist', TouristController::class);
+    Route::put('tourist-status/{id}', [TouristController::class, 'activeStatus'])->name('tourist.status');
+
+    // university
+    Route::resource('university', UniversityController::class);
+    Route::put('university-status/{id}', [UniversityController::class, 'activeStatus'])->name('university.status');
 });

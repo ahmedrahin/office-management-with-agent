@@ -1,6 +1,6 @@
 @extends('backend.layout.template')
 @section('page-title')
-    <title>All Country List || {{ \App\Models\Settings::site_title() }}</title>
+    <title>All Job Type List || {{ \App\Models\Settings::site_title() }}</title>
 @endsection
 
 @section('page-css')
@@ -26,7 +26,7 @@
                         <div class="page-title">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="{{url('/')}}">{{ \App\Models\Settings::site_title() }}</a></li>
-                                <li class="breadcrumb-item active">All Country List</li>
+                                <li class="breadcrumb-item active">All Job Type List</li>
                             </ol>
                         </div>
 
@@ -42,10 +42,10 @@
 
                             <h4 class="card-title" style="display: flex;justify-content: space-between;align-items:center;">
                                 <div>
-                                    All Country List
+                                    All Job Type List
                                 </div>
                                 <div>
-                                    <a href="{{ route('country.create') }}" class="btn btn-primary addnew"> <i class="ri-add-line"></i> Add New</a>
+                                    <a href="{{ route('job.create') }}" class="btn btn-primary addnew"> <i class="ri-add-line"></i> Add New</a>
                                 </div>
                             </h4>
                             <div class="data">
@@ -59,12 +59,10 @@
                                             <tr>
                                                 <th>Sl.</th>
                                                 <th>Name</th>
+                                                <th class="text-center">Country Name</th>
                                                 <th class="text-center">Created_at</th>
                                                 <th class="text-center">Created_by</th>
-                                                <th class="text-center">Visitors</th>
-                                                <th class="text-center">Job Types</th>
-                                                <th class="text-center">Tourist Places</th>
-                                                <th class="text-center">University</th>
+                                                <th class="text-center">Total Person</th>
                                                 <th class="text-center">Status</th>
                                                 <th>Action</th>
                                             </tr>
@@ -78,7 +76,11 @@
                                                 <tr>
                                                     <td>{{$counter++}}</td>
                                                     <td>{{$v->name}}</td>
-                                                    
+                                                    <td class="text-center">
+                                                        <a href="{{ route('country.show', $v->country->id) }}" target="_blank">
+                                                            {{ $v->country->name }}
+                                                        </a>
+                                                    </td>
                                                     <td class="text-center">{{ \Carbon\Carbon::parse($v->created_at)->format('d M, Y') }}</td>
                                                     <td class="text-center">
                                                         <a href="" class="badge bg-dark" target="_blank">
@@ -86,27 +88,7 @@
                                                         </a>
                                                     </td>
                                                     <td class="text-center"></td>
-                                                    <td class="text-center">
-                                                        @if( $v->jobTypes->count() > 0 )
-                                                            <span class="badge bg-success">{{ $v->jobTypes->count() }}</span>
-                                                        @else
-                                                            <span class="badge bg-danger">0</span>
-                                                        @endif
-                                                    </td>
-                                                    <td class="text-center">
-                                                        @if( $v->touristPlaces->count() > 0 )
-                                                            <span class="badge bg-success">{{ $v->touristPlaces->count() }}</span>
-                                                        @else
-                                                            <span class="badge bg-danger">0</span>
-                                                        @endif
-                                                    </td>
-                                                    <td class="text-center">
-                                                        @if( $v->university->count() > 0 )
-                                                            <span class="badge bg-success">{{ $v->university->count() }}</span>
-                                                        @else
-                                                            <span class="badge bg-danger">0</span>
-                                                        @endif
-                                                    </td>
+                                                    
                                                     <td align="middle">
                                                         @php
                                                             $switchId = 'switch' . $counter;
@@ -121,7 +103,7 @@
                                                     </td>
                                                     <td class="action">
                                                         <button>
-                                                            <a href="{{route('country.edit',$v->id)}}">
+                                                            <a href="{{route('job.edit',$v->id)}}">
                                                                 <i class="ri-edit-2-fill"></i>
                                                             </a>
                                                         </button>
@@ -157,7 +139,7 @@
                 // Send AJAX request
                 $.ajax({
                     type: 'PUT',
-                    url: '/admin/country-status/' + id, 
+                    url: '/admin/job-status/' + id, 
                     data: {
                         _token: '{{ csrf_token() }}',
                         status: status

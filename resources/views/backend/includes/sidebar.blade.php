@@ -145,6 +145,40 @@
                 </li>
 
 
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="ri-creative-commons-nc-line"></i>
+                        <span>Job Type</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{route('job.create')}}"> <i class="ri-arrow-right-s-fill"></i> Add New job</a></li>
+                        <li><a href="{{route('job.index')}}"><i class="ri-arrow-right-s-fill"></i> All Job List</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="ri-creative-commons-nc-line"></i>
+                        <span>Tourist Places</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{route('tourist.create')}}"> <i class="ri-arrow-right-s-fill"></i> Add New Tourist</a></li>
+                        <li><a href="{{route('tourist.index')}}"><i class="ri-arrow-right-s-fill"></i> All Tourist List</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="ri-creative-commons-nc-line"></i>
+                        <span>University</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{route('university.create')}}"> <i class="ri-arrow-right-s-fill"></i> Add New University</a></li>
+                        <li><a href="{{route('university.index')}}"><i class="ri-arrow-right-s-fill"></i> All University List</a></li>
+                    </ul>
+                </li>
+
+
                 <li class="menu-title">PLATFORM SETTINGS</li>
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">

@@ -1,11 +1,10 @@
 @extends('backend.layout.template')
 @section('page-title')
-    <title>Add New Country || {{ \App\Models\Settings::site_title() }}</title>
+    <title>Edit Tourist Place || {{ \App\Models\Settings::site_title() }}</title>
 @endsection
 
 @section('page-css')
-    <link href="{{asset('backend/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}" rel="stylesheet">
-   
+    <link href="{{asset('backend/libs/select2/css/select2.min.css')}}" rel="stylesheet">
 @endsection
 
 @section('body-content')
@@ -22,7 +21,7 @@
                         <div class="page-title">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="{{ url('/') }}">{{ \App\Models\Settings::site_title() }}</a></li>
-                                <li class="breadcrumb-item active">Add New Country</li>
+                                <li class="breadcrumb-item active">Edit Tourist Place</li>
                             </ol>
                         </div>
 
@@ -37,20 +36,33 @@
                         <div class="card-body">
                             <h4 class="card-title" style="display: flex;justify-content: space-between;align-items:center;">
                                 <div>
-                                    Add New Country
+                                    Edit Tourist Place
                                 </div>
                                 <div>
-                                    <a href="{{ route('country.index') }}" class="btn btn-primary addnew"> <i class="ri-arrow-left-line"></i> All Countries</a>
+                                    <a href="{{ route('tourist.index') }}" class="btn btn-primary addnew"> <i class="ri-arrow-left-line"></i> All Tourist Place</a>
                                 </div>
                             </h4>
 
-                            <form action="{{route('country.store')}}" method="POST" class="needs-validation"  novalidate enctype="multipart/form-data">
+                            <form action="{{route('tourist.update', $data->id)}}" method="POST" class="needs-validation" novalidate>
                                 @csrf
+                                @method('PUT')
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="mb-3">
-                                            <label for="validationName" class="form-label">Name</label>
-                                            <input type="text" class="form-control" id="validationName" placeholder="Country Name" name="name" required>
+                                            <label for="emp" class="form-label">Country</label>
+                                            <select name="country_id" class="form-control select2" required>
+                                                <option value="">Select a country</option>
+                                               @foreach ($countries as $country)
+                                                   <option value="{{ $country->id }}" {{ $data->country_id == $country->id ? 'selected' : '' }} >{{ $country->name }}</option>
+                                               @endforeach
+                                            </select>
+                                            <div id="emp" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="mb-3">
+                                            <label for="validationName" class="form-label">Tourist Place Name</label>
+                                            <input type="text" class="form-control" id="validationName" placeholder="Tourist Place Name" name="name" value="{{ $data->name }}" required>
                                             <div class="invalid-feedback"></div>
                                         </div>
                                     </div>
@@ -77,6 +89,8 @@
 @section('page-script')
     <script src="{{asset('backend/js/pages/form-validation.init.js')}}"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="{{asset('backend/libs/select2/js/select2.min.js')}}"></script>
+    <script src="{{asset('backend/js/pages/form-advanced.init.js')}}"></script>
     <script src="{{asset('backend/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}"></script>
 
     {{-- send employess data --}}
@@ -103,15 +117,14 @@
                         $("#addEmployee").prop('disabled', false).html(`
                             Save
                         `);
-                        $('.needs-validation')[0].reset();
                         $('.needs-validation').find('.form-control').removeClass('form-control');
                         $('input').next('.invalid-feedback').html('');
-
+                        $('#emp').html('');
                         // Display SweetAlert popup
                         Swal.fire({
                             icon: 'success',
                             title: 'Success!',
-                            text: 'Country saved successfully!',
+                            text: response.message,
                         });
                     },
                     error: function(xhr, textStatus, errorThrown) {
@@ -130,6 +143,10 @@
                             input.addClass('is-invalid');
                             input.addClass('form-control');
                             input.next('.invalid-feedback').html(value); 
+
+                            if (key === 'country_id') {
+                                $('#emp').html(value);
+                            }
                         });
                     }
                 });

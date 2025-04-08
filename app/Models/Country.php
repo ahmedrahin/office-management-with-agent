@@ -14,4 +14,16 @@ class Country extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
+
+    public function jobTypes(){
+        return $this->hasMany(JobType::class);
+    }
+
+    public function touristPlaces(){
+        return $this->hasMany(TouristPlace::class);
+    }
+
+    public function university(){
+        return $this->hasMany(University::class);
+    }
 }
