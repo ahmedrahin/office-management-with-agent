@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('registations', function (Blueprint $table) {
+        Schema::create('job_inquiries', function (Blueprint $table) {
             $table->id();
             $table->text('image')->nullable();
             $table->text('front_image')->nullable();
@@ -21,8 +21,7 @@ return new class extends Migration
             $table->foreignId('country_id')->nullable()->constrained('countries')->nullOnDelete();
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete()->nullable();
             $table->foreignId('agent_id')->nullable()->constrained('agents')->nullOnDelete()->nullable();
-            $table->integer('university_id')->nullable();
-            $table->integer('subject_id')->nullable();
+            $table->integer('job_type_id')->nullable();
             $table->decimal('total_cost', 10, 2)->default(0);
             $table->decimal('due_amount', 10, 2)->default(0);
             $table->string('user_type')->default('admin');
@@ -49,9 +48,6 @@ return new class extends Migration
             $table->string('temporary_division')->nullable();
             $table->string('temporary_district')->nullable();
             $table->string('temporary_mobile')->nullable();
-
-            $table->string('emp_name')->nullable();
-        
             $table->timestamps();
         });
     }
@@ -61,6 +57,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('registations');
+        Schema::dropIfExists('job_inquiries');
     }
 };

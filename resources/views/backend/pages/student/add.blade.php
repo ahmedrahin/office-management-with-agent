@@ -1,81 +1,12 @@
 @extends('backend.layout.template')
 @section('page-title')
-    <title>Register Form || {{ \App\Models\Settings::site_title() }}</title>
+    <title>Student Register Form || {{ \App\Models\Settings::site_title() }}</title>
 @endsection
 
 @section('page-css')
     <link href="{{asset('backend/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}" rel="stylesheet">
     <link href="{{asset('backend/libs/select2/css/select2.min.css')}}" rel="stylesheet">
-    <style>
-        .AppBody {
-            border: 3px dotted #d1d6d6;
-            height: 200px;
-            width: 100%;
-            background-color: #fff;
-            border-radius: 5px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            position: relative;
-        }
-        .AppBody.active {
-            border: 3px solid #0f9cf3;
-        }
-        .icon {
-            font-size: 30px;
-            color: #0f9cf3;
-        }
-        .AppBody h3 {
-            font-size: 18px;
-            font-weight: 600;
-            color: #333;
-        }
-        .AppBody span {
-            font-size: 18px;
-            font-weight: 500;
-            color: #333;
-            margin: 6px 0 2px 0;
-        }
-        .AppBody button {
-            padding: 3px 25px;
-            font-size: 18px;
-            font-weight: 500;
-            border: none;
-            outline: none;
-            background: #fff;
-            color: #0f9cf3;
-            border-radius: 5px;
-            cursor: pointer;    
-        }
-        .AppBody img{
-            height: 100%;
-            width: 100%;
-            object-fit: cover;
-            border-radius: 5px;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 11;
-        }
-        .cancell {
-            font-weight: 800;
-            font-size: 11px;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: red;
-            color: white;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-           cursor: pointer;
-           z-index: 12;
-        }
-    </style>
+   
 @endsection
 
 @section('body-content')
@@ -91,7 +22,7 @@
                         <div class="page-title">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="{{ url('/') }}">{{ \App\Models\Settings::site_title() }}</a></li>
-                                <li class="breadcrumb-item active">Register Form</li>
+                                <li class="breadcrumb-item active">Student Register Form</li>
                             </ol>
                         </div>
                     </div>
@@ -108,30 +39,14 @@
                                     Register Student
                                 </div>
                                 <div>
-                                    <a href="{{ route('student-registration.index') }}" class="btn btn-primary">See List</a>
+                                    <a href="{{ route('student-registration.index') }}" class="btn btn-primary addnew"> <i class="ri-arrow-left-line"></i> View All</a>
                                 </div>
                             </h4>
 
                             <form action="{{route('student-registration.store')}}" method="POST" class="needs-validation"  novalidate enctype="multipart/form-data">
                                 @csrf
 
-                                <div class="row">
-                                    <div class="col-md-2">
-                                       <div class="mb-3">
-                                            <label for="salary" class="form-label">Student Image</label>
-                                            <div class="AppBody">
-                                                <div class="icon">
-                                                    <i class="fas fa-images"></i>
-                                                </div>
-                                        
-                                                <h3 class="drag mb-0">Drag & Drop</h3>
-                                                <span>OR</span>
-                                                <button type="button" id="browseFile">Browse File</button>
-                                                <input type="file" name="image" class="picture" hidden>
-                                            </div>
-                                       </div>
-                                    </div>
-                                </div>
+                               
 
                                 <div class="row">
                                     <div class="col-md-4">
@@ -269,193 +184,380 @@
                                     </div>
                                 </div>
 
+                                <div style="border-bottom: 1px solid #00000040;" class="my-4"></div>
 
-                                <div>
-                                    <button class="btn btn-primary" type="submit" id="addEmployee" style="width: 100% !important;margin:15px auto 0;margin-top:10px !important;"> Register </button>
+                                <div class="row" style="margin-bottom: 20px;">
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label for="emp" class="form-label">Country</label>
+                                            <select name="country_id" id="country_id" class="form-control select2" required>
+                                                <option value="">Select a country</option>
+                                                @foreach ($countries as $country)
+                                                    <option value="{{ $country->id }}">{{ $country->name }}</option>
+                                                @endforeach
+                                            </select>                                            
+                                            <div id="countryErr" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label for="university_id" class="form-label">University</label>
+                                            <select name="university_id" id="university_id" class="form-control select2" required>
+                                                <option value="">Select a university</option>
+                                            </select>
+                                            <div id="universityErr" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label class="form-label">Subject</label>
+                                        <select name="subject_id" id="subject_id" class="form-control select2" required>
+                                            <option value="">Select a subject</option>
+                                        </select>
+                                    </div>
+                                
+                                    {{-- Price --}}
+                                    <div class="col-md-3">
+                                        <label class="form-label">Processing Fees</label>
+                                        <input type="text" name="processing_fees" id="subject_price" class="form-control" readonly>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label class="form-label">Total Cost</label>
+                                        <input type="text" name="total_cost" id="total_cost" class="form-control" required>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+
                                 </div>
-                            </form>
+
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                        <div class="mb-3">
+                                                <label class="form-label">Student Image</label>
+                                                <div class="AppBody">
+                                                    <div class="icon">
+                                                        <i class="fas fa-images"></i>
+                                                    </div>
+                                            
+                                                    <h3 class="drag mb-0">Drag & Drop</h3>
+                                                    <span>OR</span>
+                                                    <button type="button" id="browseFile">Browse File</button>
+                                                    <input type="file" name="image" class="picture" hidden>
+                                                </div>
+                                                <div class="msgError mt-2" id="imageErr"></div>
+                                        </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="mb-3">
+                                                <label  class="form-label">Nid/birth certificate front-side</label>
+                                                <div class="AppBody">
+                                                    <div class="icon">
+                                                        <i class="fas fa-images"></i>
+                                                    </div>
+                                            
+                                                    <h3 class="drag mb-0">Drag & Drop</h3>
+                                                    <span>OR</span>
+                                                    <button type="button" id="browseFile">Browse File</button>
+                                                    <input type="file" name="front_image" class="picture" hidden>
+                                                </div>
+                                                <div class="msgError mt-2" id="frontErr"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="mb-3">
+                                                <label  class="form-label">Nid back-side image (optional)</label>
+                                                <div class="AppBody">
+                                                    <div class="icon">
+                                                        <i class="fas fa-images"></i>
+                                                    </div>
+                                            
+                                                    <h3 class="drag mb-0">Drag & Drop</h3>
+                                                    <span>OR</span>
+                                                    <button type="button" id="browseFile">Browse File</button>
+                                                    <input type="file" name="back_image" class="picture" hidden>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="mb-3">
+                                                <label class="form-label">Passport Copy</label>
+                                                <div class="AppBody">
+                                                    <div class="icon">
+                                                        <i class="fas fa-images"></i>
+                                                    </div>
+                                            
+                                                    <h3 class="drag mb-0">Drag & Drop</h3>
+                                                    <span>OR</span>
+                                                    <button type="button" id="browseFile">Browse File</button>
+                                                    <input type="file" name="passport_image" class="picture" hidden>
+                                                </div>
+                                                <div class="msgError mt-2" id="passportErr"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <button class="btn btn-primary" type="submit" id="addEmployee" style="width: 100% !important;margin:15px auto 0;margin-top:10px !important;font-size:17px;font-weight:600;"> Register </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                    </div>
-                    <!-- end card -->
-                </div> 
-            </div>
-            <!-- end row -->
+                        <!-- end card -->
+                    </div> 
+                </div>
+                <!-- end row -->
 
-        </div> 
-    </div>
-    <!-- End Page-content -->
-                
-@endsection
+            </div> 
+        </div>
+        <!-- End Page-content -->
+                    
+    @endsection
 
-@section('page-script')
-    <script src="{{asset('backend/js/pages/form-validation.init.js')}}"></script>
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-    <script src="{{asset('backend/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}"></script>
-    <script src="{{asset('backend/libs/select2/js/select2.min.js')}}"></script>
+    @section('page-script')
+        <script src="{{asset('backend/js/pages/form-validation.init.js')}}"></script>
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+        <script src="{{asset('backend/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}"></script>
+        <script src="{{asset('backend/libs/select2/js/select2.min.js')}}"></script>
+        <script src="{{asset('backend/js/pages/form-advanced.init.js')}}"></script>
 
-    {{-- send employess data --}}
-    <script>
-         $(document).ready(function() {
-            $('.needs-validation').submit(function(event) {
-                event.preventDefault(); 
-                var form = $(this);
-                var formData = new FormData(form[0]); 
-
-                $.ajax({
-                    type: form.attr('method'),
-                    url: form.attr('action'),
-                    data: formData,
-                    contentType: false, // Don't set content type
-                    processData: false, // Don't process the data
-                    beforeSend: function(){
-                        $("#addEmployee").prop('disabled', true).html(`
-                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                            Loading...
-                        `);
-                    },
-                    success: function(response) {
-                      
-                        // Display SweetAlert popup
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success!',
-                            text: 'Register successfully!',
+        <script>
+            $(document).ready(function () {
+                $('#country_id').on('change', function () {
+                    var countryId = $(this).val();
+        
+                    if (countryId) {
+                        $.ajax({
+                            url: '/get-university/' + countryId,
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (data) {
+                                $('#university_id').empty().append('<option value="">Select a university</option>');
+                                $.each(data, function (key, university) {
+                                    $('#university_id').append('<option value="' + university.id + '">' + university.name + '</option>');
+                                });
+                            },
+                            error: function () {
+                                alert('Error loading universities');
+                            }
                         });
-
-                        setTimeout(() => {
-                            window.location = ("{{ route('student-registration.index') }}");
-                        }, 1000);
-                    },
-                    error: function(xhr, textStatus, errorThrown) {
-                        // Reset Bootstrap validation state
-                        form.find('.form-control').removeClass('is-invalid');
-                        form.find('.invalid-feedback').html('');
-                        $("#addEmployee").prop('disabled', false).html(`
-                            Add Employees
-                        `);
-                        
-                        // Handle validation errors
-                        var errors = xhr.responseJSON.errors;
-                        console.log(errors)
-                        $.each(errors, function(key, value) {
-                            var input = form.find('[name="' + key + '"]');
-                            input.addClass('is-invalid');
-                            input.addClass('form-control');
-                            input.next('.invalid-feedback').html(value); 
-                        });
+                    } else {
+                        $('#university_id').empty().append('<option value="">Select a university</option>');
                     }
                 });
             });
 
-            // Remove validation classes and messages on input change
-            $('.needs-validation input').on('input', function() {
-                var input = $(this);
-                input.removeClass('is-invalid');
-                input.next('.invalid-feedback').html('');
+            $(document).ready(function () {
+                // Load Subjects when university changes
+                $('#university_id').on('change', function () {
+                    let universityId = $(this).val();
+                    $('#subject_id').empty().append('<option value="">Loading...</option>');
+                    $('#subject_price').val('');
+
+                    if (universityId) {
+                        $.get('/get-subject/' + universityId, function (data) {
+                            $('#subject_id').empty().append('<option value="">Select a subject</option>');
+                            $.each(data, function (index, subject) {
+                                $('#subject_id').append('<option value="' + subject.id + '" data-price="' + subject.price + '">' + subject.name + '</option>');
+                            });
+                        });
+                    } else {
+                        $('#subject_id').empty().append('<option value="">Select a subject</option>');
+                    }
+                });
+
+                // Show price when subject selected
+                $('#subject_id').on('change', function () {
+                    let selectedPrice = $(this).find(':selected').data('price') || '';
+                    $('#subject_price').val(selectedPrice);
+                });
             });
-        });
-    </script>
+        </script>
+    
 
-    {{-- drag & drop --}}
-    <script>
-        function imgUpload() {
-            let dragArea = document.querySelector('.AppBody');
-            let dragText = document.querySelector('.drag');
-            let btn = document.querySelector('#browseFile');
-            let input = document.querySelector('.picture');
-            let file;
+        {{-- send data --}}
+        <script>
+            $(document).ready(function() {
+                $('.needs-validation').submit(function(event) {
+                    event.preventDefault(); 
+                    var form = $(this);
+                    var formData = new FormData(form[0]); 
 
-            btn.onclick = () => {
-                input.click();
-            }
+                    $.ajax({
+                        type: form.attr('method'),
+                        url: form.attr('action'),
+                        data: formData,
+                        contentType: false, // Don't set content type
+                        processData: false, // Don't process the data
+                        beforeSend: function(){
+                            $("#addEmployee").prop('disabled', true).html(`
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Loading...
+                            `);
+                        },
+                        success: function(response) {
+                        
+                            // Display SweetAlert popup
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Register successfully!',
+                            });
 
-            input.addEventListener('change', function () {
-                file = this.files[0];
-                show();
-            })
+                            setTimeout(() => {
+                                window.location = ("{{ route('student-registration.index') }}");
+                            }, 1000);
+                        },
+                        error: function(xhr, textStatus, errorThrown) {
+                            // Reset Bootstrap validation state
+                            form.find('.form-control').removeClass('is-invalid');
+                            form.find('.invalid-feedback').html('');
+                            $("#addEmployee").prop('disabled', false).html(`
+                                Register
+                            `);
+                            
+                            // Handle validation errors
+                            var errors = xhr.responseJSON.errors;
+                            console.log(errors)
+                            $.each(errors, function(key, value) {
+                                var input = form.find('[name="' + key + '"]');
+                                input.addClass('is-invalid');
+                                input.addClass('form-control');
+                                input.next('.invalid-feedback').html(value); 
 
-            dragArea.addEventListener('dragover', (event) => {
-                event.preventDefault();
-                dragText.innerText = "Release to Upload File";
-                dragArea.classList.add('active');
-            })
+                                if (key === 'image') {
+                                    $('#imageErr').html(value);
+                                }
 
-            dragArea.addEventListener('dragleave', (event) => {
-                dragText.innerText = "Drag & Drop";
-                dragArea.classList.remove('active');
-            })
+                                if (key === 'front_image') {
+                                    $('#frontErr').html(value);
+                                }
 
-            dragArea.addEventListener('drop', (event) => {
-                event.preventDefault();
-                file = event.dataTransfer.files[0];
-                input.files = event.dataTransfer.files; // Set files to input
-                show();
-            })
+                                if (key === 'passport_image') {
+                                    $('#passportErr').html(value);
+                                }
 
-            function show() {
-                let fileType = file.type;
-                let validType = ['image/jpeg', 'image/jpg', 'image/png'];
+                                if (key === 'country_id') {
+                                    $('#countryErr').html(value);
+                                }
 
-                if (validType.includes(fileType)) {
-                    let fileRead = new FileReader();
-                    fileRead.onload = () => {
-                        let imgUrl = fileRead.result;
-                        let img = `<img src="${imgUrl}">`;
-                        let cancelButton = `<div class="cancell">
-                                                ❌
-                                            </div>`;
-                        // Create a new div for the uploaded image and cancel button
-                        let imageContainer = document.createElement('div');
-                        imageContainer.classList.add('image-container');
-                        imageContainer.innerHTML = img + cancelButton;
-
-                        // Check if an image is already uploaded
-                        let existingImageContainer = dragArea.querySelector('.image-container');
-                        if (existingImageContainer) {
-                            // Remove the existing image container
-                            dragArea.removeChild(existingImageContainer);
+                                if (key === 'university_id') {
+                                    $('#universityErr').html(value);
+                                }
+                            });
                         }
-                        dragArea.appendChild(imageContainer);
+                    });
+                });
 
-                        // Add event listener to the cancel button
-                        let cancelButtonElement = imageContainer.querySelector('.cancell');
-                        cancelButtonElement.addEventListener('click', function () {
-                            // Clear the input file and remove the image container
-                            input.value = null;
+                // Remove validation classes and messages on input change
+                $('.needs-validation input').on('input', function() {
+                    var input = $(this);
+                    input.removeClass('is-invalid');
+                    input.next('.invalid-feedback').html('');
+                });
+            });
+        </script>
+
+        {{-- drag & drop --}}
+        <script>
+            function imgUploadAll() {
+                // Select all AppBody containers
+                document.querySelectorAll('.AppBody').forEach((dragArea, index) => {
+                    const dragText = dragArea.querySelector('.drag');
+                    const btn = dragArea.querySelector('button');
+                    const input = dragArea.querySelector('input.picture');
+                    let file;
+
+                    btn.onclick = () => input.click();
+
+                    input.addEventListener('change', function () {
+                        file = this.files[0];
+                        showPreview();
+                    });
+
+                    dragArea.addEventListener('dragover', (event) => {
+                        event.preventDefault();
+                        dragText.innerText = "Release to Upload File";
+                        dragArea.classList.add('active');
+                    });
+
+                    dragArea.addEventListener('dragleave', () => {
+                        dragText.innerText = "Drag & Drop";
+                        dragArea.classList.remove('active');
+                    });
+
+                    dragArea.addEventListener('drop', (event) => {
+                        event.preventDefault();
+                        file = event.dataTransfer.files[0];
+                        input.files = event.dataTransfer.files;
+                        showPreview();
+                    });
+
+                    function showPreview() {
+                        const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+
+                        if (file && validTypes.includes(file.type)) {
+                            const reader = new FileReader();
+
+                            reader.onload = () => {
+                                const imgUrl = reader.result;
+                                const img = `<img src="${imgUrl}">`;
+                                const cancelBtn = `<div class="cancell">❌</div>`;
+
+                                const imageContainer = document.createElement('div');
+                                imageContainer.classList.add('image-container');
+                                imageContainer.innerHTML = img + cancelBtn;
+
+                                // Remove previous image if any
+                                const existing = dragArea.querySelector('.image-container');
+                                if (existing) dragArea.removeChild(existing);
+
+                                dragArea.appendChild(imageContainer);
+
+                                // Cancel Button Handler
+                                imageContainer.querySelector('.cancell').addEventListener('click', () => {
+                                    input.value = null;
+                                    dragArea.classList.remove('active');
+                                    dragText.innerText = "Drag & Drop";
+                                    dragArea.removeChild(imageContainer);
+                                });
+                            };
+
+                            reader.readAsDataURL(file);
+                        } else {
+                            alert('Invalid file type. Only JPG, JPEG, PNG allowed.');
                             dragArea.classList.remove('active');
                             dragText.innerText = "Drag & Drop";
-                            dragArea.removeChild(imageContainer);
-                        });
+                        }
                     }
-                    fileRead.readAsDataURL(file);
-                } else {
-                    alert('This file is not valid');
-                    dragArea.classList.remove('active');
-                    dragText.innerText = "Drag & Drop";
-                }
+                });
             }
-        }
 
-        imgUpload();
-    </script>
+            // Initialize
+            imgUploadAll();
+        </script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const checkbox = document.getElementById("sameaspermanent");
 
-            checkbox.addEventListener("change", function () {
-                if (this.checked) {
-                    document.getElementById("tdivision").value = document.getElementById("pdivision").value;
-                    document.getElementById("tdistrict").value = document.getElementById("pdistrict").value;
-                    document.getElementById("taddress").value = document.getElementById("paddress").value;
-                } else {
-                    document.getElementById("tdivision").value = "";
-                    document.getElementById("tdistrict").value = "";
-                    document.getElementById("taddress").value = "";
-                }
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const checkbox = document.getElementById("sameaspermanent");
+
+                checkbox.addEventListener("change", function () {
+                    if (this.checked) {
+                        document.getElementById("tdivision").value = document.getElementById("pdivision").value;
+                        document.getElementById("tdistrict").value = document.getElementById("pdistrict").value;
+                        document.getElementById("taddress").value = document.getElementById("paddress").value;
+                    } else {
+                        document.getElementById("tdivision").value = "";
+                        document.getElementById("tdistrict").value = "";
+                        document.getElementById("taddress").value = "";
+                    }
+                });
             });
-        });
-    </script>
+        </script>
 
 
 @endsection

@@ -17,4 +17,20 @@ class Registation extends Model
     public function assign(){
         return $this->hasMany(AssignCourse::class);
     }
+
+    public function country(){
+        return $this->belongsTo(Country::class);
+    }
+
+    public function agent(){
+        return $this->belongsTo(Agent::class);
+    }
+
+    public function university(){
+        return $this->belongsTo(University::class);
+    }
+
+    public function subject(){
+        return $this->belongsTo(Subject::class);
+    }
 }

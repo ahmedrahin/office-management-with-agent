@@ -4,6 +4,7 @@ namespace App\Http\Controllers\AdminController;
 
 use App\Http\Controllers\Controller;
 use App\Models\Registation;
+use App\Models\Country;
 use Illuminate\Http\Request;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
@@ -17,7 +18,6 @@ class StudentController extends Controller
      */
     public function index(Request $request)
     {
-        // Start with all students
         $query = Registation::latest();
 
         if ($request->filled('start_date') && $request->filled('end_date')) {
@@ -28,24 +28,8 @@ class StudentController extends Controller
                 ->whereDate('created_at', '<=', $endDate);
         }
 
-        // Get the filtered students
-        $students = $query->get();
-
-        // Return the view with filtered students
-        return view('backend.pages.student.manage', compact('students'));
-    }
-
-    public function filter(Request $request)
-    {
-        dd(1);
-        $query = Registation::latest();
-
-        if ($request->has('start_date') && $request->has('end_date')) {
-            $startDate = Carbon::createFromFormat('d M, Y', $request->start_date)->format('Y-m-d');
-            $endDate = Carbon::createFromFormat('d M, Y', $request->end_date)->format('Y-m-d');
-
-            $query->whereDate('created_at', '>=', $startDate)
-                ->whereDate('created_at', '<=', $endDate);
+        if ($request->filled('user_type')) {
+            $query->where('user_type', $request->user_type);
         }
 
         $students = $query->get();
@@ -53,12 +37,15 @@ class StudentController extends Controller
         return view('backend.pages.student.manage', compact('students'));
     }
 
+
+
     /**
      * Show the form for creating a new resource.
      */
     public function create()
-    {
-        return view('backend.pages.student.add');
+    {   
+        $countries = Country::where('status',1)->latest()->get();
+        return view('backend.pages.student.add', compact('countries'));
     }
 
     /**
@@ -73,40 +60,60 @@ class StudentController extends Controller
             'mobile' => 'required|numeric|digits:11',
             'birth'  => 'nullable',
             'gender'  => 'required',
+            'country_id'  => 'required',
+            'university_id'  => 'required',
+            'total_cost'  => 'required',
+            'image' => 'required|image',
+            'front_image' => 'required|image',
+            'passport_image' => 'required|image',
         ]);
 
-        $student = new Registation();
+        $data = new Registation();
 
         // image 
-        if ($request->image) {
-            $manager = new ImageManager(new Driver());
-            $name_gan = hexdec(uniqid()) . '.' . $request->file('image')->getClientOriginalExtension();
-            $image = $manager->read($request->file('image'));
-            $image->save(base_path('public/backend/images/student/' . $name_gan));
-
-            $student->image = 'backend/images/student/' . $name_gan;
+        $fields = [
+            'image' => 'image',
+            'front_image' => 'front_image',
+            'back_image' => 'back_image',
+            'passport_image' => 'passport_image',
+        ];
+        
+        foreach ($fields as $field => $column) {
+            if ($request->hasFile($field)) {
+                $file = $request->file($field);
+                $fileName = time() . '_' . $field . $file->getClientOriginalName();
+                $file->move(public_path('/backend/images/student'), $fileName);
+                $data->$column = '/backend/images/student/' . $fileName;
+            }
         }
 
-        $student->name = $request->name;
-        $student->email = $request->email;
-        $student->father_name = $request->father_name;
-        $student->mother_name = $request->mother_name;
-        $student->gender = $request->gender;
-        $student->date_of_birth = $request->birth;
-        $student->courses = $request->course;
-        $student->mobile = $request->mobile;
+        $data->country_id = $request->country_id;
+        $data->university_id = $request->university_id;
+        $data->subject_id = $request->subject_id;
+        $data->total_cost = $request->total_cost;
+                            $data->processing_fees = $request->processing_fees
+                            ? (float) str_replace(',', '', $request->processing_fees)
+                            : 0;
+    
 
-        $student->permanent_division = $request->pdivision;
-        $student->permanent_district = $request->pdistrict;
-        $student->permanent_address = $request->paddress;
+        $data->name = $request->name;
+        $data->email = $request->email;
+        $data->father_name = $request->father_name;
+        $data->mother_name = $request->mother_name;
+        $data->gender = $request->gender;
+        $data->date_of_birth = $request->birth;
+        $data->mobile = $request->mobile;
 
-        $student->temporary_division = $request->tdivision;
-        $student->temporary_district = $request->tdistrict;
-        $student->temporary_address = $request->taddress;
+        $data->permanent_division = $request->pdivision;
+        $data->permanent_district = $request->pdistrict;
+        $data->permanent_address = $request->paddress;
 
-        $student->user_id = auth()->user()->id;
+        $data->temporary_division = $request->tdivision;
+        $data->temporary_district = $request->tdistrict;
+        $data->temporary_address = $request->taddress;
+        $data->user_id = auth()->user()->id;
 
-        $student->save();
+        $data->save();
 
     }
 
@@ -134,7 +141,8 @@ class StudentController extends Controller
     public function edit(string $id)
     {
         $student = Registation::find($id);
-        return view('backend.pages.student.edit', compact('student'));
+        $countries = Country::where('status',1)->latest()->get();
+        return view('backend.pages.student.edit', compact('student', 'countries'));
     }
 
     /**
@@ -148,52 +156,59 @@ class StudentController extends Controller
             'mobile' => 'required|numeric|digits:11',
             'birth'  => 'nullable',
             'gender'  => 'required',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'country_id'  => 'required',
+            'university_id'  => 'required',
+            'total_cost'  => 'required',
+            
         ]);
 
-        $student = Registation::findOrFail($id);
 
-        // Handling Image Upload
-        if($request->hasRemove){
-            // delete employee image
-            if (File::exists($student->image)) {
-                File::delete($student->image);
+        $data = Registation::findOrFail($id);
+
+        $fields = [
+            'image' => 'image',
+            'front_image' => 'front_image',
+            'back_image' => 'back_image',
+            'passport_image' => 'passport_image',
+        ];
+        
+        foreach ($fields as $field => $column) {
+            if ($request->hasFile($field)) {
+                $file = $request->file($field);
+                $fileName = time() . '_' . $field . $file->getClientOriginalName();
+                $file->move(public_path('/backend/images/student'), $fileName);
+                $data->$column = '/backend/images/student/' . $fileName;
             }
-            $student->image = null;
         }
-        elseif($request->image) {
-            // Delete old image if exists
-            if ($student->image && file_exists(public_path($student->image))) {
-                File::delete($student->image);
-            }
 
-            $manager = new ImageManager(new Driver());
-            $name_gan = hexdec(uniqid()) . '.' . $request->file('image')->getClientOriginalExtension();
-            $image = $manager->read($request->file('image'));
-            $image->save(base_path('public/backend/images/student/' . $name_gan));
+        $data->country_id = $request->country_id;
+        $data->university_id = $request->university_id;
+        $data->subject_id = $request->subject_id;
+        $data->total_cost = $request->total_cost;
+        $data->processing_fees = $request->processing_fees
+                                ? (float) str_replace(',', '', $request->processing_fees)
+                                : 0;
 
-            $student->image = 'backend/images/student/' . $name_gan;
-        }
 
         // Update Student Data
-        $student->name = $request->name;
-        $student->email = $request->email;
-        $student->father_name = $request->father_name;
-        $student->mother_name = $request->mother_name;
-        $student->gender = $request->gender;
-        $student->date_of_birth = $request->birth;
-        $student->courses = $request->course;
-        $student->mobile = $request->mobile;
+        $data->name = $request->name;
+        $data->email = $request->email;
+        $data->father_name = $request->father_name;
+        $data->mother_name = $request->mother_name;
+        $data->gender = $request->gender;
+        $data->date_of_birth = $request->birth;
+        $data->courses = $request->course;
+        $data->mobile = $request->mobile;
 
-        $student->permanent_division = $request->pdivision;
-        $student->permanent_district = $request->pdistrict;
-        $student->permanent_address = $request->paddress;
+        $data->permanent_division = $request->pdivision;
+        $data->permanent_district = $request->pdistrict;
+        $data->permanent_address = $request->paddress;
 
-        $student->temporary_division = $request->tdivision;
-        $student->temporary_district = $request->tdistrict;
-        $student->temporary_address = $request->taddress;
+        $data->temporary_division = $request->tdivision;
+        $data->temporary_district = $request->tdistrict;
+        $data->temporary_address = $request->taddress;
 
-        $student->save();
+        $data->save();
 
     }
 

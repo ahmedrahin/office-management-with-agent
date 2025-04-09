@@ -19,8 +19,10 @@ use App\Http\Controllers\AdminController\JobTypeController;
 use App\Http\Controllers\AdminController\TouristController;
 use App\Http\Controllers\AdminController\UniversityController;
 use App\Http\Controllers\AdminController\SubjectController;
+use App\Http\Controllers\AdminController\JobInquiryController;
 use App\Models\Employees;
-
+use App\Models\Subject;
+use App\Models\University;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -45,6 +47,15 @@ Route::get('/get-employee/{id}', function($id) {
 Route::get('/get-pay-employee/{id}', function($id) {
     return response()->json(Employees::find($id));
 });
+
+Route::get('/get-university/{id}', function($id){
+    return response()->json(University::where('country_id', $id)->where('status',1)->get());
+});
+
+Route::get('/get-subject/{id}', function($id){
+    return response()->json(Subject::where('university_id', $id)->where('status',1)->get());
+});
+
 //admin dashboard
 Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'check.status']], function(){
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');

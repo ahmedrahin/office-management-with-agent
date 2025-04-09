@@ -24,7 +24,7 @@ class AgentLoginController extends Controller
             'email' => $request->email,
             'password' => $request->password,
         ], $request->filled('remember'))) {
-            return redirect()->intended(route('agent.dashboard'));
+            return redirect()->route('agent.dashboard');
         }
 
         return back()->withErrors([

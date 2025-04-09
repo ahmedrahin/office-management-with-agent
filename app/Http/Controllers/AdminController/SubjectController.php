@@ -11,7 +11,7 @@ class SubjectController extends Controller
 {
     public function index(){
         $data = Subject::latest()->get();
-        return view('backend.pages.university.manage' , compact('data'));
+        return view('backend.pages.subject.manage' , compact('data'));
     }
 
 

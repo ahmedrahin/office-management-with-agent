@@ -1,81 +1,12 @@
 @extends('backend.layout.template')
 @section('page-title')
-    <title>Edit Register Form || {{ \App\Models\Settings::site_title() }}</title>
+    <title>Edit Student Register Form || {{ \App\Models\Settings::site_title() }}</title>
 @endsection
 
 @section('page-css')
     <link href="{{asset('backend/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}" rel="stylesheet">
     <link href="{{asset('backend/libs/select2/css/select2.min.css')}}" rel="stylesheet">
-    <style>
-        .AppBody {
-            border: 3px dotted #d1d6d6;
-            height: 200px;
-            width: 100%;
-            background-color: #fff;
-            border-radius: 5px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            position: relative;
-        }
-        .AppBody.active {
-            border: 3px solid #0f9cf3;
-        }
-        .icon {
-            font-size: 30px;
-            color: #0f9cf3;
-        }
-        .AppBody h3 {
-            font-size: 18px;
-            font-weight: 600;
-            color: #333;
-        }
-        .AppBody span {
-            font-size: 18px;
-            font-weight: 500;
-            color: #333;
-            margin: 6px 0 2px 0;
-        }
-        .AppBody button {
-            padding: 3px 25px;
-            font-size: 18px;
-            font-weight: 500;
-            border: none;
-            outline: none;
-            background: #fff;
-            color: #0f9cf3;
-            border-radius: 5px;
-            cursor: pointer;    
-        }
-        .AppBody img{
-            height: 100%;
-            width: 100%;
-            object-fit: cover;
-            border-radius: 5px;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 11;
-        }
-        .cancell {
-            font-weight: 800;
-            font-size: 11px;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: red;
-            color: white;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-           cursor: pointer;
-           z-index: 12;
-        }
-    </style>
+   
 @endsection
 
 @section('body-content')
@@ -108,40 +39,13 @@
                                     Edit Student
                                 </div>
                                 <div>
-                                    <a href="{{ route('student-registration.index') }}" class="btn btn-primary">See List</a>
+                                    <a href="{{ route('student-registration.index') }}" class="btn btn-primary addnew"> <i class="ri-arrow-left-line"></i> View All</a>
                                 </div>
                             </h4>
 
                             <form action="{{route('student-registration.update', $student->id)}}" method="POST" class="needs-validation"  novalidate enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
-
-                                <div class="row">
-                                    <div class="col-md-2">
-                                       <div class="mb-3">
-                                            <label for="salary" class="form-label">Student Image</label>
-                                            <div class="AppBody">
-                                                <div class="icon">
-                                                    <i class="fas fa-images"></i>
-                                                </div>
-                                        
-                                                <h3 class="drag">Drag & Drop</h3>
-                                                <span>OR</span>
-                                                <button type="button" id="browseFile">Browse File</button>
-                                                <input type="file" name="image" class="picture" hidden>
-
-                                                {{-- has image --}}
-                                                @if( !is_null($student->image) )
-                                                    <img src="{{asset($student->image)}}" alt="" id="editImg">
-                                                    <div class="cancell" id="editCan">
-                                                        ❌
-                                                    </div>
-                                                    <input type="hidden" name="hasRemove" id="hasRemove">
-                                                @endif
-                                            </div>
-                                       </div>
-                                    </div>
-                                </div>
 
                                 <div class="row">
                                     <div class="col-md-4">
@@ -277,6 +181,86 @@
                                     </div>
                                 </div>
 
+                                <div style="border-bottom: 1px solid #00000040;" class="my-4"></div>
+
+                                <div class="row" style="margin-bottom: 20px;">
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label for="emp" class="form-label">Country</label>
+                                            <select name="country_id" id="country_id" class="form-control select2" required>
+                                                <option value="">Select a country</option>
+                                                @foreach ($countries as $country)
+                                                    <option value="{{ $country->id }}" {{ $student->country_id == $country->id ? 'selected' : '' }}>{{ $country->name }}</option>
+                                                @endforeach
+                                            </select>                                            
+                                            <div id="countryErr" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label for="university_id" class="form-label">University</label>
+                                            <select name="university_id" id="university_id" class="form-control select2" required>
+                                                <option value="">Select a university</option>
+                                            </select>
+                                            <div id="universityErr" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label class="form-label">Subject</label>
+                                        <select name="subject_id" id="subject_id" class="form-control select2" required>
+                                            <option value="">Select a subject</option>
+                                        </select>
+                                    </div>
+                                
+                                    {{-- Price --}}
+                                    <div class="col-md-3">
+                                        <label class="form-label">Processing Fees</label>
+                                        <input type="text" name="processing_fees" id="subject_price" class="form-control" readonly>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label class="form-label">Total Cost</label>
+                                        <input type="text" name="total_cost" id="total_cost" class="form-control" value="{{ $student->total_cost }}" required>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+                                    @php
+                                        $images = [
+                                            'image' => 'Student Image',
+                                            'front_image' => 'Front Image',
+                                            'back_image' => 'Back Image',
+                                            'passport_image' => 'Passport Image',
+                                        ];
+                                    @endphp
+                                
+                                    @foreach ($images as $field => $label)
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label class="form-label">{{ $label }}</label>
+                                            <div class="AppBody" data-name="{{ $field }}">
+                                                <div class="icon"><i class="fas fa-images"></i></div>
+                                                <h3 class="drag">Drag & Drop</h3>
+                                                <span>OR</span>
+                                                <button type="button" class="browseFile">Browse File</button>
+                                                <input type="file" name="{{ $field }}" class="picture" hidden>
+                                
+                                                {{-- Show existing image if available --}}
+                                                @if (!is_null($student->$field))
+                                                    <img src="{{ asset($student->$field) }}" alt="" id="editImg-{{ $field }}">
+                                                    <div class="cancell" id="editCan-{{ $field }}">❌</div>
+                                                @endif
+                                            </div>
+                                            <div class="msgError mt-2" id="{{ $field }}Err"></div>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                </div>
+                                
 
                                 <div>
                                     <button class="btn btn-primary" type="submit" id="addEmployee" style="width: 100% !important;margin:15px auto 0;margin-top:10px !important;"> Save Changes </button>
@@ -300,6 +284,84 @@
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <script src="{{asset('backend/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}"></script>
     <script src="{{asset('backend/libs/select2/js/select2.min.js')}}"></script>
+    <script src="{{asset('backend/js/pages/form-advanced.init.js')}}"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Define selected values from Blade/PHP
+            var selectedCountryId = "{{ $student->country_id }}";
+            var selectedUniversityId = "{{ $student->university_id }}";
+            var selectedSubjectId = "{{ $student->subject_id }}";
+    
+            // Country change: Load universities
+            $('#country_id').on('change', function () {
+                var countryId = $(this).val();
+    
+                if (countryId) {
+                    $.ajax({
+                        url: '/get-university/' + countryId,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            $('#university_id').empty().append('<option value="">Select a university</option>');
+                            $.each(data, function (key, university) {
+                                var selected = (university.id == selectedUniversityId) ? 'selected' : '';
+                                $('#university_id').append('<option value="' + university.id + '" ' + selected + '>' + university.name + '</option>');
+                            });
+    
+                            // Trigger change to load subjects if editing
+                            if (selectedUniversityId) {
+                                $('#university_id').trigger('change');
+                            }
+                        },
+                        error: function () {
+                            alert('Error loading universities');
+                        }
+                    });
+                } else {
+                    $('#university_id').empty().append('<option value="">Select a university</option>');
+                }
+            });
+    
+            // University change: Load subjects
+            $('#university_id').on('change', function () {
+                let universityId = $(this).val();
+                $('#subject_id').empty().append('<option value="">Loading...</option>');
+                $('#subject_price').val('');
+    
+                if (universityId) {
+                    $.get('/get-subject/' + universityId, function (data) {
+                        $('#subject_id').empty().append('<option value="">Select a subject</option>');
+                        $.each(data, function (index, subject) {
+                            var selected = (subject.id == selectedSubjectId) ? 'selected' : '';
+                            $('#subject_id').append('<option value="' + subject.id + '" data-price="' + subject.price + '" ' + selected + '>' + subject.name + '</option>');
+                        });
+    
+                        // If editing, set price of selected subject
+                        if (selectedSubjectId) {
+                            let selectedOption = $('#subject_id').find('option:selected');
+                            let selectedPrice = selectedOption.data('price') || '';
+                            $('#subject_price').val(selectedPrice);
+                        }
+                    });
+                } else {
+                    $('#subject_id').empty().append('<option value="">Select a subject</option>');
+                }
+            });
+    
+            // Subject change: Show price
+            $('#subject_id').on('change', function () {
+                let selectedPrice = $(this).find(':selected').data('price') || '';
+                $('#subject_price').val(selectedPrice);
+            });
+    
+            // ======== On Page Load (Edit Page) =========
+            if (selectedCountryId) {
+                $('#country_id').val(selectedCountryId).trigger('change');
+            }
+        });
+    </script>
+    
 
     {{-- send employess data --}}
     <script>
@@ -350,6 +412,26 @@
                             input.addClass('is-invalid');
                             input.addClass('form-control');
                             input.next('.invalid-feedback').html(value); 
+
+                            if (key === 'image') {
+                                $('#imageErr').html(value);
+                            }
+
+                            if (key === 'front_image') {
+                                $('#front_imageErr').html(value);
+                            }
+
+                            if (key === 'passport_image') {
+                                $('#passport_imageErr').html(value);
+                            }
+
+                            if (key === 'country_id') {
+                                $('#countryErr').html(value);
+                            }
+
+                            if (key === 'university_id') {
+                                $('#universityErr').html(value);
+                            }
                         });
                     }
                 });
@@ -366,92 +448,90 @@
 
     {{-- drag & drop --}}
     <script>
-         function imgUpload() {
-            let dragArea = document.querySelector('.AppBody');
-            let dragText = document.querySelector('.drag');
-            let btn = document.querySelector('#browseFile');
-            let input = document.querySelector('.picture');
+        function imgUpload(dragArea) {
+            let dragText = dragArea.querySelector('.drag');
+            let btn = dragArea.querySelector('.browseFile');
+            let input = dragArea.querySelector('.picture');
+            let fieldName = dragArea.dataset.name;
             let file;
-
+    
             btn.onclick = () => {
                 input.click();
             }
-
+    
             input.addEventListener('change', function () {
                 file = this.files[0];
                 show();
             })
-
+    
             dragArea.addEventListener('dragover', (event) => {
                 event.preventDefault();
                 dragText.innerText = "Release to Upload File";
                 dragArea.classList.add('active');
             })
-
+    
             dragArea.addEventListener('dragleave', (event) => {
                 dragText.innerText = "Drag & Drop";
                 dragArea.classList.remove('active');
             })
-
+    
             dragArea.addEventListener('drop', (event) => {
                 event.preventDefault();
                 file = event.dataTransfer.files[0];
-                input.files = event.dataTransfer.files; // Set files to input
+                input.files = event.dataTransfer.files;
                 show();
             })
-
+    
             function show() {
                 let fileType = file.type;
                 let validType = ['image/jpeg', 'image/jpg', 'image/png'];
-
+    
                 if (validType.includes(fileType)) {
                     let fileRead = new FileReader();
                     fileRead.onload = () => {
                         let imgUrl = fileRead.result;
-                        let img = `<img src="${imgUrl}">`;
-                        let cancelButton = `<div class="cancell">
-                                                ❌
-                                            </div>`;
-                        // Create a new div for the uploaded image and cancel button
-                        let imageContainer = document.createElement('div');
-                        imageContainer.classList.add('image-container');
-                        imageContainer.innerHTML = img + cancelButton;
-
-                        // Check if an image is already uploaded
-                        let existingImageContainer = dragArea.querySelector('.image-container');
-                        if (existingImageContainer) {
-                            // Remove the existing image container
-                            dragArea.removeChild(existingImageContainer);
-                        }
-                        dragArea.appendChild(imageContainer);
-
-                        // Add event listener to the cancel button
-                        let cancelButtonElement = imageContainer.querySelector('.cancell');
-                        cancelButtonElement.addEventListener('click', function () {
-                            // Clear the input file and remove the image container
-                            input.value = null;
+                        let img = `<img src="${imgUrl}" id="preview-${fieldName}">`;
+                        let cancelButton = `<div class="cancell" id="cancel-${fieldName}">❌</div>`;
+                        let container = document.createElement('div');
+                        container.classList.add('image-container');
+                        container.innerHTML = img + cancelButton;
+    
+                        let existing = dragArea.querySelector('.image-container');
+                        if (existing) dragArea.removeChild(existing);
+                        dragArea.appendChild(container);
+    
+                        dragText.innerText = "Drag & Drop";
+    
+                        document.getElementById(`cancel-${fieldName}`).addEventListener('click', function () {
+                            input.value = '';
                             dragArea.classList.remove('active');
                             dragText.innerText = "Drag & Drop";
-                            dragArea.removeChild(imageContainer);
+                            dragArea.removeChild(container);
                         });
                     }
                     fileRead.readAsDataURL(file);
                 } else {
-                    alert('This file is not valid');
-                    dragArea.classList.remove('active');
+                    alert('Invalid file type');
                     dragText.innerText = "Drag & Drop";
+                    dragArea.classList.remove('active');
                 }
             }
-                $('#editCan').on('click', function(){
-                $('#editImg').remove();
-                $('#hasRemove').val(1)
-                $(this).remove();
-                imgUpload();
-            })
+    
+            // If edit image exists, allow cancelling it
+            let existingCancel = document.getElementById(`editCan-${fieldName}`);
+            let existingImg = document.getElementById(`editImg-${fieldName}`);
+            if (existingCancel && existingImg) {
+                existingCancel.addEventListener('click', function () {
+                    existingImg.remove();
+                    existingCancel.remove();
+                });
+            }
         }
-
-        imgUpload();
+    
+        // Initialize all drag areas
+        document.querySelectorAll('.AppBody').forEach(imgUpload);
     </script>
+    
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {

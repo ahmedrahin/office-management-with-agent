@@ -46,7 +46,8 @@
                                     Manage Student
                                 </div>
                                 <div>
-                                    <a href="{{ route('student-registration.create') }}" class="btn btn-primary">Register New</a>
+                                   
+                                    <a href="{{ route('student-registration.create') }}" class="btn btn-primary addnew"> <i class="ri-add-line"></i> Register New</a>
                                 </div>
                             </h4>
                             <div class="data">
@@ -61,10 +62,11 @@
                                                 <th>Sl.</th>
                                                 <th class="text-center">Image</th>
                                                 <th>Name</th>
-                                                <th>Total Courses</th>
+                                                <th>Country</th>
                                                 <th>Mobile no.</th>
                                                 <th>Payment</th>
                                                 <th>Added by</th>
+                                                <th>Admin Type</th>
                                                 <th>Register Date</th>
                                                 <th>Details</th>
                                                 <th>Action</th>
@@ -86,11 +88,10 @@
                                                         @endif
                                                     </td>
                                                     <td>{{$student->name}}</td>
-                                                    <td class="text-center">
-                                                        <span class="badge {{ $student->assign->count() == 0 ? 'bg-danger' : 'bg-success' }}">
-                                                            {{ $student->assign->count() }}
-                                                        </span>
+                                                    <td>
+                                                        {{ $student->country->name }}
                                                     </td>
+                                                   
                                                     
                                                     <td>{{ $student->mobile }}</td>
                                                         @php
@@ -114,7 +115,9 @@
                                                     <td class="text-center">
                                                         <span class="badge bg-dark">{{ optional($student->user)->name ?? 'N/A' }}</span>
                                                     </td>
-
+                                                    <td class="text-center">
+                                                        By {{ $student->user_type }}
+                                                    </td>
                                                     <td class="text-center">{{ $student->created_at->format('d M Y') }}</td>
 
                                                     <td class="text-center">
@@ -149,20 +152,27 @@
                     <div>
                         <label class="form-label">Filter By Date</label>
                         <!-- Filter Form -->
-                        <form method="GET" action="{{ route('student-registration.index') }}" id="filterForm">
+                        <form method="GET" action="{{ route('student-registration.index') }}" id="filterForm" style="margin-bottom: 30px;">
                             <div class="input-daterange input-group mb-2" id="datepicker6" data-date-format="dd M, yyyy" data-date-autoclose="true">
-                                <input type="text" class="form-control" name="start_date" placeholder="Start Date" 
-                                    value="{{ request('start_date') }}" autocomplete="off" />
-                                <input type="text" class="form-control" name="end_date" placeholder="End Date" 
-                                    value="{{ request('end_date') }}" autocomplete="off" />
+                                <input type="text" class="form-control" name="start_date" placeholder="Start Date" value="{{ request('start_date') }}" autocomplete="off" />
+                                <input type="text" class="form-control" name="end_date" placeholder="End Date" value="{{ request('end_date') }}" autocomplete="off" />
                             </div>
-                            <!-- Filter Button -->
+                        
+                            <div class="mb-2">
+                                <select name="user_type" class="form-select">
+                                    <option value="">Select admin type</option>
+                                    <option value="admin" {{ request('user_type') == 'admin' ? 'selected' : '' }}>By Admin</option>
+                                    <option value="agent" {{ request('user_type') == 'agent' ? 'selected' : '' }}>By Agent</option>
+                                </select>
+                            </div>
+                        
                             <button type="submit" class="btn btn-primary mt-2">Filter</button>
+                        
+                            @if(request('start_date') || request('end_date') || request('user_type'))
+                                <a href="{{ route('student-registration.index') }}" class="btn btn-secondary mt-2">Show All</a>
+                            @endif
                         </form>
                         
-                        @if(request('start_date') || request('end_date'))
-                            <a href="{{ route('student-registration.index') }}" class="btn btn-secondary mt-2">Show All</a>
-                        @endif
                     </div>
                 </div>
            </div>
