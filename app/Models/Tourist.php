@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class JobInquiry extends Model
+class Tourist extends Model
 {
     use HasFactory;
     protected $guarded = [];
@@ -22,8 +22,7 @@ class JobInquiry extends Model
         return $this->belongsTo(Agent::class);
     }
 
-    public function jobtype(){
-        return $this->belongsTo(JobType::class, 'job_type_id');
+    public function TouristPlace(){
+        return $this->belongsTo(TouristPlace::class, 'tourist_place_id');
     }
-
 }

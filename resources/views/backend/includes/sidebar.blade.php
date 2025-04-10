@@ -133,6 +133,21 @@
                         </li>
                     </ul>
                 </li>
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="ri-creative-commons-nc-line"></i>
+                        <span>Job inquiry</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li>
+                            <a href="{{route('inquiry.create')}}"> <i class="ri-arrow-right-s-fill"></i>Add new Person</a>
+                        </li>
+                        <li>
+                            <a href="{{route('inquiry.index')}}" style="padding-bottom: 0;"> <i class="ri-arrow-right-s-fill"></i>Register Person</a>
+                        </li>
+                    </ul>
+                </li>
                 
                 {{-- <li class="menu-title">Course Management</li>
                 <li>

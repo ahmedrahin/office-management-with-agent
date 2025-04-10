@@ -91,9 +91,9 @@ class StudentController extends Controller
         $data->university_id = $request->university_id;
         $data->subject_id = $request->subject_id;
         $data->total_cost = $request->total_cost;
-                            $data->processing_fees = $request->processing_fees
-                            ? (float) str_replace(',', '', $request->processing_fees)
-                            : 0;
+        $data->processing_fees = $request->processing_fees
+        ? (float) str_replace(',', '', $request->processing_fees)
+        : 0;
     
 
         $data->name = $request->name;

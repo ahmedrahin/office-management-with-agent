@@ -20,8 +20,11 @@ use App\Http\Controllers\AdminController\TouristController;
 use App\Http\Controllers\AdminController\UniversityController;
 use App\Http\Controllers\AdminController\SubjectController;
 use App\Http\Controllers\AdminController\JobInquiryController;
+use App\Http\Controllers\AdminController\TourTravelController;
 use App\Models\Employees;
+use App\Models\JobType;
 use App\Models\Subject;
+use App\Models\TouristPlace;
 use App\Models\University;
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +57,14 @@ Route::get('/get-university/{id}', function($id){
 
 Route::get('/get-subject/{id}', function($id){
     return response()->json(Subject::where('university_id', $id)->where('status',1)->get());
+});
+
+Route::get('/get-job/{id}', function($id){
+    return response()->json(JobType::where('country_id', $id)->where('status',1)->get());
+});
+
+Route::get('/get-tour-place/{id}', function($id){
+    return response()->json(TouristPlace::where('country_id', $id)->where('status',1)->get());
 });
 
 //admin dashboard
@@ -151,6 +162,12 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'check.status']], f
 
     // student
     Route::resource('/student-registration', StudentController::class);
+
+    // inquriy
+    Route::resource('/inquiry', JobInquiryController::class);
+
+    // tourist
+    Route::resource('/tour-travel', TourTravelController::class);
 
     // course
     Route::resource('/course', CourseController::class);
