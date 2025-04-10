@@ -36,14 +36,14 @@
                         <div class="card-body">
                             <h4 class="card-title" style="display: flex;justify-content: space-between;align-items:center;">
                                 <div>
-                                    Edit Inquiry Person
+                                    Edit Tourist
                                 </div>
                                 <div>
-                                    <a href="{{ route('inquiry.index') }}" class="btn btn-primary addnew"> <i class="ri-arrow-left-line"></i> View All</a>
+                                    <a href="{{ route('tour-travel.index') }}" class="btn btn-primary addnew"> <i class="ri-arrow-left-line"></i> View All</a>
                                 </div>
                             </h4>
 
-                            <form action="{{route('inquiry.update', $student->id)}}" method="POST" class="needs-validation"  novalidate enctype="multipart/form-data">
+                            <form action="{{route('tour-travel.update', $student->id)}}" method="POST" class="needs-validation"  novalidate enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
 
@@ -199,9 +199,9 @@
 
                                     <div class="col-md-3">
                                         <div class="mb-3">
-                                            <label for="job_type_id" class="form-label">Job Type</label>
-                                            <select name="job_type_id" id="job_type_id" class="form-control select2" required>
-                                                <option value="">Select a job type</option>
+                                            <label for="tourist_place_id" class="form-label">Tour Place</label>
+                                            <select name="tourist_place_id" id="tourist_place_id" class="form-control select2" required>
+                                                <option value="">Select a tour place</option>
                                             </select>
                                             <div id="universityErr" class="invalid-feedback"></div>
                                         </div>
@@ -277,7 +277,7 @@
         $(document).ready(function () {
             // Define selected values from Blade/PHP
             var selectedCountryId = "{{ $student->country_id }}";
-            var selectedUniversityId = "{{ $student->job_type_id }}";
+            var selectedUniversityId = "{{ $student->tourist_place_id }}";
     
             // Country change: Load universities
             $('#country_id').on('change', function () {
@@ -285,27 +285,26 @@
     
                 if (countryId) {
                     $.ajax({
-                        url: '/get-job/' + countryId,
+                        url: '/get-tour-place/' + countryId,
                         type: 'GET',
                         dataType: 'json',
                         success: function (data) {
-                            $('#job_type_id').empty().append('<option value="">Select a job type</option>');
-                            $.each(data, function (key, university) {
-                                var selected = (university.id == selectedUniversityId) ? 'selected' : '';
-                                $('#job_type_id').append('<option value="' + university.id + '" ' + selected + '>' + university.name + '</option>');
+                            $('#tourist_place_id').empty().append('<option value="">Select a tour place</option>');
+                            $.each(data, function (key, data) {
+                                $('#tourist_place_id').append('<option value="' + data.id + '">' + data.name + '</option>');
                             });
     
                             // Trigger change to load subjects if editing
                             if (selectedUniversityId) {
-                                $('#job_type_id').trigger('change');
+                                $('#tourist_place_id').trigger('change');
                             }
                         },
                         error: function () {
-                            alert('Error loading universities');
+                            alert('Error loading ');
                         }
                     });
                 } else {
-                    $('#job_type_id').empty().append('<option value="">Select a job type</option>');
+                    $('#tourist_place_id').empty().append('<option value="">Select a tour place</option>');
                 }
             });
     

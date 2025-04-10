@@ -1,6 +1,6 @@
 @extends('backend.layout.template')
 @section('page-title')
-    <title>Job Inquiry Register Form || {{ \App\Models\Settings::site_title() }}</title>
+    <title>Tourist Register Form || {{ \App\Models\Settings::site_title() }}</title>
 @endsection
 
 @section('page-css')
@@ -22,7 +22,7 @@
                         <div class="page-title">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="{{ url('/') }}">{{ \App\Models\Settings::site_title() }}</a></li>
-                                <li class="breadcrumb-item active">Job Inquiry Register Form</li>
+                                <li class="breadcrumb-item active">Tourist Register Form</li>
                             </ol>
                         </div>
                     </div>
@@ -36,14 +36,14 @@
                         <div class="card-body">
                             <h4 class="card-title" style="display: flex;justify-content: space-between;align-items:center;">
                                 <div>
-                                    Add New Job Inquiry Person
+                                    Add New Tourist
                                 </div>
                                 <div>
-                                    <a href="{{ route('inquiry.index') }}" class="btn btn-primary addnew"> <i class="ri-arrow-left-line"></i> View All</a>
+                                    <a href="{{ route('tour-travel.index') }}" class="btn btn-primary addnew"> <i class="ri-arrow-left-line"></i> View All</a>
                                 </div>
                             </h4>
 
-                            <form action="{{route('inquiry.store')}}" method="POST" class="needs-validation"  novalidate enctype="multipart/form-data">
+                            <form action="{{route('tour-travel.store')}}" method="POST" class="needs-validation"  novalidate enctype="multipart/form-data">
                                 @csrf
 
                                 <div class="row">
@@ -200,9 +200,9 @@
 
                                     <div class="col-md-3">
                                         <div class="mb-3">
-                                            <label for="job_type_id" class="form-label">Job Type</label>
-                                            <select name="job_type_id" id="job_type_id" class="form-control select2" required>
-                                                <option value="">Select a job type</option>
+                                            <label for="tourist_place_id" class="form-label">Tour Place</label>
+                                            <select name="tourist_place_id" id="tourist_place_id" class="form-control select2" required>
+                                                <option value="">Select a tour place</option>
                                             </select>
                                             <div id="universityErr" class="invalid-feedback"></div>
                                         </div>
@@ -316,13 +316,13 @@
         
                     if (countryId) {
                         $.ajax({
-                            url: '/get-job/' + countryId,
+                            url: '/get-tour-place/' + countryId,
                             type: 'GET',
                             dataType: 'json',
                             success: function (data) {
-                                $('#job_type_id').empty().append('<option value="">Select a job type</option>');
+                                $('#tourist_place_id').empty().append('<option value="">Select a tour place</option>');
                                 $.each(data, function (key, data) {
-                                    $('#job_type_id').append('<option value="' + data.id + '">' + data.name + '</option>');
+                                    $('#tourist_place_id').append('<option value="' + data.id + '">' + data.name + '</option>');
                                 });
                             },
                             error: function () {
@@ -330,7 +330,7 @@
                             }
                         });
                     } else {
-                        $('#job_type_id').empty().append('<option value="">Select a job type</option>');
+                        $('#tourist_place_id').empty().append('<option value="">Select a tour place</option>');
                     }
                 });
             });
@@ -368,7 +368,7 @@
                             });
 
                             setTimeout(() => {
-                                window.location = ("{{ route('inquiry.index') }}");
+                                window.location = ("{{ route('tour-travel.index') }}");
                             }, 1000);
                         },
                         error: function(xhr, textStatus, errorThrown) {
@@ -404,7 +404,7 @@
                                     $('#countryErr').html(value);
                                 }
 
-                                if (key === 'job_type_id') {
+                                if (key === 'tourist_place_id') {
                                     $('#universityErr').html(value);
                                 }
                             });
