@@ -1,6 +1,6 @@
-@extends('backend.layout.template')
+@extends('agent.layout.template')
 @section('page-title')
-    <title>Edit Register Form || {{ \App\Models\Settings::site_title() }}</title>
+    Edit Register Form 
 @endsection
 
 @section('page-css')
@@ -39,11 +39,11 @@
                                     Edit Tourist
                                 </div>
                                 <div>
-                                    <a href="{{ route('tour-travel.index') }}" class="btn btn-primary addnew"> <i class="ri-arrow-left-line"></i> View All</a>
+                                    <a href="{{ route('agent-tourist.index') }}" class="btn btn-primary addnew"> <i class="ri-arrow-left-line"></i> View All</a>
                                 </div>
                             </h4>
 
-                            <form action="{{route('tour-travel.update', $student->id)}}" method="POST" class="needs-validation"  novalidate enctype="multipart/form-data">
+                            <form action="{{route('agent-tourist.update', $student->id)}}" method="POST" class="needs-validation"  novalidate enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
 
@@ -51,7 +51,7 @@
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label for="validationName" class="form-label">Name</label>
-                                            <input type="text" class="form-control" id="validationName" placeholder="Student Name" name="name" value="{{ $student->name }}" required>
+                                            <input type="text" class="form-control" id="validationName" placeholder="Tourist Name" name="name" value="{{ $student->name }}" required>
                                             <div class="invalid-feedback"></div>
                                         </div>
                                     </div>
@@ -218,7 +218,7 @@
                                 <div class="row">
                                     @php
                                         $images = [
-                                            'image' => 'Student Image',
+                                            'image' => 'Tourist Image',
                                             'front_image' => 'Front Image',
                                             'back_image' => 'Back Image',
                                             'passport_image' => 'Passport Image',
@@ -347,7 +347,7 @@
                         });
 
                         setTimeout(() => {
-                            window.location = ("{{ route('inquiry.index') }}");
+                            window.location = ("{{ route('agent-tourist.index') }}");
                         }, 1000);
                     },
                     error: function(xhr, textStatus, errorThrown) {

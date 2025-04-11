@@ -48,6 +48,7 @@ return new class extends Migration
             $table->string('temporary_division')->nullable();
             $table->string('temporary_district')->nullable();
             $table->string('temporary_mobile')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

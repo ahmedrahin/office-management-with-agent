@@ -1,6 +1,6 @@
-@extends('backend.layout.template')
+@extends('agent.layout.template')
 @section('page-title')
-    <title>Edit Register Form || {{ \App\Models\Settings::site_title() }}</title>
+   Edit Register Form 
 @endsection
 
 @section('page-css')
@@ -36,14 +36,14 @@
                         <div class="card-body">
                             <h4 class="card-title" style="display: flex;justify-content: space-between;align-items:center;">
                                 <div>
-                                    Edit Tourist
+                                    Edit Inquiry Person
                                 </div>
                                 <div>
-                                    <a href="{{ route('tour-travel.index') }}" class="btn btn-primary addnew"> <i class="ri-arrow-left-line"></i> View All</a>
+                                    <a href="{{ route('inquiry.index') }}" class="btn btn-primary addnew"> <i class="ri-arrow-left-line"></i> View All</a>
                                 </div>
                             </h4>
 
-                            <form action="{{route('tour-travel.update', $student->id)}}" method="POST" class="needs-validation"  novalidate enctype="multipart/form-data">
+                            <form action="{{route('agent-person.update', $student->id)}}" method="POST" class="needs-validation"  novalidate enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
 
@@ -51,7 +51,7 @@
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label for="validationName" class="form-label">Name</label>
-                                            <input type="text" class="form-control" id="validationName" placeholder="Student Name" name="name" value="{{ $student->name }}" required>
+                                            <input type="text" class="form-control" id="validationName" placeholder="Person Name" name="name" value="{{ $student->name }}" required>
                                             <div class="invalid-feedback"></div>
                                         </div>
                                     </div>
@@ -199,9 +199,9 @@
 
                                     <div class="col-md-3">
                                         <div class="mb-3">
-                                            <label for="tourist_place_id" class="form-label">Tour Place</label>
-                                            <select name="tourist_place_id" id="tourist_place_id" class="form-control select2" required>
-                                                <option value="">Select a tour place</option>
+                                            <label for="job_type_id" class="form-label">Job Type</label>
+                                            <select name="job_type_id" id="job_type_id" class="form-control select2" required>
+                                                <option value="">Select a job type</option>
                                             </select>
                                             <div id="universityErr" class="invalid-feedback"></div>
                                         </div>
@@ -218,7 +218,7 @@
                                 <div class="row">
                                     @php
                                         $images = [
-                                            'image' => 'Student Image',
+                                            'image' => 'Person Image',
                                             'front_image' => 'Front Image',
                                             'back_image' => 'Back Image',
                                             'passport_image' => 'Passport Image',
@@ -277,7 +277,7 @@
         $(document).ready(function () {
             // Define selected values from Blade/PHP
             var selectedCountryId = "{{ $student->country_id }}";
-            var selectedUniversityId = "{{ $student->tourist_place_id }}";
+            var selectedUniversityId = "{{ $student->job_type_id }}";
     
             // Country change: Load universities
             $('#country_id').on('change', function () {
@@ -285,26 +285,27 @@
     
                 if (countryId) {
                     $.ajax({
-                        url: '/get-tour-place/' + countryId,
+                        url: '/get-job/' + countryId,
                         type: 'GET',
                         dataType: 'json',
                         success: function (data) {
-                            $('#tourist_place_id').empty().append('<option value="">Select a tour place</option>');
-                            $.each(data, function (key, data) {
-                                $('#tourist_place_id').append('<option value="' + data.id + '">' + data.name + '</option>');
+                            $('#job_type_id').empty().append('<option value="">Select a job type</option>');
+                            $.each(data, function (key, university) {
+                                var selected = (university.id == selectedUniversityId) ? 'selected' : '';
+                                $('#job_type_id').append('<option value="' + university.id + '" ' + selected + '>' + university.name + '</option>');
                             });
     
                             // Trigger change to load subjects if editing
                             if (selectedUniversityId) {
-                                $('#tourist_place_id').trigger('change');
+                                $('#job_type_id').trigger('change');
                             }
                         },
                         error: function () {
-                            alert('Error loading ');
+                            alert('Error loading universities');
                         }
                     });
                 } else {
-                    $('#tourist_place_id').empty().append('<option value="">Select a tour place</option>');
+                    $('#job_type_id').empty().append('<option value="">Select a job type</option>');
                 }
             });
     
@@ -347,7 +348,7 @@
                         });
 
                         setTimeout(() => {
-                            window.location = ("{{ route('inquiry.index') }}");
+                            window.location = ("{{ route('agent-person.index') }}");
                         }, 1000);
                     },
                     error: function(xhr, textStatus, errorThrown) {
@@ -383,7 +384,7 @@
                                 $('#countryErr').html(value);
                             }
 
-                            if (key === 'tourist_place_id') {
+                            if (key === 'university_id') {
                                 $('#universityErr').html(value);
                             }
                         });

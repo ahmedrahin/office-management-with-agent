@@ -3,22 +3,17 @@
 namespace App\Http\Controllers\Agent;
 
 use App\Http\Controllers\Controller;
-use App\Models\Registation;
-use App\Models\Country;
 use Illuminate\Http\Request;
-use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\Gd\Driver;
+use App\Models\JobInquiry;
 use Illuminate\Support\Facades\File;
 use Carbon\Carbon;
+use App\Models\Country;
 
-class StudentController extends Controller
+class JobInquiryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
-        $query = Registation::where('user_type','agent')->where('agent_id',auth()->user()->id)->latest();
+        $query = JobInquiry::where('user_type','agent')->where('agent_id',auth()->user()->id)->latest();
 
         if ($request->filled('start_date') && $request->filled('end_date')) {
             $startDate = Carbon::createFromFormat('d M, Y', $request->start_date)->format('Y-m-d');
@@ -30,23 +25,15 @@ class StudentController extends Controller
 
         $students = $query->get();
 
-        return view('agent.pages.student.manage', compact('students'));
+        return view('agent.pages.inquiry.manage', compact('students'));
     }
 
-
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {   
         $countries = Country::where('status',1)->latest()->get();
-        return view('agent.pages.student.add', compact('countries'));
+        return view('agent.pages.inquiry.add', compact('countries'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         // dd($request->all());
@@ -57,14 +44,14 @@ class StudentController extends Controller
             'birth'  => 'nullable',
             'gender'  => 'required',
             'country_id'  => 'required',
-            'university_id'  => 'required',
+            'job_type_id'  => 'required',
             'total_cost'  => 'required',
             'image' => 'required|image',
             'front_image' => 'required|image',
             'passport_image' => 'required|image',
         ]);
 
-        $data = new Registation();
+        $data = new JobInquiry();
 
         // image 
         $fields = [
@@ -78,19 +65,14 @@ class StudentController extends Controller
             if ($request->hasFile($field)) {
                 $file = $request->file($field);
                 $fileName = time() . '_' . $field . $file->getClientOriginalName();
-                $file->move(public_path('/backend/images/student'), $fileName);
-                $data->$column = '/backend/images/student/' . $fileName;
+                $file->move(public_path('/backend/images/person'), $fileName);
+                $data->$column = '/backend/images/person/' . $fileName;
             }
         }
 
         $data->country_id = $request->country_id;
-        $data->university_id = $request->university_id;
-        $data->subject_id = $request->subject_id;
+        $data->job_type_id = $request->job_type_id;
         $data->total_cost = $request->total_cost;
-        $data->processing_fees = $request->processing_fees
-        ? (float) str_replace(',', '', $request->processing_fees)
-        : 0;
-    
 
         $data->name = $request->name;
         $data->email = $request->email;
@@ -119,7 +101,7 @@ class StudentController extends Controller
      */
     public function show(string $id)
     {
-        $student = Registation::with('assign')->find($id);
+        $student = JobInquiry::find($id);
 
         $totalCourse = $student->assign->count();
         $totalPaid   = $student->assign->flatMap->payment->sum('payment');
@@ -137,9 +119,9 @@ class StudentController extends Controller
      */
     public function edit(string $id)
     {
-        $student = Registation::find($id);
+        $student = JobInquiry::find($id);
         $countries = Country::where('status',1)->latest()->get();
-        return view('agent.pages.student.edit', compact('student', 'countries'));
+        return view('agent.pages.inquiry.edit', compact('student', 'countries'));
     }
 
     /**
@@ -154,13 +136,12 @@ class StudentController extends Controller
             'birth'  => 'nullable',
             'gender'  => 'required',
             'country_id'  => 'required',
-            'university_id'  => 'required',
+            'job_type_id'  => 'required',
             'total_cost'  => 'required',
-            
         ]);
 
 
-        $data = Registation::findOrFail($id);
+        $data = JobInquiry::findOrFail($id);
 
         $fields = [
             'image' => 'image',
@@ -173,19 +154,14 @@ class StudentController extends Controller
             if ($request->hasFile($field)) {
                 $file = $request->file($field);
                 $fileName = time() . '_' . $field . $file->getClientOriginalName();
-                $file->move(public_path('/backend/images/student'), $fileName);
-                $data->$column = '/backend/images/student/' . $fileName;
+                $file->move(public_path('/backend/images/person'), $fileName);
+                $data->$column = '/backend/images/person/' . $fileName;
             }
         }
 
         $data->country_id = $request->country_id;
-        $data->university_id = $request->university_id;
-        $data->subject_id = $request->subject_id;
+        $data->job_type_id = $request->job_type_id;
         $data->total_cost = $request->total_cost;
-        $data->processing_fees = $request->processing_fees
-                                ? (float) str_replace(',', '', $request->processing_fees)
-                                : 0;
-
 
         // Update Student Data
         $data->name = $request->name;
@@ -209,13 +185,9 @@ class StudentController extends Controller
 
     }
 
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        $delete = Registation::find($id);
+        $delete = JobInquiry::find($id);
         if ($delete) {
             $delete->delete();
             // delete employee image
@@ -223,10 +195,10 @@ class StudentController extends Controller
                 File::delete($delete->image);
             }
             return response()->json([
-                'message' => 'Student deleted successfully.',
+                'message' => 'Person deleted successfully.',
             ]);
         } else {
-            return response()->json(['error' => 'Student not found.'], 404);
+            return response()->json(['error' => 'data not found.'], 404);
         }
     }
 }

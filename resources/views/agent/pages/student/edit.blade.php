@@ -1,6 +1,6 @@
-@extends('backend.layout.template')
+@extends('agent.layout.template')
 @section('page-title')
-    <title>Edit Register Form || {{ \App\Models\Settings::site_title() }}</title>
+   Edit Student Register Form 
 @endsection
 
 @section('page-css')
@@ -36,14 +36,14 @@
                         <div class="card-body">
                             <h4 class="card-title" style="display: flex;justify-content: space-between;align-items:center;">
                                 <div>
-                                    Edit Tourist
+                                    Edit Student
                                 </div>
                                 <div>
-                                    <a href="{{ route('tour-travel.index') }}" class="btn btn-primary addnew"> <i class="ri-arrow-left-line"></i> View All</a>
+                                    <a href="{{ route('student-registration.index') }}" class="btn btn-primary addnew"> <i class="ri-arrow-left-line"></i> View All</a>
                                 </div>
                             </h4>
 
-                            <form action="{{route('tour-travel.update', $student->id)}}" method="POST" class="needs-validation"  novalidate enctype="multipart/form-data">
+                            <form action="{{route('student.update', $student->id)}}" method="POST" class="needs-validation"  novalidate enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
 
@@ -199,15 +199,28 @@
 
                                     <div class="col-md-3">
                                         <div class="mb-3">
-                                            <label for="tourist_place_id" class="form-label">Tour Place</label>
-                                            <select name="tourist_place_id" id="tourist_place_id" class="form-control select2" required>
-                                                <option value="">Select a tour place</option>
+                                            <label for="university_id" class="form-label">University</label>
+                                            <select name="university_id" id="university_id" class="form-control select2" required>
+                                                <option value="">Select a university</option>
                                             </select>
                                             <div id="universityErr" class="invalid-feedback"></div>
                                         </div>
                                     </div>
 
                                     <div class="col-md-3">
+                                        <label class="form-label">Subject</label>
+                                        <select name="subject_id" id="subject_id" class="form-control select2" required>
+                                            <option value="">Select a subject</option>
+                                        </select>
+                                    </div>
+                                
+                                    {{-- Price --}}
+                                    <div class="col-md-3">
+                                        <label class="form-label">Processing Fees</label>
+                                        <input type="text" name="processing_fees" id="subject_price" class="form-control" readonly>
+                                    </div>
+
+                                    <div class="col-12">
                                         <label class="form-label">Total Cost</label>
                                         <input type="text" name="total_cost" id="total_cost" class="form-control" value="{{ $student->total_cost }}" required>
                                         <div class="invalid-feedback"></div>
@@ -277,7 +290,8 @@
         $(document).ready(function () {
             // Define selected values from Blade/PHP
             var selectedCountryId = "{{ $student->country_id }}";
-            var selectedUniversityId = "{{ $student->tourist_place_id }}";
+            var selectedUniversityId = "{{ $student->university_id }}";
+            var selectedSubjectId = "{{ $student->subject_id }}";
     
             // Country change: Load universities
             $('#country_id').on('change', function () {
@@ -285,30 +299,62 @@
     
                 if (countryId) {
                     $.ajax({
-                        url: '/get-tour-place/' + countryId,
+                        url: '/get-university/' + countryId,
                         type: 'GET',
                         dataType: 'json',
                         success: function (data) {
-                            $('#tourist_place_id').empty().append('<option value="">Select a tour place</option>');
-                            $.each(data, function (key, data) {
-                                $('#tourist_place_id').append('<option value="' + data.id + '">' + data.name + '</option>');
+                            $('#university_id').empty().append('<option value="">Select a university</option>');
+                            $.each(data, function (key, university) {
+                                var selected = (university.id == selectedUniversityId) ? 'selected' : '';
+                                $('#university_id').append('<option value="' + university.id + '" ' + selected + '>' + university.name + '</option>');
                             });
     
                             // Trigger change to load subjects if editing
                             if (selectedUniversityId) {
-                                $('#tourist_place_id').trigger('change');
+                                $('#university_id').trigger('change');
                             }
                         },
                         error: function () {
-                            alert('Error loading ');
+                            alert('Error loading universities');
                         }
                     });
                 } else {
-                    $('#tourist_place_id').empty().append('<option value="">Select a tour place</option>');
+                    $('#university_id').empty().append('<option value="">Select a university</option>');
                 }
             });
     
-           
+            // University change: Load subjects
+            $('#university_id').on('change', function () {
+                let universityId = $(this).val();
+                $('#subject_id').empty().append('<option value="">Loading...</option>');
+                $('#subject_price').val('');
+    
+                if (universityId) {
+                    $.get('/get-subject/' + universityId, function (data) {
+                        $('#subject_id').empty().append('<option value="">Select a subject</option>');
+                        $.each(data, function (index, subject) {
+                            var selected = (subject.id == selectedSubjectId) ? 'selected' : '';
+                            $('#subject_id').append('<option value="' + subject.id + '" data-price="' + subject.price + '" ' + selected + '>' + subject.name + '</option>');
+                        });
+    
+                        // If editing, set price of selected subject
+                        if (selectedSubjectId) {
+                            let selectedOption = $('#subject_id').find('option:selected');
+                            let selectedPrice = selectedOption.data('price') || '';
+                            $('#subject_price').val(selectedPrice);
+                        }
+                    });
+                } else {
+                    $('#subject_id').empty().append('<option value="">Select a subject</option>');
+                }
+            });
+    
+            // Subject change: Show price
+            $('#subject_id').on('change', function () {
+                let selectedPrice = $(this).find(':selected').data('price') || '';
+                $('#subject_price').val(selectedPrice);
+            });
+    
             // ======== On Page Load (Edit Page) =========
             if (selectedCountryId) {
                 $('#country_id').val(selectedCountryId).trigger('change');
@@ -347,7 +393,7 @@
                         });
 
                         setTimeout(() => {
-                            window.location = ("{{ route('inquiry.index') }}");
+                            window.location = ("{{ route('student.index') }}");
                         }, 1000);
                     },
                     error: function(xhr, textStatus, errorThrown) {
@@ -383,7 +429,7 @@
                                 $('#countryErr').html(value);
                             }
 
-                            if (key === 'tourist_place_id') {
+                            if (key === 'university_id') {
                                 $('#universityErr').html(value);
                             }
                         });

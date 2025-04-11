@@ -51,7 +51,7 @@ return new class extends Migration
             $table->string('temporary_mobile')->nullable();
 
             $table->string('emp_name')->nullable();
-        
+            $table->softDeletes();
             $table->timestamps();
         });
     }

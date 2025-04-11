@@ -241,26 +241,40 @@
                                 </a>
                             </li>
 
+        
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-apps" role="button"
                                 >
-                                    <i class="ri-apps-2-line me-2"></i>Apps <div class="arrow-down"></div>
+                                    <i class="ri-apps-2-line me-2"></i>Student <div class="arrow-down"></div>
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="topnav-apps">
-
-                                    <a href="calendar.html" class="dropdown-item">Calendar</a>
-                                    <div class="dropdown">
-                                        <a class="dropdown-item dropdown-toggle arrow-none" href="#" id="topnav-email"
-                                            role="button">
-                                            Email <div class="arrow-down"></div>
-                                        </a>
-                                        <div class="dropdown-menu" aria-labelledby="topnav-email">
-                                            <a href="email-inbox.html" class="dropdown-item">Inbox</a>
-                                            <a href="email-read.html" class="dropdown-item">Read Email</a>
-                                        </div>
-                                    </div>
+                                    <a href="{{ route('student.create') }}" class="dropdown-item">Add New Student</a>
+                                    <a href="{{ route('student.index') }}" class="dropdown-item">Your Student List</a>
                                 </div>
                             </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-apps" role="button"
+                                >
+                                    <i class="ri-apps-2-line me-2"></i>Job Inquiry <div class="arrow-down"></div>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="topnav-apps">
+                                    <a href="{{ route('agent-person.create') }}" class="dropdown-item">Add New Person</a>
+                                    <a href="{{ route('agent-person.index') }}" class="dropdown-item">Your Person List</a>
+                                </div>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-apps" role="button"
+                                >
+                                    <i class="ri-apps-2-line me-2"></i>Tourist <div class="arrow-down"></div>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="topnav-apps">
+                                    <a href="{{ route('agent-tourist.create') }}" class="dropdown-item">Add New Tourist</a>
+                                    <a href="{{ route('agent-tourist.index') }}" class="dropdown-item">Your Tourist List</a>
+                                </div>
+                            </li>
+
 
                         </ul>
                     </div>
