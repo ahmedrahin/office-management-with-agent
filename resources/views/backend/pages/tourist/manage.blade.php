@@ -62,7 +62,7 @@
                                                 <th class="text-center">Country Name</th>
                                                 <th class="text-center">Created_at</th>
                                                 <th class="text-center">Created_by</th>
-                                                <th class="text-center">Total Person</th>
+                                                <th class="text-center">Total Tourist</th>
                                                 <th class="text-center">Status</th>
                                                 <th>Action</th>
                                             </tr>
@@ -87,7 +87,13 @@
                                                             {{ optional($v->user)->name ?? 'N/A' }}
                                                         </a>
                                                     </td>
-                                                    <td class="text-center"></td>
+                                                    <td class="text-center">
+                                                        @if( $v->tourist->count() > 0 )
+                                                            <span class="badge bg-success">{{ $v->tourist->count() }}</span>
+                                                        @else
+                                                            <span class="badge bg-danger">0</span>
+                                                        @endif
+                                                    </td>
                                                     
                                                     <td align="middle">
                                                         @php
@@ -107,7 +113,7 @@
                                                                 <i class="ri-edit-2-fill"></i>
                                                             </a>
                                                         </button>
-                                                        <button class="deleteButton" data-id="{{ $v->id }}">
+                                                        <button class="deleteButton" data-id="{{ $v->id }}" style="opacity: .5" >
                                                             <i class="ri-delete-bin-2-fill"></i>
                                                         </button>
                                                     </td>

@@ -32,7 +32,7 @@
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="dripicons-user-group"></i>
+                        <i class="ri-shield-user-line"></i>
                         <span>Admin</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -56,7 +56,7 @@
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="dripicons-user-group"></i>
+                        <i class="ri-user-2-fill"></i>
                         <span>Employees</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -121,7 +121,7 @@
                 <li class="menu-title">Abroad Setup Management</li>
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="ri-creative-commons-nc-line"></i>
+                        <i class="ri-account-circle-line"></i>
                         <span>Student Management</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -136,7 +136,7 @@
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="ri-creative-commons-nc-line"></i>
+                        <i class="ri-user-heart-line"></i>
                         <span>Job inquiry</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -151,7 +151,7 @@
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="ri-creative-commons-nc-line"></i>
+                        <i class=" fas fa-plane"></i>
                         <span>Tour & Travel</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -175,7 +175,7 @@
                 <li class="menu-title">Placement Settings</li>
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="ri-creative-commons-nc-line"></i>
+                        <i class=" ri-earth-line"></i>
                         <span>Countries</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -187,7 +187,7 @@
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="ri-creative-commons-nc-line"></i>
+                        <i class="ri-suitcase-line"></i>
                         <span>Job Type</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -198,7 +198,7 @@
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="ri-creative-commons-nc-line"></i>
+                        <i class="ri-user-location-line"></i>
                         <span>Tourist Places</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -209,7 +209,7 @@
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="ri-creative-commons-nc-line"></i>
+                        <i class="ri-hotel-line"></i>
                         <span>University</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">

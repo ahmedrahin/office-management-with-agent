@@ -61,7 +61,7 @@
                                                 <th>Name</th>
                                                 <th class="text-center">Created_at</th>
                                                 <th class="text-center">Created_by</th>
-                                                <th class="text-center">Visitors</th>
+                                                <th class="text-center">Total Visitors</th>
                                                 <th class="text-center">Job Types</th>
                                                 <th class="text-center">Tourist Places</th>
                                                 <th class="text-center">University</th>
@@ -85,7 +85,16 @@
                                                             {{ optional($v->user)->name ?? 'N/A' }}
                                                         </a>
                                                     </td>
-                                                    <td class="text-center"></td>
+                                                    <td class="text-center">
+                                                        @php
+                                                            $data =  $v->student->count() + $v->person->count() + $v->tourist->count() ;
+                                                        @endphp
+                                                        @if( $data > 0 )
+                                                            <span class="badge bg-success">{{ $data }}</span>
+                                                        @else
+                                                            <span class="badge bg-danger">0</span>
+                                                        @endif
+                                                    </td>
                                                     <td class="text-center">
                                                         @if( $v->jobTypes->count() > 0 )
                                                             <span class="badge bg-success">{{ $v->jobTypes->count() }}</span>
@@ -121,12 +130,14 @@
                                                     </td>
                                                     <td class="action">
                                                         <button>
+                                                            <a href="{{route('country.show',$v->id)}}" target="_blank">
+                                                                <i class="fa fa-eye" aria-hidden="true"></i>
+                                                            </a>
+                                                        </button>
+                                                        <button>
                                                             <a href="{{route('country.edit',$v->id)}}">
                                                                 <i class="ri-edit-2-fill"></i>
                                                             </a>
-                                                        </button>
-                                                        <button class="deleteButton" data-id="{{ $v->id }}">
-                                                            <i class="ri-delete-bin-2-fill"></i>
                                                         </button>
                                                     </td>
                                                 </tr>

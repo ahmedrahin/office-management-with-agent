@@ -35,4 +35,16 @@ class Agent extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function student(){
+        return $this->hasMany(Registation::class);
+    }
+
+    public function person(){
+        return $this->hasMany(JobInquiry::class);
+    }
+
+    public function tourist(){
+        return $this->hasMany(Tourist::class);
+    }
 }

@@ -18,4 +18,12 @@ class University extends Model
     public function country(){
         return $this->belongsTo(Country::class);
     }
+
+    public function student(){
+        return $this->hasMany(Registation::class);
+    }
+
+    public function subject(){
+        return $this->hasMany(Subject::class);
+    }
 }

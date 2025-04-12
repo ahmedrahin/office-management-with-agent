@@ -40,6 +40,10 @@ class SubjectController extends Controller
         return response()->json(['message' => 'Subject saved successfully']);
     }
 
+    public function show(string $id){
+        
+    }
+
     public function edit(string $id){
         $data = Subject::find($id);
         $universitys = University::where('status',1)->latest()->get();

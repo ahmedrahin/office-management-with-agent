@@ -43,7 +43,7 @@
 
                             <h4 class="card-title" style="display: flex;justify-content: space-between;align-items:center;">
                                 <div>
-                                    Manage Inquiry Person
+                                    Manage Inquiry Person ({{ $students->count() }})
                                 </div>
                                 <div>
                                    
@@ -63,10 +63,10 @@
                                                 <th class="text-center">Image</th>
                                                 <th>Name</th>
                                                 <th>Country</th>
+                                                <th>Selected Job</th>
                                                 <th>Mobile no.</th>
-                                                <th>Payment</th>
+                                                <th style="text-align: center;">Total Cost</th>
                                                 <th>Added by</th>
-                                                <th>Admin Type</th>
                                                 <th>Register Date</th>
                                                 <th>Details</th>
                                                 <th>Action</th>
@@ -91,18 +91,26 @@
                                                     <td>
                                                         {{ $student->country->name }}
                                                     </td>
-                                                   
+                                                   <td>
+                                                    {{ $student->jobType->name }}
+                                                   </td>
                                                     
                                                     <td>{{ $student->mobile }}</td>
                                                     
-                                                    <td></td>
+                                                    <td align="middle">
+                                                        {{ $student->total_cost }}BDT
+                                                    </td>
 
                                                     <td class="text-center">
-                                                        <span class="badge bg-dark">{{ optional($student->user)->name ?? 'N/A' }}</span>
+                                                        <span class="badge bg-dark">
+                                                            @if( $student->user_id )
+                                                                {{ optional($student->user)->name ?? 'N/A' }}
+                                                            @else
+                                                                {{ optional($student->agent)->name ?? 'N/A' }}
+                                                            @endif
+                                                        </span>
                                                     </td>
-                                                    <td class="text-center">
-                                                        By {{ $student->user_type }}
-                                                    </td>
+                                                   
                                                     <td class="text-center">{{ $student->created_at->format('d M Y') }}</td>
 
                                                     <td class="text-center">
@@ -181,7 +189,7 @@
                 // Trigger SweetAlert confirmation dialog
                 Swal.fire({
                     title: 'Are you sure?',
-                    text: 'You will not be able to recover this student data!',
+                    text: 'You will not be able to recover this person data!',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Yes, delete it!',
@@ -194,7 +202,7 @@
                         // Send an AJAX request to delete the employee
                         $.ajax({
                             type: 'DELETE',
-                            url: '{{ route("student-registration.show", ":id") }}'.replace(':id', id),
+                            url: '{{ route("inquiry.destroy", ":id") }}'.replace(':id', id),
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
@@ -205,13 +213,13 @@
                                 });
 
                                 setTimeout(() => {
-                                    Swal.fire('Deleted!', 'Student has been deleted.', 'success');
+                                    Swal.fire('Deleted!', 'Person has been deleted.', 'success');
                                 }, 1000);
 
                             },
                             error: function(xhr, textStatus, errorThrown) {
                                 // Handle deletion error
-                                Swal.fire('Error!', 'Failed to delete student.', 'error');
+                                Swal.fire('Error!', 'Failed to delete.', 'error');
                             }
                         });
                     }

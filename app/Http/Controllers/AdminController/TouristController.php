@@ -37,6 +37,10 @@ class TouristController extends Controller
         return response()->json(['message' => 'Tourist Place saved successfully']);
     }
 
+    public function show(string $id){
+        
+    }
+
     public function edit(string $id){
         $data = TouristPlace::find($id);
         $countries = Country::where('status',1)->latest()->get();

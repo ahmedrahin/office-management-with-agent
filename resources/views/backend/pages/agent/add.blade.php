@@ -92,7 +92,7 @@
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="mb-3">
-                                            <label for="employeeImage" class="form-label">Employee Picture</label>
+                                            <label for="employeeImage" class="form-label">Agent Picture</label>
                                             <div class="employee-AppBody AppBody">
                                                 <div class="icon">
                                                     <i class="fas fa-images"></i>
@@ -160,7 +160,7 @@
                         Swal.fire({
                             icon: 'success',
                             title: 'Success!',
-                            text: 'Employee added successfully!',
+                            text: 'Agent added successfully!',
                         });
 
                         $('.employee-AppBody').html(`

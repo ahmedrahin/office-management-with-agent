@@ -45,7 +45,7 @@
                                     All Agent List
                                 </div>
                                 <div>
-                                    <a href="{{ route('agent.create') }}" class="btn btn-primary">Add New</a>
+                                    <a href="{{ route('agent.create') }}" class="btn btn-primary addnew"><i class="ri-add-line"></i> Add New</a>
                                 </div>
                             </h4>
                             <div class="data">
@@ -62,7 +62,12 @@
                                                 <th>Name</th>
                                                 <th>Email</th>
                                                 <th>Phone No.</th>
+                                                <th class="text-center">Total Added</th>
+                                                <th class="text-center">Students</th>
+                                                <th class="text-center">Job Inquiry</th>
+                                                <th class="text-center">Tourist</th>
                                                 <th>Created_at</th>
+                                                <th style="text-align: center;">Status</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -85,15 +90,67 @@
                                                     
                                                     <td>{{$employee->email}}</td>
                                                     <td>{{$employee->phone}}</td>
+
+                                                    <td align="middle">
+                                                        @php
+                                                            $data =  $employee->student->count() + $employee->person->count() + $employee->tourist->count() ;
+                                                        @endphp
+                                                        @if( $data > 0 )
+                                                            <span class="badge bg-success">{{ $data }}</span>
+                                                        @else
+                                                            <span class="badge bg-danger">0</span>
+                                                        @endif
+                                                    </td>
+
+                                                    <td class="text-center">
+                                                        @if( $employee->student->count() > 0 )
+                                                            <span class="badge bg-success">{{ $employee->student->count() }}</span>
+                                                        @else
+                                                            <span class="badge bg-danger">0</span>
+                                                        @endif
+                                                    </td>
+
+                                                    <td class="text-center">
+                                                        @if( $employee->person->count() > 0 )
+                                                            <span class="badge bg-success">{{ $employee->person->count() }}</span>
+                                                        @else
+                                                            <span class="badge bg-danger">0</span>
+                                                        @endif
+                                                    </td>
+
+                                                    <td class="text-center">
+                                                        @if( $employee->tourist->count() > 0 )
+                                                            <span class="badge bg-success">{{ $employee->tourist->count() }}</span>
+                                                        @else
+                                                            <span class="badge bg-danger">0</span>
+                                                        @endif
+                                                    </td>
                                                     
                                                     <td>{{ \Carbon\Carbon::parse($employee->created_at)->format('d M, Y') }}</td>
+                                                    <td align="middle">
+                                                        @php
+                                                            $switchId = 'switch' . $counter;
+                                                        @endphp
+                                                        @if($employee->status == 0)
+                                                            <input type="checkbox" id="{{ $switchId }}" class="status-toggle" data-user-id="{{ $employee->id }}" switch="success" />
+                                                            <label for="{{ $switchId }}" data-on-label="Active" data-off-label="Inactive"></label>
+                                                        @else
+                                                            <input type="checkbox" id="{{ $switchId }}" class="status-toggle" data-user-id="{{ $employee->id }}" switch="success" checked />
+                                                            <label for="{{ $switchId }}" data-on-label="Active" data-off-label="Inactive"></label>
+                                                        @endif
+                                                    </td>
                                                     <td class="action">
                                                         <button>
-                                                            <a href="{{route('edit.employees',$employee->id)}}">
+                                                            <a href="{{route('agent.show',$employee->id)}}" target="_blank">
+                                                                <i class="fa fa-eye" aria-hidden="true"></i>
+                                                            </a>
+                                                        </button>
+                                                        <button>
+                                                            <a href="{{route('agent.edit',$employee->id)}}">
                                                                 <i class="ri-edit-2-fill"></i>
                                                             </a>
                                                         </button>
-                                                        <button class="deleteButton" data-employee-id="{{ $employee->id }}">
+                                                        <button class="deleteButton" data-employee-id="{{ $employee->id }}" style="opacity: .5" >
                                                             <i class="ri-delete-bin-2-fill"></i>
                                                         </button>
                                                     </td>
@@ -115,50 +172,33 @@
 @endsection
 
 @section('page-script')
-    {{-- delete employee --}}
+    
     <script>
         $(document).ready(function() {
-            $('.deleteButton').click(function() {
-                var deleteButton = $(this); 
-                
-                var employeeId = deleteButton.data('employee-id');
+            $('.status-toggle').change(function() {
+                var id = $(this).data('user-id');
+                var status = $(this).prop('checked') ? 1 : 0;
 
-                // Trigger SweetAlert confirmation dialog
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: 'You will not be able to recover this employee data!',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes, delete it!',
-                    cancelButtonText: 'Cancel',
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                }).then((result) => {
-                    // Handle the user's response
-                    if (result.isConfirmed) {
-                        // Send an AJAX request to delete the employee
-                        $.ajax({
-                            type: 'DELETE',
-                            url: '/admin/employees/delete/' + employeeId,
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            success: function(response) {    
-                                // Remove the row from the table
-                                deleteButton.closest('tr').fadeOut('slow', function() {
-                                    $(this).remove();
-                                });
-
-                                setTimeout(() => {
-                                    Swal.fire('Deleted!', 'Employee has been deleted.', 'success');
-                                }, 1000);
-
-                            },
-                            error: function(xhr, textStatus, errorThrown) {
-                                // Handle deletion error
-                                Swal.fire('Error!', 'Failed to delete employee.', 'error');
-                            }
+                // Send AJAX request
+                $.ajax({
+                    type: 'PUT',
+                    url: '/admin/agent-status/' + id, 
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        status: status
+                    },
+                    success: function(response) {
+                        // Handle success response here
+                        console.log(response);
+                        Swal.fire({
+                            icon: response.type,
+                            title: response.msg,
+                            text: ''
                         });
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle error here
+                        console.error(xhr.responseText);
                     }
                 });
             });

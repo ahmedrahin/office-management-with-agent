@@ -18,4 +18,8 @@ class Subject extends Model
     public function university(){
         return $this->belongsTo(University::class);
     }
+
+    public function student(){
+        return $this->hasMany(Registation::class);
+    }
 }

@@ -291,7 +291,8 @@
                         success: function (data) {
                             $('#tourist_place_id').empty().append('<option value="">Select a tour place</option>');
                             $.each(data, function (key, data) {
-                                $('#tourist_place_id').append('<option value="' + data.id + '">' + data.name + '</option>');
+                                var selected = (data.id == selectedUniversityId) ? 'selected' : '';
+                                $('#tourist_place_id').append('<option value="' + data.id + '" ' + selected + '>' + data.name + '</option>');
                             });
     
                             // Trigger change to load subjects if editing

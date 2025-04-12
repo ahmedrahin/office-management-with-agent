@@ -240,7 +240,11 @@
                                     <i class="ri-dashboard-line me-2"></i> Dashboard
                                 </a>
                             </li>
-
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('agent.profile') }}">
+                                    <i class="ri-user-line align-middle me-2"></i> Profile
+                                </a>
+                            </li>
         
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-apps" role="button"

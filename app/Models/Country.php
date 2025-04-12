@@ -26,4 +26,16 @@ class Country extends Model
     public function university(){
         return $this->hasMany(University::class);
     }
+
+    public function student(){
+        return $this->hasMany(Registation::class);
+    }
+
+    public function person(){
+        return $this->hasMany(JobInquiry::class);
+    }
+
+    public function tourist(){
+        return $this->hasMany(Tourist::class);
+    }
 }

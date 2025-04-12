@@ -43,7 +43,7 @@
 
                             <h4 class="card-title" style="display: flex;justify-content: space-between;align-items:center;">
                                 <div>
-                                    Manage Student
+                                    Manage Student ({{ $students->count() }})
                                 </div>
                                 <div>
                                    
@@ -63,10 +63,10 @@
                                                 <th class="text-center">Image</th>
                                                 <th>Name</th>
                                                 <th>Country</th>
+                                                <th>University/Subject</th>
                                                 <th>Mobile no.</th>
-                                                <th>Payment</th>
+                                                <th>Total Cost</th>
                                                 <th>Added by</th>
-                                                <th>Admin Type</th>
                                                 <th>Register Date</th>
                                                 <th>Details</th>
                                                 <th>Action</th>
@@ -91,7 +91,9 @@
                                                     <td>
                                                         {{ $student->country->name }}
                                                     </td>
-                                                   
+                                                    <td>
+                                                        {{ $student->university->name }} {{ isset($student->subject) ? '/ sub:' . $student->subject->name : '' }}
+                                                   </td>
                                                     
                                                     <td>{{ $student->mobile }}</td>
                                                         @php
@@ -104,19 +106,18 @@
                                                             $totalDue = $lastPayments->sum('due_payment');
                                                         @endphp
 
-                                                        <td class="text-center fw-bold {{ $totalDue > 0 ? 'text-danger' : 'text-success' }}">
-                                                            @if( $totalDue > 0 )
-                                                                <span class="badge bg-danger">Due ৳{{ $totalDue }}</span>
-                                                            @else
-                                                                <span class="badge bg-success">no due</span>
-                                                            @endif
+                                                        <td align="middle">
+                                                            {{ $student->total_cost }}BDT
                                                         </td>
 
                                                     <td class="text-center">
-                                                        <span class="badge bg-dark">{{ optional($student->user)->name ?? 'N/A' }}</span>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        By {{ $student->user_type }}
+                                                        <span class="badge bg-dark">
+                                                            @if( $student->user_id )
+                                                                {{ optional($student->user)->name ?? 'N/A' }}
+                                                            @else
+                                                                {{ optional($student->agent)->name ?? 'N/A' }}
+                                                            @endif
+                                                        </span>
                                                     </td>
                                                     <td class="text-center">{{ $student->created_at->format('d M Y') }}</td>
 
@@ -209,7 +210,7 @@
                         // Send an AJAX request to delete the employee
                         $.ajax({
                             type: 'DELETE',
-                            url: '{{ route("student-registration.show", ":id") }}'.replace(':id', id),
+                            url: '{{ route("student-registration.destroy", ":id") }}'.replace(':id', id),
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },

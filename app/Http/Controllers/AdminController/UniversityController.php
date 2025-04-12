@@ -37,6 +37,10 @@ class UniversityController extends Controller
         return response()->json(['message' => 'University saved successfully']);
     }
 
+    public function show(string $id){
+        
+    }
+
     public function edit(string $id){
         $data = University::find($id);
         $countries = Country::where('status',1)->latest()->get();

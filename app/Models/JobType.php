@@ -18,4 +18,8 @@ class JobType extends Model
     public function country(){
         return $this->belongsTo(Country::class);
     }
+
+    public function person(){
+        return $this->hasMany(JobInquiry::class);
+    }
 }

@@ -31,6 +31,11 @@ class CountryController extends Controller
         return response()->json(['message' => 'Country saved successfully']);
     }
 
+    public function show(string $id){
+        $data = Country::find($id);
+        return view('backend.pages.country.show', compact('data'));
+    }
+
     public function edit(string $id){
         $data = Country::find($id);
         return view('backend.pages.country.edit', compact('data'));

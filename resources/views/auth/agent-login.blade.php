@@ -23,6 +23,14 @@
         <link href="{{asset('backend/css/app.min.css')}}" id="app-style" rel="stylesheet" type="text/css" />
         {{-- <link href="{{asset('backend/css/custom.css')}}" id="app-style" rel="stylesheet" type="text/css" /> --}}
 
+        <style>
+            #logo{
+                width: 100px;
+                border-radius: 50%;
+                height: 100px;
+                object-fit: cover;
+            }
+        </style>
     </head>
 
     <body class="auth-body-bg" style="background-image: url('{{ asset('backend/images/agent-auth-bg.jpg') }}');margin-top: 200px;

@@ -37,6 +37,10 @@ class JobTypeController extends Controller
         return response()->json(['message' => 'Job Type saved successfully']);
     }
 
+    public function show(string $id){
+        
+    }
+
     public function edit(string $id){
         $data = JobType::find($id);
         $countries = Country::where('status',1)->latest()->get();

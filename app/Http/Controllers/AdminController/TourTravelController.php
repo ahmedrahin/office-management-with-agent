@@ -104,16 +104,7 @@ class TourTravelController extends Controller
     public function show(string $id)
     {
         $student = Tourist::find($id);
-
-        $totalCourse = $student->assign->count();
-        $totalPaid   = $student->assign->flatMap->payment->sum('payment');
-        $totalDue = $student->assign->reduce(function ($carry, $assignment) {
-            $lastPayment = $assignment->payment->last();
-            $duePayment = $lastPayment ? $lastPayment->due_payment : 0;
-            return $carry + $duePayment;
-        }, 0);
-
-        return view('backend.pages.student.show', compact('student', 'totalCourse', 'totalPaid', 'totalDue'));
+        return view('backend.pages.travel.show', compact('student'));
     }
 
     /**

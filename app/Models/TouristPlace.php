@@ -18,4 +18,8 @@ class TouristPlace extends Model
     public function country(){
         return $this->belongsTo(Country::class);
     }
+
+    public function tourist(){
+        return $this->hasMany(Tourist::class);
+    }
 }
