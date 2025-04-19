@@ -5,9 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Agent\DashboardController;
 use App\Http\Controllers\Agent\Auth\AgentLoginController;
 use App\Http\Controllers\Agent\AgentProfile;
-use App\Http\Controllers\agent\JobInquiryController;
-use App\Http\Controllers\agent\TourTravelController;
-use App\Http\Controllers\agent\StudentController;
+use App\Http\Controllers\Agent\JobInquiryController;
+use App\Http\Controllers\Agent\TourTravelController;
+use App\Http\Controllers\Agent\StudentController;
 
 
 Route::get('agent/login', [AgentLoginController::class, 'showLoginForm'])->name('agent.login');
