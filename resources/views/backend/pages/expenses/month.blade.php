@@ -96,7 +96,7 @@
                                     <a href="{{route('year.expenses')}}" class="btn btn-primary">This Year</a>
                                 </div>
                             </h4>
-                            <div class="data">
+                            <div class="data table-responsive">
                                 @if( $expenses->count() == 0 )
                                     <div class="alert alert-danger" role="alert">
                                         No Data Found!

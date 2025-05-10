@@ -79,9 +79,9 @@
 
                             <form action="{{route('store.custom.attendance')}}" method="POST" class="needs-validation">
                             @csrf
-                                <h4 class="card-title">
+                                <h4 class="card-title attendance-responsive">
                                     Take Attendence
-                                    <div class="d-flex align-items-center flex-wrap" style="cursor: pointer; gap: 10px; justify-content: end;">
+                                    <div class="d-flex align-items-center flex-wrap button-grp" style="cursor: pointer; gap: 10px; justify-content: end;">
                                     
                                         <div class="d-flex align-items-center badge bg-danger px-2 ">
                                             <label for="holiday" class="mb-0 d-block text-white" style="font-size: 16px; cursor: pointer;">Holiday</label>
@@ -106,7 +106,8 @@
                                         No Employee Found!
                                     </div>
                                 @else
-                                    <table id="datatable-buttons" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                <div class="table-responsive">
+                                    <table id="datatable-buttons" class="table table-striped  table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                         <thead>
                                             <tr>
                                                 <th>Sl.</th>
@@ -163,6 +164,7 @@
                                             @endforeach
                                         </tbody>
                                     </table>
+                                </div>
                                 @endif
 
                             </form>

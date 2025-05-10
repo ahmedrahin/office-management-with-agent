@@ -48,7 +48,7 @@
                                     <a class="btn btn-primary" href="{{ route('custom.attendance') }}" style="margin-right: 10px;">Take Date Wise Attendance</a>
                                 </div>
                             </h4>
-                            <div class="data">
+                            <div class="data table-responsive">
                                 @if( $attendances->count() == 0 )
                                     <div class="alert alert-danger" role="alert">
                                         No Data Found!

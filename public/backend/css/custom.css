@@ -283,3 +283,13 @@ input[switch]+label{
     font-weight: 600 !important;
     margin-top: 7px !important;
 }
+
+
+@media screen and (max-width: 500px) {
+    .card-title{
+        display: inherit !important;
+    }
+    .attendance-responsive .button-grp {
+        display: inherit !important;
+    }
+}

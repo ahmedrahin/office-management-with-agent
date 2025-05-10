@@ -79,9 +79,9 @@
                             @if( !$att_date )
                             <form action="{{route('store.attendance')}}" method="POST" class="needs-validation">
                             @csrf
-                                <h4 class="card-title">
+                                <h4 class="card-title attendance-responsive">
                                     Take Attendence
-                                    <div class="d-flex" style="cursor: pointer;">
+                                    <div class="d-flex button-grp" style="cursor: pointer;">
                                         <a class="btn btn-primary" href="{{ route('custom.attendance') }}" style="margin-right: 10px;">Take Date Wise Attendance</a>
                                         <div class="d-flex align-items-center badge bg-danger">
                                             <label for="holiday" class="mx-1 mb-0 d-block" style="font-size: 16px;cursor: pointer;" name="holiday">Holiday</label>
@@ -95,64 +95,66 @@
                                         No Employee Found!
                                     </div>
                                 @else
-                                    <table id="datatable-buttons" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                                        <thead>
-                                            <tr>
-                                                <th>Sl.</th>
-                                                <th>Image</th>
-                                                <th>#ID</th>
-                                                <th>Name</th>
-                                                <th>Attendence</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-                                            @php
-                                                $counter = 1; // Initialize counter variable
-                                            @endphp
-                                            @foreach ($employees as $employee)
+                                    <div class="table-responsive">
+                                        <table id="datatable-buttons" class="table table-striped  table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                            <thead>
                                                 <tr>
-                                                    <td>{{$counter++}}</td>
-                                                    <td>
-                                                        @if( !is_null($employee->image) )
-                                                            <img src="{{asset($employee->image)}}" alt="" class="user-img">
-                                                        @else
-                                                            <img src="{{asset('backend/images/user.jpg')}}" alt="" class="user-img">
-                                                        @endif
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <span class="badge bg-primary">{{ $employee->employee_office_id }}</span>
-                                                    </td>
-                                                    <td>{{$employee->name}} {{$employee->position ? '(' . $employee->position .')'  : ''}}</td>
-                                                    
-                                                    <td>
-                                                        <input type="hidden" name="emp[]" value="{{$employee->id}}">
-                                                        <input type="hidden" name="date" value="{{date('d M, Y')}}">
-                                                        <input type="hidden" name="year" value="{{date('Y')}}">
-                                                        <div class="form-check mb-2">
-                                                            <input class="form-check-input" type="radio" name="att[{{$employee->id}}]" id="present{{$employee->id}}" value="present">
-                                                            <label class="form-check-label" for="present{{$employee->id}}">
-                                                                Present <i class="ri-checkbox-circle-line"></i>
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check absence-box mb-2">
-                                                            <input class="form-check-input" type="radio" name="att[{{$employee->id}}]" id="absence{{$employee->id}}" value="absence">
-                                                            <label class="form-check-label" for="absence{{$employee->id}}">
-                                                                Absence <i class="ri-close-circle-line"></i>
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input holiday-radio-input" type="radio" name="att[{{$employee->id}}]" id="holiday{{$employee->id}}" value="holiday">
-                                                            <label class="form-check-label" for="holiday{{$employee->id}}">
-                                                                Holiday <i class="ri-close-circle-line"></i>
-                                                            </label>
-                                                        </div>
-                                                    </td>
+                                                    <th>Sl.</th>
+                                                    <th>Image</th>
+                                                    <th>#ID</th>
+                                                    <th>Name</th>
+                                                    <th>Attendence</th>
                                                 </tr>
-                                                
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+                                            </thead>
+
+                                            <tbody>
+                                                @php
+                                                    $counter = 1; // Initialize counter variable
+                                                @endphp
+                                                @foreach ($employees as $employee)
+                                                    <tr>
+                                                        <td>{{$counter++}}</td>
+                                                        <td>
+                                                            @if( !is_null($employee->image) )
+                                                                <img src="{{asset($employee->image)}}" alt="" class="user-img">
+                                                            @else
+                                                                <img src="{{asset('backend/images/user.jpg')}}" alt="" class="user-img">
+                                                            @endif
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <span class="badge bg-primary">{{ $employee->employee_office_id }}</span>
+                                                        </td>
+                                                        <td>{{$employee->name}} {{$employee->position ? '(' . $employee->position .')'  : ''}}</td>
+                                                        
+                                                        <td>
+                                                            <input type="hidden" name="emp[]" value="{{$employee->id}}">
+                                                            <input type="hidden" name="date" value="{{date('d M, Y')}}">
+                                                            <input type="hidden" name="year" value="{{date('Y')}}">
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="radio" name="att[{{$employee->id}}]" id="present{{$employee->id}}" value="present">
+                                                                <label class="form-check-label" for="present{{$employee->id}}">
+                                                                    Present <i class="ri-checkbox-circle-line"></i>
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check absence-box mb-2">
+                                                                <input class="form-check-input" type="radio" name="att[{{$employee->id}}]" id="absence{{$employee->id}}" value="absence">
+                                                                <label class="form-check-label" for="absence{{$employee->id}}">
+                                                                    Absence <i class="ri-close-circle-line"></i>
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input holiday-radio-input" type="radio" name="att[{{$employee->id}}]" id="holiday{{$employee->id}}" value="holiday">
+                                                                <label class="form-check-label" for="holiday{{$employee->id}}">
+                                                                    Holiday <i class="ri-close-circle-line"></i>
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 @endif
 
                             </form>

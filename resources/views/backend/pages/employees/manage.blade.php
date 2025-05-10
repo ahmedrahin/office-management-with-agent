@@ -48,7 +48,7 @@
                                     <a href="{{ route('add.employees') }}" class="btn btn-primary">Add New</a>
                                 </div>
                             </h4>
-                            <div class="data">
+                            <div class="data table-responsive">
                                 @if( $employees->count() == 0 )
                                     <div class="alert alert-danger" role="alert">
                                         No Data Found!

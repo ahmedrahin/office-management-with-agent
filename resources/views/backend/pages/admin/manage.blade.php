@@ -68,7 +68,7 @@
                         <div class="card-body">
 
                             <h4 class="card-title">Admin List</h4>
-                            <div class="data">
+                            <div class="data table-responsive">
                                 @if( $users->count() == 0 )
                                     <div class="alert alert-danger" role="alert">
                                         No Data Found!

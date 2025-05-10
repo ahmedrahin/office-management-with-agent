@@ -48,7 +48,7 @@
                                     <a href="{{ route('agent.create') }}" class="btn btn-primary addnew"><i class="ri-add-line"></i> Add New</a>
                                 </div>
                             </h4>
-                            <div class="data">
+                            <div class="data table-responsive">
                                 @if( $employees->count() == 0 )
                                     <div class="alert alert-danger" role="alert">
                                         No Data Found!

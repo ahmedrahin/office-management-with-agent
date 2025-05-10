@@ -70,7 +70,7 @@
                                     </button>                                    
                                 </div>
                             </h4>
-                            <div class="data">
+                            <div class="data table-responsive">
                                 @if( $data->count() == 0 )
                                     <div class="alert alert-danger" role="alert">
                                         No Data Found!

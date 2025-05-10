@@ -34,7 +34,6 @@ class StudentController extends Controller
     }
 
 
-
     /**
      * Show the form for creating a new resource.
      */
@@ -59,9 +58,6 @@ class StudentController extends Controller
             'country_id'  => 'required',
             'university_id'  => 'required',
             'total_cost'  => 'required',
-            'image' => 'required|image',
-            'front_image' => 'required|image',
-            'passport_image' => 'required|image',
         ]);
 
         $data = new Registation();
