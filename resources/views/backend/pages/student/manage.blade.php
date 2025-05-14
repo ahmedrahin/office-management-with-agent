@@ -9,8 +9,8 @@
     <link href="{{asset('backend/libs/datatables.net-select-bs4/css//select.bootstrap4.min.css')}}" rel="stylesheet" type="text/css" />
 
     <!-- Responsive datatable examples -->
-    <link href="{{asset('backend/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css')}}" rel="stylesheet" type="text/css" />   
-    <link href="{{asset('backend/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}" rel="stylesheet">  
+    <link href="{{asset('backend/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{asset('backend/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}" rel="stylesheet">
 @endsection
 
 @section('body-content')
@@ -29,8 +29,8 @@
                                 <li class="breadcrumb-item"><a href="{{url('/')}}">{{ \App\Models\Settings::site_title() }}</a></li>
                                 <li class="breadcrumb-item active">All Register Student</li>
                             </ol>
-                        </div>                    
-                        
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -46,7 +46,7 @@
                                     Manage Student ({{ $students->count() }})
                                 </div>
                                 <div>
-                                   
+
                                     <a href="{{ route('student-registration.create') }}" class="btn btn-primary addnew"> <i class="ri-add-line"></i> Register New</a>
                                 </div>
                             </h4>
@@ -75,7 +75,7 @@
 
                                         <tbody>
                                             @php
-                                                $counter = 1; 
+                                                $counter = 1;
                                             @endphp
                                             @foreach ($students as $student)
                                                 <tr>
@@ -89,12 +89,12 @@
                                                     </td>
                                                     <td>{{$student->name}}</td>
                                                     <td>
-                                                        {{ $student->country->name }}
+                                                       {{ optional($student->country)->name }}
                                                     </td>
                                                     <td>
-                                                        {{ $student->university->name }} {{ isset($student->subject) ? '/ sub:' . $student->subject->name : '' }}
+                                                        {{ optional($student->university)->name }} {{ isset($student->subject) ? '/ sub:' . $student->subject->name : '' }}
                                                    </td>
-                                                    
+
                                                     <td>{{ $student->mobile }}</td>
                                                         @php
                                                             // Retrieve all payments from assigned courses
@@ -126,7 +126,7 @@
                                                             Details
                                                         </a>
                                                     </td>
-                                                   
+
                                                     <td class="action">
                                                         <button>
                                                             <a href="{{route('student-registration.edit',$student->id)}}">
@@ -158,7 +158,7 @@
                                 <input type="text" class="form-control" name="start_date" placeholder="Start Date" value="{{ request('start_date') }}" autocomplete="off" />
                                 <input type="text" class="form-control" name="end_date" placeholder="End Date" value="{{ request('end_date') }}" autocomplete="off" />
                             </div>
-                        
+
                             <div class="mb-2">
                                 <select name="user_type" class="form-select">
                                     <option value="">Select admin type</option>
@@ -166,22 +166,22 @@
                                     <option value="agent" {{ request('user_type') == 'agent' ? 'selected' : '' }}>By Agent</option>
                                 </select>
                             </div>
-                        
+
                             <button type="submit" class="btn btn-primary mt-2">Filter</button>
-                        
+
                             @if(request('start_date') || request('end_date') || request('user_type'))
                                 <a href="{{ route('student-registration.index') }}" class="btn btn-secondary mt-2">Show All</a>
                             @endif
                         </form>
-                        
+
                     </div>
                 </div>
            </div>
-            
-        </div> 
+
+        </div>
     </div>
     <!-- End Page-content -->
-                
+
 @endsection
 
 @section('page-script')
@@ -190,8 +190,8 @@
     <script>
         $(document).ready(function() {
             $('.deleteButton').click(function() {
-                var deleteButton = $(this); 
-                
+                var deleteButton = $(this);
+
                 var id = deleteButton.data('student-id');
 
                 // Trigger SweetAlert confirmation dialog
@@ -214,7 +214,7 @@
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            success: function(response) {    
+                            success: function(response) {
                                 // Remove the row from the table
                                 deleteButton.closest('tr').fadeOut('slow', function() {
                                     $(this).remove();
@@ -243,8 +243,8 @@
 
         });
     </script>
-    
-    
+
+
     <!-- Responsive examples -->
     <script src="{{asset('backend/libs/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
     <script src="{{asset('backend/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js')}}"></script>

@@ -72,8 +72,27 @@
                         <div class="info-group"><strong>Mobile:</strong><span>{{ $student->mobile }}</span></div>
                         <div class="info-group"><strong>Permanent Address:</strong><span>{{ $student->permanent_address }}, {{ $student->permanent_district }}, {{ $student->permanent_division }}</span></div>
                         <div class="info-group"><strong>Temporary Address:</strong><span>{{ $student->temporary_address }}, {{ $student->temporary_district }}, {{ $student->temporary_division }}</span></div>
-                        <div class="info-group"><strong>Country:</strong><span><a href="{{ route('country.show', $student->country->id) }}" target="_blank">{{ $student->country->name }}</a></span></div>
-                        <div class="info-group"><strong>University:</strong><span><a href="{{ route('university.show', $student->university->id) }}" target="_blank">{{ $student->university->name }}</a></span></div>
+
+                        <div class="info-group">
+                            <strong>Country:</strong>
+                            <span>
+                                <a href="{{ optional($student->country)->id ? route('country.show', $student->country->id) : '#' }}"
+                                target="_blank">
+                                    {{ optional($student->country)->name ?? 'N/A' }}
+                                </a>
+                            </span>
+                        </div>
+
+                        <div class="info-group">
+                            <strong>University:</strong>
+                            <span>
+                                <a href="{{ optional($student->university)->id ? route('university.show', $student->university->id) : '#' }}"
+                                target="_blank">
+                                    {{ optional($student->university)->name ?? 'N/A' }}
+                                </a>
+                            </span>
+                        </div>
+
                         <div class="info-group"><strong>Subject:</strong>
                             <span>
                                 @if($student->subject_id)
@@ -83,6 +102,7 @@
                                 @endif
                             </span>
                         </div>
+
                         <div class="info-group"><strong>Total_cost:</strong><span>{{ $student->total_cost }}BDT</span></div>
                         <div class="info-group"><strong>Processing Fees:</strong><span>{{ $student->processing_fees > 0 ? $student->processing_fees . ' BDT' : 'N/A' }}</span></div>
                         <div class="info-group"><strong>Added by:</strong><span>{{ $student->user_id ? optional($student->user)->name . ' - (admin)' : optional($student->agent)->name . ' - (agent)' }}</span></div>
@@ -91,30 +111,22 @@
 
                     {{-- 🖼️ Student Documents --}}
                     <div class="image-gallery">
-                        @if($student->image)
-                            <a href="{{ asset($student->image) }}" data-lightbox="student-gallery" data-title="Profile Image">
-                                <img src="{{ asset($student->image) }}" alt="Profile Image">
-                            </a>
-                        @endif
+                        @foreach (['image' => 'Profile Image', 'front_image' => 'Front Image', 'back_image' => 'Back Image', 'passport_image' => 'Passport Image'] as $field => $title)
+                            @if ($student->$field)
+                                <a href="{{ asset($student->$field) }}" data-lightbox="student-gallery" data-title="{{ $title }}">
+                                    <img src="{{ asset($student->$field) }}" alt="{{ $title }}">
+                                </a>
+                            @endif
+                        @endforeach
 
-                        @if($student->front_image)
-                            <a href="{{ asset($student->front_image) }}" data-lightbox="student-gallery" data-title="Front Image">
-                                <img src="{{ asset($student->front_image) }}" alt="Front Image">
+                        {{-- Document Images --}}
+                        @foreach ($student->images as $document)
+                            <a href="{{ asset($document->image) }}" data-lightbox="student-gallery" data-title="Document Image">
+                                <img src="{{ asset($document->image) }}" alt="Document Image">
                             </a>
-                        @endif
-
-                        @if($student->back_image)
-                            <a href="{{ asset($student->back_image) }}" data-lightbox="student-gallery" data-title="Back Image">
-                                <img src="{{ asset($student->back_image) }}" alt="Back Image">
-                            </a>
-                        @endif
-
-                        @if($student->passport_image)
-                            <a href="{{ asset($student->passport_image) }}" data-lightbox="student-gallery" data-title="Passport Image">
-                                <img src="{{ asset($student->passport_image) }}" alt="Passport Image">
-                            </a>
-                        @endif
+                        @endforeach
                     </div>
+
 
                      {{-- course information --}}
                     {{-- <div class="row justify-content-center g-2 mt-0">
@@ -166,7 +178,7 @@
                                             @foreach($student->assign as $key => $assignment)
                                                 @php
                                                     $paid = $assignment->payment->sum('payment');
-                                                    $lastPayment = $assignment->payment->last(); 
+                                                    $lastPayment = $assignment->payment->last();
                                                     $due = $lastPayment ? $lastPayment->due_payment : 0;
                                                 @endphp
                                                 <tr>
@@ -176,7 +188,7 @@
                                                     <td class="fw-bold text-center" style="{{ $due <= 0 ? 'background-color: #00800080; color: white;' : 'color: red;' }}">
                                                         ৳{{ number_format($due, 2) }}
                                                     </td>
-                                                    
+
                                                     <td class="text-center">
                                                         @if( isset($assignment->registation) )
                                                             <a href="{{ route('course.show',$assignment->course->id) }}" class="btn btn-sm btn-info me-1">View</a>
@@ -195,7 +207,7 @@
                         </div>
                     </div> --}}
 
-      
+
                     <div class="card-footer text-center">
                         <a href="{{ route('student-registration.edit', $student->id) }}" class="btn btn-warning">Edit</a>
                         <button onclick="window.print()" class="btn btn-success ms-2">

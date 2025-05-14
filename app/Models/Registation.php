@@ -34,4 +34,8 @@ class Registation extends Model
     public function subject(){
         return $this->belongsTo(Subject::class);
     }
+
+    public function images(){
+        return $this->hasMany(StudentImage::class);
+    }
 }

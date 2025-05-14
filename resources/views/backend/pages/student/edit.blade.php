@@ -6,7 +6,7 @@
 @section('page-css')
     <link href="{{asset('backend/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}" rel="stylesheet">
     <link href="{{asset('backend/libs/select2/css/select2.min.css')}}" rel="stylesheet">
-   
+
 @endsection
 
 @section('body-content')
@@ -29,7 +29,7 @@
                 </div>
             </div>
             <!-- end page title -->
-            
+
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card">
@@ -147,7 +147,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="mt-2">
                                     <label for="sameaspermanent" class="mb-0">Same as Permanent Address:</label>
                                     <input type="checkbox"  id="sameaspermanent">
@@ -187,12 +187,12 @@
                                     <div class="col-md-3">
                                         <div class="mb-3">
                                             <label for="emp" class="form-label">Country</label>
-                                            <select name="country_id" id="country_id" class="form-control select2" required>
+                                            <select name="country_id" id="country_id" class="form-control select2">
                                                 <option value="">Select a country</option>
                                                 @foreach ($countries as $country)
                                                     <option value="{{ $country->id }}" {{ $student->country_id == $country->id ? 'selected' : '' }}>{{ $country->name }}</option>
                                                 @endforeach
-                                            </select>                                            
+                                            </select>
                                             <div id="countryErr" class="invalid-feedback"></div>
                                         </div>
                                     </div>
@@ -200,7 +200,7 @@
                                     <div class="col-md-3">
                                         <div class="mb-3">
                                             <label for="university_id" class="form-label">University</label>
-                                            <select name="university_id" id="university_id" class="form-control select2" required>
+                                            <select name="university_id" id="university_id" class="form-control select2">
                                                 <option value="">Select a university</option>
                                             </select>
                                             <div id="universityErr" class="invalid-feedback"></div>
@@ -209,11 +209,11 @@
 
                                     <div class="col-md-3">
                                         <label class="form-label">Subject</label>
-                                        <select name="subject_id" id="subject_id" class="form-control select2" required>
+                                        <select name="subject_id" id="subject_id" class="form-control select2">
                                             <option value="">Select a subject</option>
                                         </select>
                                     </div>
-                                
+
                                     {{-- Price --}}
                                     <div class="col-md-3">
                                         <label class="form-label">Processing Fees</label>
@@ -222,7 +222,7 @@
 
                                     <div class="col-12">
                                         <label class="form-label">Total Cost</label>
-                                        <input type="text" name="total_cost" id="total_cost" class="form-control" value="{{ $student->total_cost }}" required>
+                                        <input type="text" name="total_cost" id="total_cost" class="form-control" value="{{ $student->total_cost }}" >
                                         <div class="invalid-feedback"></div>
                                     </div>
 
@@ -237,7 +237,7 @@
                                             'passport_image' => 'Passport Image',
                                         ];
                                     @endphp
-                                
+
                                     @foreach ($images as $field => $label)
                                     <div class="col-md-3">
                                         <div class="mb-3">
@@ -248,7 +248,7 @@
                                                 <span>OR</span>
                                                 <button type="button" class="browseFile">Browse File</button>
                                                 <input type="file" name="{{ $field }}" class="picture" hidden>
-                                
+
                                                 {{-- Show existing image if available --}}
                                                 @if (!is_null($student->$field))
                                                     <img src="{{ asset($student->$field) }}" alt="" id="editImg-{{ $field }}">
@@ -260,7 +260,34 @@
                                     </div>
                                     @endforeach
                                 </div>
-                                
+
+
+                                 {{-- gellary image --}}
+                                <div class="row" style="margin-top: 20px;">
+                                    <label class="form-label">Additional Documents (SSC/ HSC Certificate, Marksheets, Medical Report, Bank Statement and others)</label>
+                                    <div>
+                                        <input type="file" id="images" name="images[]" accept="image/*" multiple
+                                            class="form-control" />
+                                        <p class="form-text text-muted mt-1">You can select multiple images.</p>
+                                        <div class="text-danger error mt-1"></div>
+
+                                        <input type="hidden" name="removed_image_ids" id="removedImageIds" value="">
+
+                                        <div id="existingGalleryImages" class="preview-wrapper mt-3">
+                                            @foreach($student->images as $image)
+                                                <div class="preview-item" data-id="{{ $image->id }}">
+                                                    <img src="{{ asset($image->image) }}" />
+                                                    <button type="button" class="remove-btn existing-remove" data-id="{{ $image->id }}">&times;</button>
+                                                </div>
+                                            @endforeach
+                                        </div>
+
+                                        <!-- Preview -->
+                                        <div id="imagePreviewContainer" class="preview-wrapper mt-3 mb-4"></div>
+                                    </div>
+                                </div>
+
+
 
                                 <div>
                                     <button class="btn btn-primary" type="submit" id="addEmployee" style="width: 100% !important;margin:15px auto 0;margin-top:10px !important;"> Save Changes </button>
@@ -269,14 +296,14 @@
                         </div>
                     </div>
                     <!-- end card -->
-                </div> 
+                </div>
             </div>
             <!-- end row -->
 
-        </div> 
+        </div>
     </div>
     <!-- End Page-content -->
-                
+
 @endsection
 
 @section('page-script')
@@ -292,11 +319,11 @@
             var selectedCountryId = "{{ $student->country_id }}";
             var selectedUniversityId = "{{ $student->university_id }}";
             var selectedSubjectId = "{{ $student->subject_id }}";
-    
+
             // Country change: Load universities
             $('#country_id').on('change', function () {
                 var countryId = $(this).val();
-    
+
                 if (countryId) {
                     $.ajax({
                         url: '/get-university/' + countryId,
@@ -308,7 +335,7 @@
                                 var selected = (university.id == selectedUniversityId) ? 'selected' : '';
                                 $('#university_id').append('<option value="' + university.id + '" ' + selected + '>' + university.name + '</option>');
                             });
-    
+
                             // Trigger change to load subjects if editing
                             if (selectedUniversityId) {
                                 $('#university_id').trigger('change');
@@ -322,13 +349,13 @@
                     $('#university_id').empty().append('<option value="">Select a university</option>');
                 }
             });
-    
+
             // University change: Load subjects
             $('#university_id').on('change', function () {
                 let universityId = $(this).val();
                 $('#subject_id').empty().append('<option value="">Loading...</option>');
                 $('#subject_price').val('');
-    
+
                 if (universityId) {
                     $.get('/get-subject/' + universityId, function (data) {
                         $('#subject_id').empty().append('<option value="">Select a subject</option>');
@@ -336,7 +363,7 @@
                             var selected = (subject.id == selectedSubjectId) ? 'selected' : '';
                             $('#subject_id').append('<option value="' + subject.id + '" data-price="' + subject.price + '" ' + selected + '>' + subject.name + '</option>');
                         });
-    
+
                         // If editing, set price of selected subject
                         if (selectedSubjectId) {
                             let selectedOption = $('#subject_id').find('option:selected');
@@ -348,28 +375,28 @@
                     $('#subject_id').empty().append('<option value="">Select a subject</option>');
                 }
             });
-    
+
             // Subject change: Show price
             $('#subject_id').on('change', function () {
                 let selectedPrice = $(this).find(':selected').data('price') || '';
                 $('#subject_price').val(selectedPrice);
             });
-    
+
             // ======== On Page Load (Edit Page) =========
             if (selectedCountryId) {
                 $('#country_id').val(selectedCountryId).trigger('change');
             }
         });
     </script>
-    
+
 
     {{-- send employess data --}}
     <script>
          $(document).ready(function() {
             $('.needs-validation').submit(function(event) {
-                event.preventDefault(); 
+                event.preventDefault();
                 var form = $(this);
-                var formData = new FormData(form[0]); 
+                var formData = new FormData(form[0]);
 
                 $.ajax({
                     type: form.attr('method'),
@@ -384,7 +411,7 @@
                         `);
                     },
                     success: function(response) {
-                      
+
                         // Display SweetAlert popup
                         Swal.fire({
                             icon: 'success',
@@ -403,7 +430,7 @@
                         $("#addEmployee").prop('disabled', false).html(`
                             Save Changes
                         `);
-                        
+
                         // Handle validation errors
                         var errors = xhr.responseJSON.errors;
                         console.log(errors)
@@ -411,7 +438,7 @@
                             var input = form.find('[name="' + key + '"]');
                             input.addClass('is-invalid');
                             input.addClass('form-control');
-                            input.next('.invalid-feedback').html(value); 
+                            input.next('.invalid-feedback').html(value);
 
                             if (key === 'image') {
                                 $('#imageErr').html(value);
@@ -454,38 +481,38 @@
             let input = dragArea.querySelector('.picture');
             let fieldName = dragArea.dataset.name;
             let file;
-    
+
             btn.onclick = () => {
                 input.click();
             }
-    
+
             input.addEventListener('change', function () {
                 file = this.files[0];
                 show();
             })
-    
+
             dragArea.addEventListener('dragover', (event) => {
                 event.preventDefault();
                 dragText.innerText = "Release to Upload File";
                 dragArea.classList.add('active');
             })
-    
+
             dragArea.addEventListener('dragleave', (event) => {
                 dragText.innerText = "Drag & Drop";
                 dragArea.classList.remove('active');
             })
-    
+
             dragArea.addEventListener('drop', (event) => {
                 event.preventDefault();
                 file = event.dataTransfer.files[0];
                 input.files = event.dataTransfer.files;
                 show();
             })
-    
+
             function show() {
                 let fileType = file.type;
                 let validType = ['image/jpeg', 'image/jpg', 'image/png'];
-    
+
                 if (validType.includes(fileType)) {
                     let fileRead = new FileReader();
                     fileRead.onload = () => {
@@ -495,13 +522,13 @@
                         let container = document.createElement('div');
                         container.classList.add('image-container');
                         container.innerHTML = img + cancelButton;
-    
+
                         let existing = dragArea.querySelector('.image-container');
                         if (existing) dragArea.removeChild(existing);
                         dragArea.appendChild(container);
-    
+
                         dragText.innerText = "Drag & Drop";
-    
+
                         document.getElementById(`cancel-${fieldName}`).addEventListener('click', function () {
                             input.value = '';
                             dragArea.classList.remove('active');
@@ -516,7 +543,7 @@
                     dragArea.classList.remove('active');
                 }
             }
-    
+
             // If edit image exists, allow cancelling it
             let existingCancel = document.getElementById(`editCan-${fieldName}`);
             let existingImg = document.getElementById(`editImg-${fieldName}`);
@@ -527,11 +554,11 @@
                 });
             }
         }
-    
+
         // Initialize all drag areas
         document.querySelectorAll('.AppBody').forEach(imgUpload);
     </script>
-    
+
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -551,5 +578,56 @@
         });
     </script>
 
+
+    {{-- gellary images --}}
+    <script>
+        let removedImageIds = [];
+
+        document.querySelectorAll('.existing-remove').forEach(button => {
+            button.addEventListener('click', function () {
+                const imageId = this.getAttribute('data-id');
+                removedImageIds.push(imageId);
+                document.getElementById('removedImageIds').value = removedImageIds.join(',');
+                this.parentElement.remove();
+            });
+        });
+
+        // Preview new uploads
+        document.getElementById('images').addEventListener('change', function (event) {
+            const files = event.target.files;
+            const previewContainer = document.getElementById('imagePreviewContainer');
+            previewContainer.innerHTML = '';
+
+            Array.from(files).forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'preview-item';
+
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+
+                    const removeBtn = document.createElement('button');
+                    removeBtn.innerHTML = '&times;';
+                    removeBtn.className = 'remove-btn';
+
+                    removeBtn.addEventListener('click', function () {
+                        const dt = new DataTransfer();
+                        Array.from(files).forEach((f, i) => {
+                            if (i !== index) dt.items.add(f);
+                        });
+                        event.target.files = dt.files;
+                        wrapper.remove();
+                        document.getElementById('images').dispatchEvent(new Event('change'));
+                    });
+
+                    wrapper.appendChild(img);
+                    wrapper.appendChild(removeBtn);
+                    previewContainer.appendChild(wrapper);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+    </script>
 
 @endsection

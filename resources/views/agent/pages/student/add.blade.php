@@ -5,7 +5,7 @@
 @section('page-css')
     <link href="{{asset('backend/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}" rel="stylesheet">
     <link href="{{asset('backend/libs/select2/css/select2.min.css')}}" rel="stylesheet">
-   
+
 @endsection
 
 @section('body-content')
@@ -28,7 +28,7 @@
                 </div>
             </div>
             <!-- end page title -->
-            
+
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card">
@@ -145,7 +145,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="mt-2">
                                     <label for="sameaspermanent" class="mb-0">Same as Permanent Address:</label>
                                     <input type="checkbox"  id="sameaspermanent">
@@ -190,7 +190,7 @@
                                                 @foreach ($countries as $country)
                                                     <option value="{{ $country->id }}">{{ $country->name }}</option>
                                                 @endforeach
-                                            </select>                                            
+                                            </select>
                                             <div id="countryErr" class="invalid-feedback"></div>
                                         </div>
                                     </div>
@@ -211,7 +211,7 @@
                                             <option value="">Select a subject</option>
                                         </select>
                                     </div>
-                                
+
                                     {{-- Price --}}
                                     <div class="col-md-3">
                                         <label class="form-label">Processing Fees</label>
@@ -234,7 +234,7 @@
                                                     <div class="icon">
                                                         <i class="fas fa-images"></i>
                                                     </div>
-                                            
+
                                                     <h3 class="drag mb-0">Drag & Drop</h3>
                                                     <span>OR</span>
                                                     <button type="button" id="browseFile">Browse File</button>
@@ -251,7 +251,7 @@
                                                     <div class="icon">
                                                         <i class="fas fa-images"></i>
                                                     </div>
-                                            
+
                                                     <h3 class="drag mb-0">Drag & Drop</h3>
                                                     <span>OR</span>
                                                     <button type="button" id="browseFile">Browse File</button>
@@ -268,7 +268,7 @@
                                                     <div class="icon">
                                                         <i class="fas fa-images"></i>
                                                     </div>
-                                            
+
                                                     <h3 class="drag mb-0">Drag & Drop</h3>
                                                     <span>OR</span>
                                                     <button type="button" id="browseFile">Browse File</button>
@@ -284,7 +284,7 @@
                                                     <div class="icon">
                                                         <i class="fas fa-images"></i>
                                                     </div>
-                                            
+
                                                     <h3 class="drag mb-0">Drag & Drop</h3>
                                                     <span>OR</span>
                                                     <button type="button" id="browseFile">Browse File</button>
@@ -295,6 +295,24 @@
                                         </div>
                                     </div>
 
+                                    {{-- gellary image --}}
+                                    <div class="row">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <div class="body-title head">Product Gallery Image</div>
+                                        </div>
+                                        <div class="divider mb-2"></div>
+
+                                        <div>
+                                            <input type="file" id="images" name="images[]" accept="image/*" multiple
+                                                class="form-control" />
+                                            <p class="form-text text-muted mt-1">You can select multiple images.</p>
+                                            <div class="text-danger error mt-1"></div>
+
+                                            <!-- Preview -->
+                                            <div id="imagePreviewContainer" class="preview-wrapper mt-3"></div>
+                                        </div>
+                                    </div>
+
                                     <div>
                                         <button class="btn btn-primary" type="submit" id="addEmployee" style="width: 100% !important;margin:15px auto 0;margin-top:10px !important;font-size:17px;font-weight:600;"> Register </button>
                                     </div>
@@ -302,14 +320,14 @@
                             </div>
                         </div>
                         <!-- end card -->
-                    </div> 
+                    </div>
                 </div>
                 <!-- end row -->
 
-            </div> 
+            </div>
         </div>
         <!-- End Page-content -->
-                    
+
     @endsection
 
     @section('page-script')
@@ -323,7 +341,7 @@
             $(document).ready(function () {
                 $('#country_id').on('change', function () {
                     var countryId = $(this).val();
-        
+
                     if (countryId) {
                         $.ajax({
                             url: '/get-university/' + countryId,
@@ -371,15 +389,15 @@
                 });
             });
         </script>
-    
+
 
         {{-- send data --}}
         <script>
             $(document).ready(function() {
                 $('.needs-validation').submit(function(event) {
-                    event.preventDefault(); 
+                    event.preventDefault();
                     var form = $(this);
-                    var formData = new FormData(form[0]); 
+                    var formData = new FormData(form[0]);
 
                     $.ajax({
                         type: form.attr('method'),
@@ -394,7 +412,7 @@
                             `);
                         },
                         success: function(response) {
-                        
+
                             // Display SweetAlert popup
                             Swal.fire({
                                 icon: 'success',
@@ -413,7 +431,7 @@
                             $("#addEmployee").prop('disabled', false).html(`
                                 Register
                             `);
-                            
+
                             // Handle validation errors
                             var errors = xhr.responseJSON.errors;
                             console.log(errors)
@@ -421,7 +439,7 @@
                                 var input = form.find('[name="' + key + '"]');
                                 input.addClass('is-invalid');
                                 input.addClass('form-control');
-                                input.next('.invalid-feedback').html(value); 
+                                input.next('.invalid-feedback').html(value);
 
                                 if (key === 'image') {
                                     $('#imageErr').html(value);
