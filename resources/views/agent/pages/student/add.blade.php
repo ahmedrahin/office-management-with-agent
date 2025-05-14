@@ -185,7 +185,7 @@
                                     <div class="col-md-3">
                                         <div class="mb-3">
                                             <label for="emp" class="form-label">Country</label>
-                                            <select name="country_id" id="country_id" class="form-control select2" required>
+                                            <select name="country_id" id="country_id" class="form-control select2" >
                                                 <option value="">Select a country</option>
                                                 @foreach ($countries as $country)
                                                     <option value="{{ $country->id }}">{{ $country->name }}</option>
@@ -198,7 +198,7 @@
                                     <div class="col-md-3">
                                         <div class="mb-3">
                                             <label for="university_id" class="form-label">University</label>
-                                            <select name="university_id" id="university_id" class="form-control select2" required>
+                                            <select name="university_id" id="university_id" class="form-control select2" >
                                                 <option value="">Select a university</option>
                                             </select>
                                             <div id="universityErr" class="invalid-feedback"></div>
@@ -207,7 +207,7 @@
 
                                     <div class="col-md-3">
                                         <label class="form-label">Subject</label>
-                                        <select name="subject_id" id="subject_id" class="form-control select2" required>
+                                        <select name="subject_id" id="subject_id" class="form-control select2" >
                                             <option value="">Select a subject</option>
                                         </select>
                                     </div>
@@ -220,7 +220,7 @@
 
                                     <div class="col-12">
                                         <label class="form-label">Total Cost</label>
-                                        <input type="text" name="total_cost" id="total_cost" class="form-control" required>
+                                        <input type="text" name="total_cost" id="total_cost" class="form-control" >
                                         <div class="invalid-feedback"></div>
                                     </div>
 
@@ -295,13 +295,9 @@
                                         </div>
                                     </div>
 
-                                    {{-- gellary image --}}
-                                    <div class="row">
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <div class="body-title head">Product Gallery Image</div>
-                                        </div>
-                                        <div class="divider mb-2"></div>
-
+                                   {{-- gellary image --}}
+                                    <div class="row" style="margin-top: 20px;">
+                                        <label class="form-label">Additional Documents (SSC/ HSC Certificate, Marksheets, Medical Report, Bank Statement and others)</label>
                                         <div>
                                             <input type="file" id="images" name="images[]" accept="image/*" multiple
                                                 class="form-control" />
@@ -309,7 +305,7 @@
                                             <div class="text-danger error mt-1"></div>
 
                                             <!-- Preview -->
-                                            <div id="imagePreviewContainer" class="preview-wrapper mt-3"></div>
+                                            <div id="imagePreviewContainer" class="preview-wrapper mt-3 mb-4"></div>
                                         </div>
                                     </div>
 
@@ -568,6 +564,45 @@
                         document.getElementById("tdistrict").value = "";
                         document.getElementById("taddress").value = "";
                     }
+                });
+            });
+        </script>
+
+        <script>
+            document.getElementById('images').addEventListener('change', function (event) {
+                const files = event.target.files;
+                const previewContainer = document.getElementById('imagePreviewContainer');
+                previewContainer.innerHTML = '';
+
+                Array.from(files).forEach((file, index) => {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const wrapper = document.createElement('div');
+                        wrapper.className = 'preview-item';
+
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+
+                        const removeBtn = document.createElement('button');
+                        removeBtn.innerHTML = '&times;';
+                        removeBtn.className = 'remove-btn';
+
+                        removeBtn.addEventListener('click', function () {
+                            const dt = new DataTransfer();
+                            Array.from(files).forEach((f, i) => {
+                                if (i !== index) dt.items.add(f);
+                            });
+                            event.target.files = dt.files;
+                            wrapper.remove();
+                            // Re-render updated previews
+                            document.getElementById('images').dispatchEvent(new Event('change'));
+                        });
+
+                        wrapper.appendChild(img);
+                        wrapper.appendChild(removeBtn);
+                        previewContainer.appendChild(wrapper);
+                    };
+                    reader.readAsDataURL(file);
                 });
             });
         </script>

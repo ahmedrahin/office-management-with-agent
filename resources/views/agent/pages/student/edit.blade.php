@@ -262,6 +262,31 @@
                                 </div>
                                 
 
+                                {{-- gellary image --}}
+                                <div class="row" style="margin-top: 20px;">
+                                    <label class="form-label">Additional Documents (SSC/ HSC Certificate, Marksheets, Medical Report, Bank Statement and others)</label>
+                                    <div>
+                                        <input type="file" id="images" name="images[]" accept="image/*" multiple
+                                            class="form-control" />
+                                        <p class="form-text text-muted mt-1">You can select multiple images.</p>
+                                        <div class="text-danger error mt-1"></div>
+
+                                        <input type="hidden" name="removed_image_ids" id="removedImageIds" value="">
+
+                                        <div id="existingGalleryImages" class="preview-wrapper mt-3">
+                                            @foreach($student->images as $image)
+                                                <div class="preview-item" data-id="{{ $image->id }}">
+                                                    <img src="{{ asset($image->image) }}" />
+                                                    <button type="button" class="remove-btn existing-remove" data-id="{{ $image->id }}">&times;</button>
+                                                </div>
+                                            @endforeach
+                                        </div>
+
+                                        <!-- Preview -->
+                                        <div id="imagePreviewContainer" class="preview-wrapper mt-3 mb-4"></div>
+                                    </div>
+                                </div>
+
                                 <div>
                                     <button class="btn btn-primary" type="submit" id="addEmployee" style="width: 100% !important;margin:15px auto 0;margin-top:10px !important;"> Save Changes </button>
                                 </div>
@@ -547,6 +572,58 @@
                     document.getElementById("tdistrict").value = "";
                     document.getElementById("taddress").value = "";
                 }
+            });
+        });
+    </script>
+
+
+    {{-- gellary images --}}
+    <script>
+        let removedImageIds = [];
+
+        document.querySelectorAll('.existing-remove').forEach(button => {
+            button.addEventListener('click', function () {
+                const imageId = this.getAttribute('data-id');
+                removedImageIds.push(imageId);
+                document.getElementById('removedImageIds').value = removedImageIds.join(',');
+                this.parentElement.remove();
+            });
+        });
+
+        // Preview new uploads
+        document.getElementById('images').addEventListener('change', function (event) {
+            const files = event.target.files;
+            const previewContainer = document.getElementById('imagePreviewContainer');
+            previewContainer.innerHTML = '';
+
+            Array.from(files).forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'preview-item';
+
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+
+                    const removeBtn = document.createElement('button');
+                    removeBtn.innerHTML = '&times;';
+                    removeBtn.className = 'remove-btn';
+
+                    removeBtn.addEventListener('click', function () {
+                        const dt = new DataTransfer();
+                        Array.from(files).forEach((f, i) => {
+                            if (i !== index) dt.items.add(f);
+                        });
+                        event.target.files = dt.files;
+                        wrapper.remove();
+                        document.getElementById('images').dispatchEvent(new Event('change'));
+                    });
+
+                    wrapper.appendChild(img);
+                    wrapper.appendChild(removeBtn);
+                    previewContainer.appendChild(wrapper);
+                };
+                reader.readAsDataURL(file);
             });
         });
     </script>

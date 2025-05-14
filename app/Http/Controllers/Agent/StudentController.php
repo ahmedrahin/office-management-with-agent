@@ -49,15 +49,18 @@ class StudentController extends Controller
     public function store(Request $request)
     {
         // dd($request->all());
-        $request->validate([
+       $request->validate([
             "name"  => "required",
             'email' => 'nullable|email',
             'mobile' => 'required|numeric|digits:11',
             'birth'  => 'nullable',
             'gender'  => 'required',
-            'country_id'  => 'required',
-            'university_id'  => 'required',
-            'total_cost'  => 'required',
+            'country_id'  => 'nullable',
+            'university_id'  => 'nullable',
+            'total_cost'  => 'nullable',
+            'image' => 'nullable|image',
+            'front_image' => 'nullable|image',
+            'passport_image' => 'nullable|image',
         ]);
 
         $data = new Registation();
@@ -82,7 +85,7 @@ class StudentController extends Controller
         $data->country_id = $request->country_id;
         $data->university_id = $request->university_id;
         $data->subject_id = $request->subject_id;
-        $data->total_cost = $request->total_cost;
+        $data->total_cost = $request->total_cost ?? 0;
         $data->processing_fees = $request->processing_fees
         ? (float) str_replace(',', '', $request->processing_fees)
         : 0;
@@ -107,6 +110,17 @@ class StudentController extends Controller
         $data->user_type = 'agent';
 
         $data->save();
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $fileName = time() . '_' . $image->getClientOriginalName();
+                $image->move(public_path('/backend/images/student'), $fileName);
+
+                $data->images()->create([
+                    'image' => '/backend/images/student/' . $fileName,
+                ]);
+            }
+        }
 
     }
 
@@ -133,7 +147,7 @@ class StudentController extends Controller
      */
     public function edit(string $id)
     {
-        $student = Registation::find($id);
+        $student = Registation::with('images')->find($id);
         $countries = Country::where('status',1)->latest()->get();
         return view('agent.pages.student.edit', compact('student', 'countries'));
     }
@@ -149,10 +163,10 @@ class StudentController extends Controller
             'mobile' => 'required|numeric|digits:11',
             'birth'  => 'nullable',
             'gender'  => 'required',
-            'country_id'  => 'required',
-            'university_id'  => 'required',
-            'total_cost'  => 'required',
-            
+            'country_id'  => 'nullable',
+            'university_id'  => 'nullable',
+            'total_cost'  => 'nullable',
+
         ]);
 
 
@@ -177,7 +191,7 @@ class StudentController extends Controller
         $data->country_id = $request->country_id;
         $data->university_id = $request->university_id;
         $data->subject_id = $request->subject_id;
-        $data->total_cost = $request->total_cost;
+        $data->total_cost = $request->total_cost ?? 0;
         $data->processing_fees = $request->processing_fees
                                 ? (float) str_replace(',', '', $request->processing_fees)
                                 : 0;
@@ -202,6 +216,40 @@ class StudentController extends Controller
         $data->temporary_address = $request->taddress;
 
         $data->save();
+
+        if ($request->has('removed_image_ids')) {
+            $ids = explode(',', $request->removed_image_ids);
+            foreach ($ids as $imageId) {
+                $galleryImage = $data->images()->find($imageId);
+                if ($galleryImage) {
+                    $imagePath = public_path($galleryImage->image);
+                    if (file_exists($imagePath)) {
+                        unlink($imagePath);
+                    }
+                    $galleryImage->delete();
+                }
+            }
+        }
+
+        if ($request->hasFile('images')) {
+            foreach ($data->images as $document) {
+                if (file_exists(public_path($document->image))) {
+                    unlink(public_path($document->image));
+                }
+                $document->delete(); // Remove from database
+            }
+
+            // Upload new document images
+            foreach ($request->file('images') as $image) {
+                $fileName = time() . '_' . $image->getClientOriginalName();
+                $image->move(public_path('/backend/images/student'), $fileName);
+
+                // Save new images in the database
+                $data->images()->create([
+                    'image' => '/backend/images/student/' . $fileName,
+                ]);
+            }
+        }
 
     }
 

@@ -51,7 +51,7 @@
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label for="validationName" class="form-label">Name</label>
-                                            <input type="text" class="form-control" id="validationName" placeholder="Person Name" name="name" value="{{ $student->name }}" required>
+                                            <input type="text" class="form-control" id="validationName" placeholder="Tourist Name" name="name" value="{{ $student->name }}" required>
                                             <div class="invalid-feedback"></div>
                                         </div>
                                     </div>

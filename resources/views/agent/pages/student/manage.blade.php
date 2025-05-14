@@ -89,11 +89,12 @@
                                                     </td>
                                                     <td>{{$student->name}}</td>
                                                     <td>
-                                                        {{ $student->country->name }}
+                                                       {{ optional($student->country)->name }}
                                                     </td>
-                                                   <td>
-                                                        {{ $student->university->name }} {{ isset($student->subject) ? '/ sub:' . $student->subject->name : '' }}
+                                                    <td>
+                                                        {{ optional($student->university)->name }} {{ isset($student->subject) ? '/ sub:' . $student->subject->name : '' }}
                                                    </td>
+
                                                     <td align="middle">{{ $student->total_cost }}BDT</td>
                                                     <td align="middle">{{ $student->processing_fees > 0 ? $student->processing_fees . 'BDT' : '-' }}</td>
                                                     <td>{{ $student->mobile }}</td>
