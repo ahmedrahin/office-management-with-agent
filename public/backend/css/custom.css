@@ -100,7 +100,7 @@
 .page-title-box{
     padding-bottom: 18px;
 }
-input, select {
+input, select, textarea {
     display: block;
     width: 100%;
     padding: .47rem .75rem;
@@ -114,7 +114,7 @@ input, select {
     transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
     border-radius: 4px;
 }
-input:focus, select:focus {
+input:focus, select:focus, textarea:focus {
     color: #505d69;
     background-color: #fff;
     border-color: #b1bbc4;

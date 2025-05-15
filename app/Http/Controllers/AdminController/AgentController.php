@@ -43,7 +43,7 @@ class AgentController extends Controller
         $data->name = $request->name;
         $data->father_name = $request->father_name;
         $data->mother_name = $request->mother_name;
-        $data->spouse_name = $request->spouse_name;
+        $data->wife_name = $request->spouse_name;
         $data->village = $request->village;
         $data->ward_no = $request->ward_no;
         $data->sub_district = $request->sub_district;
@@ -59,9 +59,9 @@ class AgentController extends Controller
         $data->experience_years = $request->previous_experience ? $request->experience_years : null;
         $data->email = $request->email;
         $data->phone = $request->phone;
-        $data->address = $request->address;
+        $data->whatsapp = $request->whatsapp;
         $data->password = bcrypt($request->password);
-
+        $data->institute_name = $request->details;
         // save
         $data->save();
 

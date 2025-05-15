@@ -36,6 +36,7 @@ return new class extends Migration
             $table->string('password');
             $table->integer('status')->default(1);
             $table->string('image')->nullable();
+            $table->longText('institute_name')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
