@@ -40,15 +40,15 @@ class JobInquiryController extends Controller
         $request->validate([
             "name"  => "required",
             'email' => 'nullable|email',
-            'mobile' => 'required|numeric|digits:11',
+            'mobile' => 'required|numeric',
             'birth'  => 'nullable',
             'gender'  => 'required',
-            'country_id'  => 'required',
-            'job_type_id'  => 'required',
-            'total_cost'  => 'required',
-            'image' => 'required|image',
-            'front_image' => 'required|image',
-            'passport_image' => 'required|image',
+            'country_id'  => 'nullable',
+            'job_type_id'  => 'nullable',
+            'total_cost'  => 'nullable',
+            'image' => 'nullable|image',
+            'front_image' => 'nullable|image',
+            'passport_image' => 'nullable|image',
         ]);
 
         $data = new JobInquiry();
@@ -72,7 +72,7 @@ class JobInquiryController extends Controller
 
         $data->country_id = $request->country_id;
         $data->job_type_id = $request->job_type_id;
-        $data->total_cost = $request->total_cost;
+        $data->total_cost = $request->total_cost ?? 0;
 
         $data->name = $request->name;
         $data->email = $request->email;
@@ -93,6 +93,18 @@ class JobInquiryController extends Controller
         $data->user_type = 'agent';
 
         $data->save();
+
+         if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $fileName = time() . '_' . $image->getClientOriginalName();
+                $image->move(public_path('/backend/images/person'), $fileName);
+
+                // Assuming you have a relation defined in the `Registation` model
+                $data->images()->create([
+                    'image' => '/backend/images/person/' . $fileName,
+                ]);
+            }
+        }
 
     }
 
@@ -132,12 +144,12 @@ class JobInquiryController extends Controller
         $request->validate([
             "name"  => "required",
             'email' => 'nullable|email',
-            'mobile' => 'required|numeric|digits:11',
+            'mobile' => 'required|numeric',
             'birth'  => 'nullable',
             'gender'  => 'required',
-            'country_id'  => 'required',
-            'job_type_id'  => 'required',
-            'total_cost'  => 'required',
+            'country_id'  => 'nullable',
+            'job_type_id'  => 'nullable',
+            'total_cost'  => 'nullable',
         ]);
 
 
@@ -182,6 +194,32 @@ class JobInquiryController extends Controller
         $data->temporary_address = $request->taddress;
 
         $data->save();
+
+        if ($request->has('removed_image_ids')) {
+            $ids = explode(',', $request->removed_image_ids);
+            foreach ($ids as $imageId) {
+                $galleryImage = $data->images()->find($imageId);
+                if ($galleryImage) {
+                    $imagePath = public_path($galleryImage->image);
+                    if (file_exists($imagePath)) {
+                        unlink($imagePath);
+                    }
+                    $galleryImage->delete();
+                }
+            }
+        }
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $fileName = time() . '_' . $image->getClientOriginalName();
+                $image->move(public_path('/backend/images/person'), $fileName);
+
+                // Save new images in the database
+                $data->images()->create([
+                    'image' => '/backend/images/person/' . $fileName,
+                ]);
+            }
+        }
 
     }
 

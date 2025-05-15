@@ -39,7 +39,7 @@
                                     Edit Student
                                 </div>
                                 <div>
-                                    <a href="{{ route('student-registration.index') }}" class="btn btn-primary addnew"> <i class="ri-arrow-left-line"></i> View All</a>
+                                    <a href="{{ route('student.index') }}" class="btn btn-primary addnew"> <i class="ri-arrow-left-line"></i> View All</a>
                                 </div>
                             </h4>
 
@@ -187,7 +187,7 @@
                                     <div class="col-md-3">
                                         <div class="mb-3">
                                             <label for="emp" class="form-label">Country</label>
-                                            <select name="country_id" id="country_id" class="form-control select2" required>
+                                            <select name="country_id" id="country_id" class="form-control select2" >
                                                 <option value="">Select a country</option>
                                                 @foreach ($countries as $country)
                                                     <option value="{{ $country->id }}" {{ $student->country_id == $country->id ? 'selected' : '' }}>{{ $country->name }}</option>
@@ -200,7 +200,7 @@
                                     <div class="col-md-3">
                                         <div class="mb-3">
                                             <label for="university_id" class="form-label">University</label>
-                                            <select name="university_id" id="university_id" class="form-control select2" required>
+                                            <select name="university_id" id="university_id" class="form-control select2" >
                                                 <option value="">Select a university</option>
                                             </select>
                                             <div id="universityErr" class="invalid-feedback"></div>
@@ -209,7 +209,7 @@
 
                                     <div class="col-md-3">
                                         <label class="form-label">Subject</label>
-                                        <select name="subject_id" id="subject_id" class="form-control select2" required>
+                                        <select name="subject_id" id="subject_id" class="form-control select2" >
                                             <option value="">Select a subject</option>
                                         </select>
                                     </div>
@@ -222,7 +222,7 @@
 
                                     <div class="col-12">
                                         <label class="form-label">Total Cost</label>
-                                        <input type="text" name="total_cost" id="total_cost" class="form-control" value="{{ $student->total_cost }}" required>
+                                        <input type="text" name="total_cost" id="total_cost" class="form-control" value="{{ $student->total_cost }}" >
                                         <div class="invalid-feedback"></div>
                                     </div>
 
@@ -264,25 +264,45 @@
 
                                 {{-- gellary image --}}
                                 <div class="row" style="margin-top: 20px;">
-                                    <label class="form-label">Additional Documents (SSC/ HSC Certificate, Marksheets, Medical Report, Bank Statement and others)</label>
+                                    <label class="form-label">Additional Documents (SSC/ HSC Certificate, Marksheets, Medical Report, Bank Statement, and others)</label>
                                     <div>
-                                        <input type="file" id="images" name="images[]" accept="image/*" multiple
-                                            class="form-control" />
-                                        <p class="form-text text-muted mt-1">You can select multiple images.</p>
+                                        <input type="file" id="images" name="images[]" accept=".pdf, .doc, .docx, .xls, .xlsx, .txt, image/*" multiple class="form-control" />
+                                        <p class="form-text text-muted mt-1">You can select multiple images and documents.</p>
                                         <div class="text-danger error mt-1"></div>
 
+                                        <!-- Hidden input to store removed IDs -->
                                         <input type="hidden" name="removed_image_ids" id="removedImageIds" value="">
 
+                                        <!-- Existing Images/Documents -->
                                         <div id="existingGalleryImages" class="preview-wrapper mt-3">
                                             @foreach($student->images as $image)
+                                                @php
+                                                    $fileExtension = pathinfo($image->image, PATHINFO_EXTENSION);
+                                                @endphp
                                                 <div class="preview-item" data-id="{{ $image->id }}">
-                                                    <img src="{{ asset($image->image) }}" />
+                                                    @if (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif']))
+                                                        <img src="{{ asset($image->image) }}" alt="Image Preview" />
+                                                    @else
+                                                        <div class="file-icon">
+                                                            @if ($fileExtension === 'pdf')
+                                                                <img src="{{ asset('backend/icons/pdf.png') }}" alt="PDF">
+                                                            @elseif (in_array($fileExtension, ['doc', 'docx']))
+                                                                <img src="{{ asset('backend/icons/word.png') }}" alt="Word">
+                                                            @elseif (in_array($fileExtension, ['xls', 'xlsx']))
+                                                                <img src="{{ asset('backend/icons/excel.png') }}" alt="Excel">
+                                                            @elseif ($fileExtension === 'txt')
+                                                                <img src="{{ asset('backend/icons/txt.png') }}" alt="Text">
+                                                            @else
+                                                                <img src="{{ asset('backend/icons/file.png') }}" alt="File">
+                                                            @endif
+                                                        </div>
+                                                    @endif
                                                     <button type="button" class="remove-btn existing-remove" data-id="{{ $image->id }}">&times;</button>
                                                 </div>
                                             @endforeach
                                         </div>
 
-                                        <!-- Preview -->
+                                        <!-- New Upload Previews -->
                                         <div id="imagePreviewContainer" class="preview-wrapper mt-3 mb-4"></div>
                                     </div>
                                 </div>
@@ -577,10 +597,12 @@
     </script>
 
 
-    {{-- gellary images --}}
+   {{-- gellary images --}}
     <script>
+
         let removedImageIds = [];
 
+        // Remove existing images
         document.querySelectorAll('.existing-remove').forEach(button => {
             button.addEventListener('click', function () {
                 const imageId = this.getAttribute('data-id');
@@ -590,7 +612,7 @@
             });
         });
 
-        // Preview new uploads
+        // Preview newly added files
         document.getElementById('images').addEventListener('change', function (event) {
             const files = event.target.files;
             const previewContainer = document.getElementById('imagePreviewContainer');
@@ -602,8 +624,16 @@
                     const wrapper = document.createElement('div');
                     wrapper.className = 'preview-item';
 
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
+                    const fileExtension = file.name.split('.').pop().toLowerCase();
+                    if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        wrapper.appendChild(img);
+                    } else {
+                        const icon = document.createElement('img');
+                        icon.src = `/backend/icons/${fileExtension}.png`;
+                        wrapper.appendChild(icon);
+                    }
 
                     const removeBtn = document.createElement('button');
                     removeBtn.innerHTML = '&times;';
@@ -619,10 +649,10 @@
                         document.getElementById('images').dispatchEvent(new Event('change'));
                     });
 
-                    wrapper.appendChild(img);
                     wrapper.appendChild(removeBtn);
                     previewContainer.appendChild(wrapper);
                 };
+
                 reader.readAsDataURL(file);
             });
         });

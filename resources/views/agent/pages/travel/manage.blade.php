@@ -87,10 +87,10 @@
                                                     </td>
                                                     <td>{{$student->name}}</td>
                                                     <td>
-                                                        {{ $student->country->name }}
+                                                         {{ optional($student->country)->name }}
                                                     </td>
                                                    
-                                                    <td>{{ $student->TouristPlace->name }}</td>                                                   
+                                                    <td>{{ optional($student->TouristPlace)->name }}</td>                                                   
                                                     
                                                     <td align="middle">{{ $student->total_cost }}BDT</td>
                                                     <td>{{ $student->mobile }}</td>

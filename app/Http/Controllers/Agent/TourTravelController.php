@@ -41,15 +41,15 @@ class TourTravelController extends Controller
         $request->validate([
             "name"  => "required",
             'email' => 'nullable|email',
-            'mobile' => 'required|numeric|digits:11',
+            'mobile' => 'required|numeric',
             'birth'  => 'nullable',
             'gender'  => 'required',
-            'country_id'  => 'required',
-            'tourist_place_id'  => 'required',
-            'total_cost'  => 'required',
-            'image' => 'required|image',
-            'front_image' => 'required|image',
-            'passport_image' => 'required|image',
+            'country_id'  => 'nullable',
+            'tourist_place_id'  => 'nullable',
+            'total_cost'  => 'nullable',
+            'image' => 'nullable|image',
+            'front_image' => 'nullable|image',
+            'passport_image' => 'nullable|image',
         ]);
 
         $data = new Tourist();
@@ -73,7 +73,7 @@ class TourTravelController extends Controller
 
         $data->country_id = $request->country_id;
         $data->tourist_place_id = $request->tourist_place_id;
-        $data->total_cost = $request->total_cost;
+        $data->total_cost = $request->total_cost ?? 0;
 
         $data->name = $request->name;
         $data->email = $request->email;
@@ -94,6 +94,18 @@ class TourTravelController extends Controller
         $data->user_type = 'agent';
 
         $data->save();
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $fileName = time() . '_' . $image->getClientOriginalName();
+                $image->move(public_path('/backend/images/travel'), $fileName);
+
+                // Assuming you have a relation defined in the `Registation` model
+                $data->images()->create([
+                    'image' => '/backend/images/travel/' . $fileName,
+                ]);
+            }
+        }
 
     }
 
@@ -131,12 +143,12 @@ class TourTravelController extends Controller
         $request->validate([
             "name"  => "required",
             'email' => 'nullable|email',
-            'mobile' => 'required|numeric|digits:11',
+            'mobile' => 'required|numeric',
             'birth'  => 'nullable',
-            'gender'  => 'required',
-            'country_id'  => 'required',
-            'tourist_place_id'  => 'required',
-            'total_cost'  => 'required',
+            'gender'  => 'nullable',
+            'country_id'  => 'nullable',
+            'tourist_place_id'  => 'nullable',
+            'total_cost'  => 'nullable',
         ]);
 
 
@@ -160,7 +172,7 @@ class TourTravelController extends Controller
 
         $data->country_id = $request->country_id;
         $data->tourist_place_id = $request->tourist_place_id;
-        $data->total_cost = $request->total_cost;
+        $data->total_cost = $request->total_cost ?? 0;
 
         // Update Student Data
         $data->name = $request->name;
@@ -181,6 +193,32 @@ class TourTravelController extends Controller
         $data->temporary_address = $request->taddress;
 
         $data->save();
+
+        if ($request->has('removed_image_ids')) {
+            $ids = explode(',', $request->removed_image_ids);
+            foreach ($ids as $imageId) {
+                $galleryImage = $data->images()->find($imageId);
+                if ($galleryImage) {
+                    $imagePath = public_path($galleryImage->image);
+                    if (file_exists($imagePath)) {
+                        unlink($imagePath);
+                    }
+                    $galleryImage->delete();
+                }
+            }
+        }
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $fileName = time() . '_' . $image->getClientOriginalName();
+                $image->move(public_path('/backend/images/travel'), $fileName);
+
+                // Save new images in the database
+                $data->images()->create([
+                    'image' => '/backend/images/travel/' . $fileName,
+                ]);
+            }
+        }
 
     }
 

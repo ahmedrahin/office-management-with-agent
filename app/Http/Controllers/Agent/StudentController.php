@@ -52,7 +52,7 @@ class StudentController extends Controller
        $request->validate([
             "name"  => "required",
             'email' => 'nullable|email',
-            'mobile' => 'required|numeric|digits:11',
+            'mobile' => 'required|numeric',
             'birth'  => 'nullable',
             'gender'  => 'required',
             'country_id'  => 'nullable',
@@ -160,7 +160,7 @@ class StudentController extends Controller
         $request->validate([
             "name"  => "required",
             'email' => 'nullable|email',
-            'mobile' => 'required|numeric|digits:11',
+            'mobile' => 'required|numeric',
             'birth'  => 'nullable',
             'gender'  => 'required',
             'country_id'  => 'nullable',
@@ -232,14 +232,6 @@ class StudentController extends Controller
         }
 
         if ($request->hasFile('images')) {
-            foreach ($data->images as $document) {
-                if (file_exists(public_path($document->image))) {
-                    unlink(public_path($document->image));
-                }
-                $document->delete(); // Remove from database
-            }
-
-            // Upload new document images
             foreach ($request->file('images') as $image) {
                 $fileName = time() . '_' . $image->getClientOriginalName();
                 $image->move(public_path('/backend/images/student'), $fileName);

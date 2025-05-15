@@ -295,13 +295,15 @@
                                         </div>
                                     </div>
 
-                                   {{-- gellary image --}}
+                                  {{-- gellary image --}}
                                     <div class="row" style="margin-top: 20px;">
-                                        <label class="form-label">Additional Documents (SSC/ HSC Certificate, Marksheets, Medical Report, Bank Statement and others)</label>
+                                        <label class="form-label">Additional Documents (SSC/ HSC Certificate, Marksheets,
+                                            Medical Report, Bank Statement and others)</label>
                                         <div>
-                                            <input type="file" id="images" name="images[]" multiple
+                                            <input type="file" id="images" name="images[]"
+                                                accept=".pdf, .doc, .docx, .xls, .xlsx, .txt, image/*" multiple
                                                 class="form-control" />
-                                            <p class="form-text text-muted mt-1">You can select multiple images.</p>
+                                            <p class="form-text text-muted mt-1">You can select multiple files.</p>
                                             <div class="text-danger error mt-1"></div>
 
                                             <!-- Preview -->
@@ -569,40 +571,67 @@
         </script>
 
         <script>
-            document.getElementById('images').addEventListener('change', function (event) {
+            document.getElementById('images').addEventListener('change', function(event) {
                 const files = event.target.files;
                 const previewContainer = document.getElementById('imagePreviewContainer');
                 previewContainer.innerHTML = '';
 
+                // Loop through selected files
                 Array.from(files).forEach((file, index) => {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        const wrapper = document.createElement('div');
-                        wrapper.className = 'preview-item';
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'preview-item';
 
-                        const img = document.createElement('img');
-                        img.src = e.target.result;
+                    const removeBtn = document.createElement('button');
+                    removeBtn.innerHTML = '&times;';
+                    removeBtn.className = 'remove-btn';
 
-                        const removeBtn = document.createElement('button');
-                        removeBtn.innerHTML = '&times;';
-                        removeBtn.className = 'remove-btn';
-
-                        removeBtn.addEventListener('click', function () {
-                            const dt = new DataTransfer();
-                            Array.from(files).forEach((f, i) => {
-                                if (i !== index) dt.items.add(f);
-                            });
-                            event.target.files = dt.files;
-                            wrapper.remove();
-                            // Re-render updated previews
-                            document.getElementById('images').dispatchEvent(new Event('change'));
+                    removeBtn.addEventListener('click', function() {
+                        const dt = new DataTransfer();
+                        Array.from(files).forEach((f, i) => {
+                            if (i !== index) dt.items.add(f);
                         });
+                        event.target.files = dt.files;
+                        wrapper.remove();
+                        // Re-render updated previews
+                        document.getElementById('images').dispatchEvent(new Event('change'));
+                    });
 
-                        wrapper.appendChild(img);
-                        wrapper.appendChild(removeBtn);
-                        previewContainer.appendChild(wrapper);
-                    };
-                    reader.readAsDataURL(file);
+                    // ** Determine file type for preview **
+                    const fileExtension = file.name.split('.').pop().toLowerCase();
+                    const validImages = ['jpg', 'jpeg', 'png', 'gif'];
+                    const validDocs = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'txt'];
+
+                    if (validImages.includes(fileExtension)) {
+                        // Image Preview
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+                            wrapper.appendChild(img);
+                        };
+                        reader.readAsDataURL(file);
+                    } else if (validDocs.includes(fileExtension)) {
+                        // File Preview for non-images
+                        const icon = document.createElement('img');
+
+                        if (fileExtension === 'pdf') {
+                            icon.src = '/backend/icons/pdf.png';
+                        } else if (['doc', 'docx'].includes(fileExtension)) {
+                            icon.src = '/backend/icons/word.png';
+                        } else if (['xls', 'xlsx'].includes(fileExtension)) {
+                            icon.src = '/backend/icons/excel.png';
+                        } else if (fileExtension === 'txt') {
+                            icon.src = '/backend/icons/txt.png';
+                        } else {
+                            icon.src = '/backend/icons/file.png';
+                        }
+
+                        icon.className = 'file-icon';
+                        wrapper.appendChild(icon);
+                    }
+
+                    wrapper.appendChild(removeBtn);
+                    previewContainer.appendChild(wrapper);
                 });
             });
         </script>
