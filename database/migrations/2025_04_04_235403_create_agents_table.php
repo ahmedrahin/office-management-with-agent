@@ -14,9 +14,25 @@ return new class extends Migration
         Schema::create('agents', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('father_name')->nullable();
+            $table->string('mother_name')->nullable();
+            $table->string('wife_name')->nullable();
+            $table->string('village')->nullable();
+            $table->string('ward_no')->nullable();
+            $table->string('sub_district')->nullable(); // Upazila
+            $table->string('district')->nullable();
+            $table->string('division')->nullable();
+            $table->string('whatsapp')->nullable();
+            $table->string('phone')->nullable()->unique();
+            $table->string('nid_number')->nullable();
+            $table->string('passport_number')->nullable();
+            $table->text('current_address')->nullable();
+            $table->text('permanent_address')->nullable();
+            $table->string('education_qualification')->nullable();
+            $table->string('study_institute')->nullable();
+            $table->boolean('previous_experience')->default(false);
+            $table->integer('experience_years')->nullable();
             $table->string('email')->unique()->nullable();
-            $table->string('phone')->nullable();
-            $table->string('address')->nullable();
             $table->string('password');
             $table->integer('status')->default(1);
             $table->string('image')->nullable();
@@ -24,6 +40,7 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
+
     }
 
     /**
