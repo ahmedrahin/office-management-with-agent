@@ -15,24 +15,23 @@ class AgentController extends Controller
     }
 
     public function create()
-    {   
+    {
         return view('backend.pages.agent.add');
     }
 
     public function store(Request $request)
-    {   
+    {
         // validation
         $request->validate([
-            "name" => "required",
-            'email' => 'required|email|unique:agents,email|unique:users,email',
-            'phone' => 'nullable|numeric|digits:11',
-            'password' => 'required|min:6'
-        ],);
+            'name' => 'required|string|max:255',
+            'password' => 'required|min:6',
+            'image' => 'nullable|image|mimes:jpeg,jpg,png|max:2048'
+        ]);
 
         $data = new Agent();
 
-         // image 
-         if ($request->hasFile('image')) {
+        // image
+        if ($request->hasFile('image')) {
             $thumbImage = $request->file('image');
             $thumbImageName = time() . '_' . $thumbImage->getClientOriginalName();
             $thumbImage->move(public_path('/backend/images/agent'), $thumbImageName);
@@ -41,20 +40,36 @@ class AgentController extends Controller
             $data->image = $image;
         }
 
-        $data->name        = $request->name;
-        $data->email       = $request->email;
-        $data->phone       = $request->phone;
-        $data->address     = $request->address;
-        $data->password    = bcrypt($request->password);
-    
+        $data->name = $request->name;
+        $data->father_name = $request->father_name;
+        $data->mother_name = $request->mother_name;
+        $data->spouse_name = $request->spouse_name;
+        $data->village = $request->village;
+        $data->ward_no = $request->ward_no;
+        $data->sub_district = $request->sub_district;
+        $data->district = $request->district;
+        $data->division = $request->division;
+        $data->nid_number = $request->nid_number;
+        $data->passport_number = $request->passport_number;
+        $data->current_address = $request->current_address;
+        $data->permanent_address = $request->permanent_address;
+        $data->education_qualification = $request->education_qualification;
+        $data->study_institute = $request->study_institute;
+        $data->previous_experience = $request->previous_experience;
+        $data->experience_years = $request->previous_experience ? $request->experience_years : null;
+        $data->email = $request->email;
+        $data->phone = $request->phone;
+        $data->address = $request->address;
+        $data->password = bcrypt($request->password);
+
         // save
         $data->save();
 
         return response()->json([
             'success' => true
         ]);
-        
     }
+
 
     public function show(string $id){
         $student = Agent::find($id);
@@ -85,7 +100,7 @@ class AgentController extends Controller
     }
 
     public function activeStatus(Request $request, string $id)
-    {   
+    {
         // update id
         $update = Agent::find($id);
         $update->status = $request->status;
