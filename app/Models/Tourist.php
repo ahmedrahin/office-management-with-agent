@@ -26,4 +26,8 @@ class Tourist extends Model
     public function TouristPlace(){
         return $this->belongsTo(TouristPlace::class, 'tourist_place_id');
     }
+
+    public function images(){
+        return $this->hasMany(TouristImages::class);
+    }
 }

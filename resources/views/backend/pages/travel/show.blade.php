@@ -72,8 +72,28 @@
                         <div class="info-group"><strong>Mobile:</strong><span>{{ $student->mobile }}</span></div>
                         <div class="info-group"><strong>Permanent Address:</strong><span>{{ $student->permanent_address }}, {{ $student->permanent_district }}, {{ $student->permanent_division }}</span></div>
                         <div class="info-group"><strong>Temporary Address:</strong><span>{{ $student->temporary_address }}, {{ $student->temporary_district }}, {{ $student->temporary_division }}</span></div>
-                        <div class="info-group"><strong>Country:</strong><span><a href="{{ route('country.show', $student->country->id) }}" target="_blank">{{ $student->country->name }}</a></span></div>
-                        <div class="info-group"><strong>Selected Place:</strong><span><a href="{{ route('tourist.show', $student->TouristPlace->id) }}" target="_blank">{{ $student->TouristPlace->name }}</a></span></div>
+                        <div class="info-group">
+                            <strong>Country:</strong>
+                            <span>
+                                @if ($student->country)
+                                    <a href="{{ route('country.show', $student->country->id) }}" target="_blank">{{ $student->country->name }}</a>
+                                @else
+                                    <em>Not Available</em>
+                                @endif
+                            </span>
+                        </div>
+
+                        <div class="info-group">
+                            <strong>Selected Place:</strong>
+                            <span>
+                                @if ($student->TouristPlace)
+                                    <a href="{{ route('tourist.show', $student->TouristPlace->id) }}" target="_blank">{{ $student->TouristPlace->name }}</a>
+                                @else
+                                    <em>Not Available</em>
+                                @endif
+                            </span>
+                        </div>
+
                         
                         <div class="info-group"><strong>Total_cost:</strong><span>{{ $student->total_cost }}BDT</span></div>
                         {{-- <div class="info-group"><strong>Processing Fees:</strong><span>{{ $student->processing_fees > 0 ? $student->processing_fees . ' BDT' : 'N/A' }}</span></div> --}}
@@ -83,33 +103,51 @@
 
                     {{-- 🖼️ Student Documents --}}
                     <div class="image-gallery">
-                        @if($student->image)
-                            <a href="{{ asset($student->image) }}" data-lightbox="student-gallery" data-title="Profile Image">
-                                <img src="{{ asset($student->image) }}" alt="Profile Image">
-                            </a>
-                        @endif
+                        {{-- Profile Images --}}
+                        @foreach (['image' => 'Profile Image', 'front_image' => 'Front Image', 'back_image' => 'Back Image', 'passport_image' => 'Passport Image'] as $field => $title)
+                            @if ($student->$field)
+                                <a href="{{ asset($student->$field) }}" data-lightbox="student-gallery" data-title="{{ $title }}">
+                                    <img src="{{ asset($student->$field) }}" alt="{{ $title }}">
+                                </a>
+                            @endif
+                        @endforeach
 
-                        @if($student->front_image)
-                            <a href="{{ asset($student->front_image) }}" data-lightbox="student-gallery" data-title="Front Image">
-                                <img src="{{ asset($student->front_image) }}" alt="Front Image">
-                            </a>
-                        @endif
+                        {{-- Document Files --}}
+                        @foreach ($student->images as $document)
+                            @php
+                                $fileExtension = pathinfo($document->image, PATHINFO_EXTENSION);
+                                $fileName = basename($document->image);
+                            @endphp
 
-                        @if($student->back_image)
-                            <a href="{{ asset($student->back_image) }}" data-lightbox="student-gallery" data-title="Back Image">
-                                <img src="{{ asset($student->back_image) }}" alt="Back Image">
-                            </a>
-                        @endif
+                            @if (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif', 'bmp']))
+                                <a href="{{ asset($document->image) }}" data-lightbox="student-gallery" data-title="Document Image">
+                                    <img src="{{ asset($document->image) }}" alt="Document Image">
+                                </a>
+                            @else
+                                <div class="file-card">
+                                    <a href="{{ asset($document->image) }}" target="_blank">
+                                        <div class="files">
+                                            @if ($fileExtension === 'pdf')
+                                                <img src="{{ asset('backend/icons/pdf.png') }}" alt="PDF">
+                                            @elseif (in_array($fileExtension, ['doc', 'docx']))
+                                                <img src="{{ asset('backend/icons/word.png') }}" alt="Word">
+                                            @elseif (in_array($fileExtension, ['xls', 'xlsx']))
+                                                <img src="{{ asset('backend/icons/excel.png') }}" alt="Excel">
+                                            @elseif ($fileExtension === 'txt')
+                                                <img src="{{ asset('backend/icons/txt.png') }}" alt="Text">
+                                            @else
+                                                <img src="{{ asset('backend/icons/file.png') }}" alt="File">
+                                            @endif
+                                        </div>
 
-                        @if($student->passport_image)
-                            <a href="{{ asset($student->passport_image) }}" data-lightbox="student-gallery" data-title="Passport Image">
-                                <img src="{{ asset($student->passport_image) }}" alt="Passport Image">
-                            </a>
-                        @endif
+                                    </a>
+                                </div>
+                            @endif
+                        @endforeach
                     </div>
 
                     <div class="card-footer text-center">
-                        <a href="{{ route('student-registration.edit', $student->id) }}" class="btn btn-warning">Edit</a>
+                        <a href="{{ route('tour-travel.edit', $student->id) }}" class="btn btn-warning">Edit</a>
                         <button onclick="window.print()" class="btn btn-success ms-2">
                             <i class="fa fa-print"></i> Print
                         </button>

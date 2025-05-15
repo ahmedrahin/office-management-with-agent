@@ -89,10 +89,10 @@
                                                     </td>
                                                     <td>{{$student->name}}</td>
                                                     <td>
-                                                        {{ $student->country->name }}
+                                                        {{ optional($student->country)->name }}
                                                     </td>
                                                    <td>
-                                                    {{ $student->jobType->name }}
+                                                        {{ optional($student->jobType)->name }}
                                                    </td>
                                                     
                                                     <td>{{ $student->mobile }}</td>

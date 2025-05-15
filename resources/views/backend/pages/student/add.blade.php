@@ -317,7 +317,7 @@
                                         <input type="file" id="images" name="images[]"
                                             accept=".pdf, .doc, .docx, .xls, .xlsx, .txt, image/*" multiple
                                             class="form-control" />
-                                        <p class="form-text text-muted mt-1">You can select multiple images.</p>
+                                        <p class="form-text text-muted mt-1">You can select multiple files.</p>
                                         <div class="text-danger error mt-1"></div>
 
                                         <!-- Preview -->

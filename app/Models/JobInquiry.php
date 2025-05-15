@@ -27,4 +27,8 @@ class JobInquiry extends Model
         return $this->belongsTo(JobType::class, 'job_type_id');
     }
 
+     public function images(){
+        return $this->hasMany(JobInquiryImages::class);
+    }
+
 }

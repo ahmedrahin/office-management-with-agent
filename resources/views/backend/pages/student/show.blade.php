@@ -49,43 +49,6 @@
             border-color: #007bff;
         }
     </style>
-
-    <style>
-        .document-gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-
-
-        .file-card a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        .files img {
-            width: 120px !important;
-            height: 120px !important;
-            margin: 15px auto;
-        }
-
-        .file-info {
-            padding: 5px 10px;
-            font-size: 12px;
-            color: #333;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .file-name {
-            margin-bottom: 10px;
-        }
-    </style>
-
-
 @endsection
 
 @section('body-content')

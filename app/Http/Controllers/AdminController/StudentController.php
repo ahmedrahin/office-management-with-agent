@@ -57,7 +57,7 @@ class StudentController extends Controller
         $request->validate([
             "name"  => "required",
             'email' => 'nullable|email',
-            'mobile' => 'required|numeric|digits:11',
+            'mobile' => 'required|numeric',
             'birth'  => 'nullable',
             'gender'  => 'required',
             'country_id'  => 'nullable',
@@ -165,7 +165,7 @@ class StudentController extends Controller
         $request->validate([
             "name"  => "required",
             'email' => 'nullable|email',
-            'mobile' => 'required|numeric|digits:11',
+            'mobile' => 'required|numeric',
             'birth'  => 'nullable',
             'gender'  => 'required',
             'country_id'  => 'nullable',
