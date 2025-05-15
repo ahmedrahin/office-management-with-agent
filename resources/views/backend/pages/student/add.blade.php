@@ -4,13 +4,11 @@
 @endsection
 
 @section('page-css')
-    <link href="{{asset('backend/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}" rel="stylesheet">
-    <link href="{{asset('backend/libs/select2/css/select2.min.css')}}" rel="stylesheet">
-
+    <link href="{{ asset('backend/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('backend/libs/select2/css/select2.min.css') }}" rel="stylesheet">
 @endsection
 
 @section('body-content')
-
     <!-- Start Page-content -->
     <div class="page-content">
         <div class="container-fluid">
@@ -21,7 +19,8 @@
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                         <div class="page-title">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="{{ url('/') }}">{{ \App\Models\Settings::site_title() }}</a></li>
+                                <li class="breadcrumb-item"><a
+                                        href="{{ url('/') }}">{{ \App\Models\Settings::site_title() }}</a></li>
                                 <li class="breadcrumb-item active">Student Register Form</li>
                             </ol>
                         </div>
@@ -39,32 +38,37 @@
                                     Register Student
                                 </div>
                                 <div>
-                                    <a href="{{ route('student-registration.index') }}" class="btn btn-primary addnew"> <i class="ri-arrow-left-line"></i> View All</a>
+                                    <a href="{{ route('student-registration.index') }}" class="btn btn-primary addnew"> <i
+                                            class="ri-arrow-left-line"></i> View All</a>
                                 </div>
                             </h4>
 
-                            <form action="{{route('student-registration.store')}}" method="POST" class="needs-validation"  novalidate enctype="multipart/form-data">
+                            <form action="{{ route('student-registration.store') }}" method="POST" class="needs-validation"
+                                novalidate enctype="multipart/form-data">
                                 @csrf
 
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label for="validationName" class="form-label">Name</label>
-                                            <input type="text" class="form-control" id="validationName" placeholder="Student Name" name="name" required>
+                                            <input type="text" class="form-control" id="validationName"
+                                                placeholder="Student Name" name="name" required>
                                             <div class="invalid-feedback"></div>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label for="father_name" class="form-label">Father Name</label>
-                                            <input type="text"  id="father_name" placeholder="Father Name" name="father_name">
+                                            <input type="text" id="father_name" placeholder="Father Name"
+                                                name="father_name">
                                             <div class="invalid-feedback"></div>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label for="mother_name" class="form-label">Mother Name</label>
-                                            <input type="text"  id="mother_name" placeholder="Mother Name" name="mother_name">
+                                            <input type="text" id="mother_name" placeholder="Mother Name"
+                                                name="mother_name">
                                             <div class="invalid-feedback"></div>
                                         </div>
                                     </div>
@@ -74,7 +78,8 @@
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label for="email" class="form-label">Email Address</label>
-                                            <input type="text" class="form-control" id="email" placeholder="Email Address" name="email">
+                                            <input type="text" class="form-control" id="email"
+                                                placeholder="Email Address" name="email">
                                             <div class="invalid-feedback"></div>
                                         </div>
                                     </div>
@@ -82,9 +87,11 @@
                                         <div class="mb-3">
                                             <label for="birth" class="form-label">Date of Birth</label>
                                             <div class="input-group" id="datepicker1">
-                                                <input type="text" class="form-control" name="birth" placeholder="dd M, yyyy"
-                                                    data-date-format="dd M, yyyy" data-date-container='#datepicker1' data-provide="datepicker" name="date" autocomplete="off" >
-                                                    <div class="invalid-feedback"></div>
+                                                <input type="text" class="form-control" name="birth"
+                                                    placeholder="dd M, yyyy" data-date-format="dd M, yyyy"
+                                                    data-date-container='#datepicker1' data-provide="datepicker"
+                                                    name="date" autocomplete="off">
+                                                <div class="invalid-feedback"></div>
                                                 <span class="input-group-text"><i class="mdi mdi-calendar"></i></span>
                                             </div>
                                         </div>
@@ -92,7 +99,8 @@
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label for="mobile" class="form-label">Mobile</label>
-                                            <input type="number"  id="mobile" placeholder="+88 0" name="mobile" required>
+                                            <input type="number" id="mobile" placeholder="+88 0" name="mobile"
+                                                required>
                                             <div class="invalid-feedback"></div>
                                         </div>
                                     </div>
@@ -104,11 +112,13 @@
                                             <label class="form-label">Gender</label>
                                             <div class="d-flex" style="gap: 10px;">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="gender" id="male" value="male" style="padding: 7px;" required>
+                                                    <input class="form-check-input" type="radio" name="gender"
+                                                        id="male" value="male" style="padding: 7px;" required>
                                                     <label class="form-check-label" for="male">Male</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="gender" id="female" value="female" style="padding: 7px;" required>
+                                                    <input class="form-check-input" type="radio" name="gender"
+                                                        id="female" value="female" style="padding: 7px;" required>
                                                     <div class="invalid-feedback"></div>
                                                     <label class="form-check-label" for="female">Female</label>
                                                 </div>
@@ -129,21 +139,21 @@
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label for="pdivision" class="form-label">Division</label>
-                                            <input type="text" id="pdivision"  name="pdivision">
+                                            <input type="text" id="pdivision" name="pdivision">
                                             <div class="invalid-feedback"></div>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label for="pdistrict" class="form-label">District</label>
-                                            <input type="text"  id="pdistrict"  name="pdistrict">
+                                            <input type="text" id="pdistrict" name="pdistrict">
                                             <div class="invalid-feedback"></div>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label for="paddress" class="form-label">Address</label>
-                                            <input type="text" id="paddress"  name="paddress">
+                                            <input type="text" id="paddress" name="paddress">
                                             <div class="invalid-feedback"></div>
                                         </div>
                                     </div>
@@ -151,7 +161,7 @@
 
                                 <div class="mt-2">
                                     <label for="sameaspermanent" class="mb-0">Same as Permanent Address:</label>
-                                    <input type="checkbox"  id="sameaspermanent">
+                                    <input type="checkbox" id="sameaspermanent">
                                 </div>
 
                                 <h5 class="my-4 mb-3">
@@ -162,14 +172,14 @@
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label for="tdivision" class="form-label">Division</label>
-                                            <input type="text" id="tdivision"  name="tdivision">
+                                            <input type="text" id="tdivision" name="tdivision">
                                             <div class="invalid-feedback"></div>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label for="tdistrict" class="form-label">District</label>
-                                            <input type="text" id="tdistrict"  name="tdistrict">
+                                            <input type="text" id="tdistrict" name="tdistrict">
                                             <div class="invalid-feedback"></div>
                                         </div>
                                     </div>
@@ -188,7 +198,7 @@
                                     <div class="col-md-3">
                                         <div class="mb-3">
                                             <label for="emp" class="form-label">Country</label>
-                                            <select name="country_id" id="country_id" class="form-control select2" >
+                                            <select name="country_id" id="country_id" class="form-control select2">
                                                 <option value="">Select a country</option>
                                                 @foreach ($countries as $country)
                                                     <option value="{{ $country->id }}">{{ $country->name }}</option>
@@ -201,7 +211,7 @@
                                     <div class="col-md-3">
                                         <div class="mb-3">
                                             <label for="university_id" class="form-label">University</label>
-                                            <select name="university_id" id="university_id" class="form-control select2" >
+                                            <select name="university_id" id="university_id" class="form-control select2">
                                                 <option value="">Select a university</option>
                                             </select>
                                             <div id="universityErr" class="invalid-feedback"></div>
@@ -210,7 +220,7 @@
 
                                     <div class="col-md-3">
                                         <label class="form-label">Subject</label>
-                                        <select name="subject_id" id="subject_id" class="form-control select2" >
+                                        <select name="subject_id" id="subject_id" class="form-control select2">
                                             <option value="">Select a subject</option>
                                         </select>
                                     </div>
@@ -218,127 +228,131 @@
                                     {{-- Price --}}
                                     <div class="col-md-3">
                                         <label class="form-label">Processing Fees</label>
-                                        <input type="text" name="processing_fees" id="subject_price" class="form-control" readonly>
+                                        <input type="text" name="processing_fees" id="subject_price"
+                                            class="form-control" readonly>
                                     </div>
 
                                     <div class="col-12">
                                         <label class="form-label">Total Cost</label>
-                                        <input type="text" name="total_cost" id="total_cost" class="form-control" >
+                                        <input type="text" name="total_cost" id="total_cost" class="form-control">
                                         <div class="invalid-feedback"></div>
                                     </div>
 
                                 </div>
 
-                                    <div class="row">
-                                        <div class="col-md-3">
+                                <div class="row">
+                                    <div class="col-md-3">
                                         <div class="mb-3">
-                                                <label class="form-label">Student Image</label>
-                                                <div class="AppBody">
-                                                    <div class="icon">
-                                                        <i class="fas fa-images"></i>
-                                                    </div>
-
-                                                    <h3 class="drag mb-0">Drag & Drop</h3>
-                                                    <span>OR</span>
-                                                    <button type="button" id="browseFile">Browse File</button>
-                                                    <input type="file" name="image" class="picture" hidden>
+                                            <label class="form-label">Student Image</label>
+                                            <div class="AppBody">
+                                                <div class="icon">
+                                                    <i class="fas fa-images"></i>
                                                 </div>
-                                                <div class="msgError mt-2" id="imageErr"></div>
-                                        </div>
-                                        </div>
 
-                                        <div class="col-md-3">
-                                            <div class="mb-3">
-                                                <label  class="form-label">Nid/birth certificate front-side</label>
-                                                <div class="AppBody">
-                                                    <div class="icon">
-                                                        <i class="fas fa-images"></i>
-                                                    </div>
-
-                                                    <h3 class="drag mb-0">Drag & Drop</h3>
-                                                    <span>OR</span>
-                                                    <button type="button" id="browseFile">Browse File</button>
-                                                    <input type="file" name="front_image" class="picture" hidden>
-                                                </div>
-                                                <div class="msgError mt-2" id="frontErr"></div>
+                                                <h3 class="drag mb-0">Drag & Drop</h3>
+                                                <span>OR</span>
+                                                <button type="button" id="browseFile">Browse File</button>
+                                                <input type="file" name="image" class="picture" hidden>
                                             </div>
+                                            <div class="msgError mt-2" id="imageErr"></div>
                                         </div>
+                                    </div>
 
-                                        <div class="col-md-3">
-                                            <div class="mb-3">
-                                                <label  class="form-label">Nid back-side image (optional)</label>
-                                                <div class="AppBody">
-                                                    <div class="icon">
-                                                        <i class="fas fa-images"></i>
-                                                    </div>
-
-                                                    <h3 class="drag mb-0">Drag & Drop</h3>
-                                                    <span>OR</span>
-                                                    <button type="button" id="browseFile">Browse File</button>
-                                                    <input type="file" name="back_image" class="picture" hidden>
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label class="form-label">Nid/birth certificate front-side</label>
+                                            <div class="AppBody">
+                                                <div class="icon">
+                                                    <i class="fas fa-images"></i>
                                                 </div>
+
+                                                <h3 class="drag mb-0">Drag & Drop</h3>
+                                                <span>OR</span>
+                                                <button type="button" id="browseFile">Browse File</button>
+                                                <input type="file" name="front_image" class="picture" hidden>
                                             </div>
+                                            <div class="msgError mt-2" id="frontErr"></div>
                                         </div>
+                                    </div>
 
-                                        <div class="col-md-3">
-                                            <div class="mb-3">
-                                                <label class="form-label">Passport Copy</label>
-                                                <div class="AppBody">
-                                                    <div class="icon">
-                                                        <i class="fas fa-images"></i>
-                                                    </div>
-
-                                                    <h3 class="drag mb-0">Drag & Drop</h3>
-                                                    <span>OR</span>
-                                                    <button type="button" id="browseFile">Browse File</button>
-                                                    <input type="file" name="passport_image" class="picture" hidden>
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label class="form-label">Nid back-side image (optional)</label>
+                                            <div class="AppBody">
+                                                <div class="icon">
+                                                    <i class="fas fa-images"></i>
                                                 </div>
-                                                <div class="msgError mt-2" id="passportErr"></div>
+
+                                                <h3 class="drag mb-0">Drag & Drop</h3>
+                                                <span>OR</span>
+                                                <button type="button" id="browseFile">Browse File</button>
+                                                <input type="file" name="back_image" class="picture" hidden>
                                             </div>
                                         </div>
                                     </div>
 
-                                    {{-- gellary image --}}
-                                    <div class="row" style="margin-top: 20px;">
-                                        <label class="form-label">Additional Documents (SSC/ HSC Certificate, Marksheets, Medical Report, Bank Statement and others)</label>
-                                        <div>
-                                            <input type="file" id="images" name="images[]" accept="image/*" multiple
-                                                class="form-control" />
-                                            <p class="form-text text-muted mt-1">You can select multiple images.</p>
-                                            <div class="text-danger error mt-1"></div>
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label class="form-label">Passport Copy</label>
+                                            <div class="AppBody">
+                                                <div class="icon">
+                                                    <i class="fas fa-images"></i>
+                                                </div>
 
-                                            <!-- Preview -->
-                                            <div id="imagePreviewContainer" class="preview-wrapper mt-3 mb-4"></div>
+                                                <h3 class="drag mb-0">Drag & Drop</h3>
+                                                <span>OR</span>
+                                                <button type="button" id="browseFile">Browse File</button>
+                                                <input type="file" name="passport_image" class="picture" hidden>
+                                            </div>
+                                            <div class="msgError mt-2" id="passportErr"></div>
                                         </div>
                                     </div>
+                                </div>
 
+                                {{-- gellary image --}}
+                                <div class="row" style="margin-top: 20px;">
+                                    <label class="form-label">Additional Documents (SSC/ HSC Certificate, Marksheets,
+                                        Medical Report, Bank Statement and others)</label>
                                     <div>
-                                        <button class="btn btn-primary" type="submit" id="addEmployee" style="width: 100% !important;margin:15px auto 0;margin-top:10px !important;font-size:17px;font-weight:600;"> Register </button>
+                                        <input type="file" id="images" name="images[]"
+                                            accept=".pdf, .doc, .docx, .xls, .xlsx, .txt, image/*" multiple
+                                            class="form-control" />
+                                        <p class="form-text text-muted mt-1">You can select multiple images.</p>
+                                        <div class="text-danger error mt-1"></div>
+
+                                        <!-- Preview -->
+                                        <div id="imagePreviewContainer" class="preview-wrapper mt-3 mb-4"></div>
                                     </div>
-                                </form>
-                            </div>
+                                </div>
+
+                                <div>
+                                    <button class="btn btn-primary" type="submit" id="addEmployee"
+                                        style="width: 100% !important;margin:15px auto 0;margin-top:10px !important;font-size:17px;font-weight:600;">
+                                        Register </button>
+                                </div>
+                            </form>
                         </div>
-                        <!-- end card -->
                     </div>
+                    <!-- end card -->
                 </div>
-                <!-- end row -->
-
             </div>
-        </div>
-        <!-- End Page-content -->
+            <!-- end row -->
 
-    @endsection
+        </div>
+    </div>
+    <!-- End Page-content -->
+@endsection
 
 @section('page-script')
-    <script src="{{asset('backend/js/pages/form-validation.init.js')}}"></script>
+    <script src="{{ asset('backend/js/pages/form-validation.init.js') }}"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-    <script src="{{asset('backend/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}"></script>
-    <script src="{{asset('backend/libs/select2/js/select2.min.js')}}"></script>
-    <script src="{{asset('backend/js/pages/form-advanced.init.js')}}"></script>
+    <script src="{{ asset('backend/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"></script>
+    <script src="{{ asset('backend/libs/select2/js/select2.min.js') }}"></script>
+    <script src="{{ asset('backend/js/pages/form-advanced.init.js') }}"></script>
 
     <script>
-        $(document).ready(function () {
-            $('#country_id').on('change', function () {
+        $(document).ready(function() {
+            $('#country_id').on('change', function() {
                 var countryId = $(this).val();
 
                 if (countryId) {
@@ -346,13 +360,16 @@
                         url: '/get-university/' + countryId,
                         type: 'GET',
                         dataType: 'json',
-                        success: function (data) {
-                            $('#university_id').empty().append('<option value="">Select a university</option>');
-                            $.each(data, function (key, university) {
-                                $('#university_id').append('<option value="' + university.id + '">' + university.name + '</option>');
+                        success: function(data) {
+                            $('#university_id').empty().append(
+                                '<option value="">Select a university</option>');
+                            $.each(data, function(key, university) {
+                                $('#university_id').append('<option value="' +
+                                    university.id + '">' + university.name +
+                                    '</option>');
                             });
                         },
-                        error: function () {
+                        error: function() {
                             alert('Error loading universities');
                         }
                     });
@@ -362,18 +379,21 @@
             });
         });
 
-        $(document).ready(function () {
+        $(document).ready(function() {
             // Load Subjects when university changes
-            $('#university_id').on('change', function () {
+            $('#university_id').on('change', function() {
                 let universityId = $(this).val();
                 $('#subject_id').empty().append('<option value="">Loading...</option>');
                 $('#subject_price').val('');
 
                 if (universityId) {
-                    $.get('/get-subject/' + universityId, function (data) {
-                        $('#subject_id').empty().append('<option value="">Select a subject</option>');
-                        $.each(data, function (index, subject) {
-                            $('#subject_id').append('<option value="' + subject.id + '" data-price="' + subject.price + '">' + subject.name + '</option>');
+                    $.get('/get-subject/' + universityId, function(data) {
+                        $('#subject_id').empty().append(
+                            '<option value="">Select a subject</option>');
+                        $.each(data, function(index, subject) {
+                            $('#subject_id').append('<option value="' + subject.id +
+                                '" data-price="' + subject.price + '">' + subject.name +
+                                '</option>');
                         });
                     });
                 } else {
@@ -382,7 +402,7 @@
             });
 
             // Show price when subject selected
-            $('#subject_id').on('change', function () {
+            $('#subject_id').on('change', function() {
                 let selectedPrice = $(this).find(':selected').data('price') || '';
                 $('#subject_price').val(selectedPrice);
             });
@@ -404,7 +424,7 @@
                     data: formData,
                     contentType: false, // Don't set content type
                     processData: false, // Don't process the data
-                    beforeSend: function(){
+                    beforeSend: function() {
                         $("#addEmployee").prop('disabled', true).html(`
                             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                             Loading...
@@ -420,7 +440,8 @@
                         });
 
                         setTimeout(() => {
-                            window.location = ("{{ route('student-registration.index') }}");
+                            window.location = (
+                                "{{ route('student-registration.index') }}");
                         }, 1000);
                     },
                     error: function(xhr, textStatus, errorThrown) {
@@ -485,7 +506,7 @@
 
                 btn.onclick = () => input.click();
 
-                input.addEventListener('change', function () {
+                input.addEventListener('change', function() {
                     file = this.files[0];
                     showPreview();
                 });
@@ -553,10 +574,10 @@
     </script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             const checkbox = document.getElementById("sameaspermanent");
 
-            checkbox.addEventListener("change", function () {
+            checkbox.addEventListener("change", function() {
                 if (this.checked) {
                     document.getElementById("tdivision").value = document.getElementById("pdivision").value;
                     document.getElementById("tdistrict").value = document.getElementById("pdistrict").value;
@@ -571,42 +592,68 @@
     </script>
 
     <script>
-        document.getElementById('images').addEventListener('change', function (event) {
+        document.getElementById('images').addEventListener('change', function(event) {
             const files = event.target.files;
             const previewContainer = document.getElementById('imagePreviewContainer');
             previewContainer.innerHTML = '';
 
+            // Loop through selected files
             Array.from(files).forEach((file, index) => {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const wrapper = document.createElement('div');
-                    wrapper.className = 'preview-item';
+                const wrapper = document.createElement('div');
+                wrapper.className = 'preview-item';
 
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
+                const removeBtn = document.createElement('button');
+                removeBtn.innerHTML = '&times;';
+                removeBtn.className = 'remove-btn';
 
-                    const removeBtn = document.createElement('button');
-                    removeBtn.innerHTML = '&times;';
-                    removeBtn.className = 'remove-btn';
-
-                    removeBtn.addEventListener('click', function () {
-                        const dt = new DataTransfer();
-                        Array.from(files).forEach((f, i) => {
-                            if (i !== index) dt.items.add(f);
-                        });
-                        event.target.files = dt.files;
-                        wrapper.remove();
-                        // Re-render updated previews
-                        document.getElementById('images').dispatchEvent(new Event('change'));
+                removeBtn.addEventListener('click', function() {
+                    const dt = new DataTransfer();
+                    Array.from(files).forEach((f, i) => {
+                        if (i !== index) dt.items.add(f);
                     });
+                    event.target.files = dt.files;
+                    wrapper.remove();
+                    // Re-render updated previews
+                    document.getElementById('images').dispatchEvent(new Event('change'));
+                });
 
-                    wrapper.appendChild(img);
-                    wrapper.appendChild(removeBtn);
-                    previewContainer.appendChild(wrapper);
-                };
-                reader.readAsDataURL(file);
+                // ** Determine file type for preview **
+                const fileExtension = file.name.split('.').pop().toLowerCase();
+                const validImages = ['jpg', 'jpeg', 'png', 'gif'];
+                const validDocs = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'txt'];
+
+                if (validImages.includes(fileExtension)) {
+                    // Image Preview
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        wrapper.appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+                } else if (validDocs.includes(fileExtension)) {
+                    // File Preview for non-images
+                    const icon = document.createElement('img');
+
+                    if (fileExtension === 'pdf') {
+                        icon.src = '/backend/icons/pdf.png';
+                    } else if (['doc', 'docx'].includes(fileExtension)) {
+                        icon.src = '/backend/icons/word.png';
+                    } else if (['xls', 'xlsx'].includes(fileExtension)) {
+                        icon.src = '/backend/icons/excel.png';
+                    } else if (fileExtension === 'txt') {
+                        icon.src = '/backend/icons/txt.png';
+                    } else {
+                        icon.src = '/backend/icons/file.png';
+                    }
+
+                    icon.className = 'file-icon';
+                    wrapper.appendChild(icon);
+                }
+
+                wrapper.appendChild(removeBtn);
+                previewContainer.appendChild(wrapper);
             });
         });
     </script>
-
 @endsection

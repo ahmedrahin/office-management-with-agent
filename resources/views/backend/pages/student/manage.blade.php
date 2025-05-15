@@ -97,12 +97,10 @@
 
                                                     <td>{{ $student->mobile }}</td>
                                                         @php
-                                                            // Retrieve all payments from assigned courses
                                                             $lastPayments = $student->assign->map(function ($assignment) {
                                                                 return $assignment->payment->sortByDesc('created_at')->first();
-                                                            })->filter(); // Remove null values
+                                                            })->filter();
 
-                                                            // Calculate total due from last payments
                                                             $totalDue = $lastPayments->sum('due_payment');
                                                         @endphp
 

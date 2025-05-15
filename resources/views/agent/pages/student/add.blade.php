@@ -299,7 +299,7 @@
                                     <div class="row" style="margin-top: 20px;">
                                         <label class="form-label">Additional Documents (SSC/ HSC Certificate, Marksheets, Medical Report, Bank Statement and others)</label>
                                         <div>
-                                            <input type="file" id="images" name="images[]" accept="image/*" multiple
+                                            <input type="file" id="images" name="images[]" multiple
                                                 class="form-control" />
                                             <p class="form-text text-muted mt-1">You can select multiple images.</p>
                                             <div class="text-danger error mt-1"></div>

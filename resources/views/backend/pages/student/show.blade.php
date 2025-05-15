@@ -49,6 +49,43 @@
             border-color: #007bff;
         }
     </style>
+
+    <style>
+        .document-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+
+
+        .file-card a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .files img {
+            width: 120px !important;
+            height: 120px !important;
+            margin: 15px auto;
+        }
+
+        .file-info {
+            padding: 5px 10px;
+            font-size: 12px;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .file-name {
+            margin-bottom: 10px;
+        }
+    </style>
+
+
 @endsection
 
 @section('body-content')
@@ -111,6 +148,7 @@
 
                     {{-- 🖼️ Student Documents --}}
                     <div class="image-gallery">
+                        {{-- Profile Images --}}
                         @foreach (['image' => 'Profile Image', 'front_image' => 'Front Image', 'back_image' => 'Back Image', 'passport_image' => 'Passport Image'] as $field => $title)
                             @if ($student->$field)
                                 <a href="{{ asset($student->$field) }}" data-lightbox="student-gallery" data-title="{{ $title }}">
@@ -119,13 +157,40 @@
                             @endif
                         @endforeach
 
-                        {{-- Document Images --}}
+                        {{-- Document Files --}}
                         @foreach ($student->images as $document)
-                            <a href="{{ asset($document->image) }}" data-lightbox="student-gallery" data-title="Document Image">
-                                <img src="{{ asset($document->image) }}" alt="Document Image">
-                            </a>
+                            @php
+                                $fileExtension = pathinfo($document->image, PATHINFO_EXTENSION);
+                                $fileName = basename($document->image);
+                            @endphp
+
+                            @if (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif', 'bmp']))
+                                <a href="{{ asset($document->image) }}" data-lightbox="student-gallery" data-title="Document Image">
+                                    <img src="{{ asset($document->image) }}" alt="Document Image">
+                                </a>
+                            @else
+                                <div class="file-card">
+                                    <a href="{{ asset($document->image) }}" target="_blank">
+                                        <div class="files">
+                                            @if ($fileExtension === 'pdf')
+                                                <img src="{{ asset('backend/icons/pdf.png') }}" alt="PDF">
+                                            @elseif (in_array($fileExtension, ['doc', 'docx']))
+                                                <img src="{{ asset('backend/icons/word.png') }}" alt="Word">
+                                            @elseif (in_array($fileExtension, ['xls', 'xlsx']))
+                                                <img src="{{ asset('backend/icons/excel.png') }}" alt="Excel">
+                                            @elseif ($fileExtension === 'txt')
+                                                <img src="{{ asset('backend/icons/txt.png') }}" alt="Text">
+                                            @else
+                                                <img src="{{ asset('backend/icons/file.png') }}" alt="File">
+                                            @endif
+                                        </div>
+
+                                    </a>
+                                </div>
+                            @endif
                         @endforeach
                     </div>
+
 
 
                      {{-- course information --}}

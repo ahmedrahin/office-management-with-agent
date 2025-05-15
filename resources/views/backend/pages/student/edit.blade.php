@@ -264,28 +264,49 @@
 
                                  {{-- gellary image --}}
                                 <div class="row" style="margin-top: 20px;">
-                                    <label class="form-label">Additional Documents (SSC/ HSC Certificate, Marksheets, Medical Report, Bank Statement and others)</label>
+                                    <label class="form-label">Additional Documents (SSC/ HSC Certificate, Marksheets, Medical Report, Bank Statement, and others)</label>
                                     <div>
-                                        <input type="file" id="images" name="images[]" accept="image/*" multiple
-                                            class="form-control" />
-                                        <p class="form-text text-muted mt-1">You can select multiple images.</p>
+                                        <input type="file" id="images" name="images[]" accept=".pdf, .doc, .docx, .xls, .xlsx, .txt, image/*" multiple class="form-control" />
+                                        <p class="form-text text-muted mt-1">You can select multiple images and documents.</p>
                                         <div class="text-danger error mt-1"></div>
 
+                                        <!-- Hidden input to store removed IDs -->
                                         <input type="hidden" name="removed_image_ids" id="removedImageIds" value="">
 
+                                        <!-- Existing Images/Documents -->
                                         <div id="existingGalleryImages" class="preview-wrapper mt-3">
                                             @foreach($student->images as $image)
+                                                @php
+                                                    $fileExtension = pathinfo($image->image, PATHINFO_EXTENSION);
+                                                @endphp
                                                 <div class="preview-item" data-id="{{ $image->id }}">
-                                                    <img src="{{ asset($image->image) }}" />
+                                                    @if (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif']))
+                                                        <img src="{{ asset($image->image) }}" alt="Image Preview" />
+                                                    @else
+                                                        <div class="file-icon">
+                                                            @if ($fileExtension === 'pdf')
+                                                                <img src="{{ asset('backend/icons/pdf.png') }}" alt="PDF">
+                                                            @elseif (in_array($fileExtension, ['doc', 'docx']))
+                                                                <img src="{{ asset('backend/icons/word.png') }}" alt="Word">
+                                                            @elseif (in_array($fileExtension, ['xls', 'xlsx']))
+                                                                <img src="{{ asset('backend/icons/excel.png') }}" alt="Excel">
+                                                            @elseif ($fileExtension === 'txt')
+                                                                <img src="{{ asset('backend/icons/txt.png') }}" alt="Text">
+                                                            @else
+                                                                <img src="{{ asset('backend/icons/file.png') }}" alt="File">
+                                                            @endif
+                                                        </div>
+                                                    @endif
                                                     <button type="button" class="remove-btn existing-remove" data-id="{{ $image->id }}">&times;</button>
                                                 </div>
                                             @endforeach
                                         </div>
 
-                                        <!-- Preview -->
+                                        <!-- New Upload Previews -->
                                         <div id="imagePreviewContainer" class="preview-wrapper mt-3 mb-4"></div>
                                     </div>
                                 </div>
+
 
 
 
@@ -581,8 +602,10 @@
 
     {{-- gellary images --}}
     <script>
+
         let removedImageIds = [];
 
+        // Remove existing images
         document.querySelectorAll('.existing-remove').forEach(button => {
             button.addEventListener('click', function () {
                 const imageId = this.getAttribute('data-id');
@@ -592,7 +615,7 @@
             });
         });
 
-        // Preview new uploads
+        // Preview newly added files
         document.getElementById('images').addEventListener('change', function (event) {
             const files = event.target.files;
             const previewContainer = document.getElementById('imagePreviewContainer');
@@ -604,8 +627,16 @@
                     const wrapper = document.createElement('div');
                     wrapper.className = 'preview-item';
 
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
+                    const fileExtension = file.name.split('.').pop().toLowerCase();
+                    if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        wrapper.appendChild(img);
+                    } else {
+                        const icon = document.createElement('img');
+                        icon.src = `/backend/icons/${fileExtension}.png`;
+                        wrapper.appendChild(icon);
+                    }
 
                     const removeBtn = document.createElement('button');
                     removeBtn.innerHTML = '&times;';
@@ -621,13 +652,14 @@
                         document.getElementById('images').dispatchEvent(new Event('change'));
                     });
 
-                    wrapper.appendChild(img);
                     wrapper.appendChild(removeBtn);
                     previewContainer.appendChild(wrapper);
                 };
+
                 reader.readAsDataURL(file);
             });
         });
     </script>
+
 
 @endsection

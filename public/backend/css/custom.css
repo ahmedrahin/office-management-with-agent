@@ -219,7 +219,18 @@ button[type="submit"]{
     padding: 0;
 }
 
-
+.file-icon {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+    }
+    .file-icon i {
+        margin-right: 5px;
+    }
 
 /* photo */
 .AppBody {
