@@ -21,6 +21,7 @@ use App\Http\Controllers\AdminController\UniversityController;
 use App\Http\Controllers\AdminController\SubjectController;
 use App\Http\Controllers\AdminController\JobInquiryController;
 use App\Http\Controllers\AdminController\TourTravelController;
+use App\Http\Controllers\AdminController\TaskController;
 use App\Models\Employees;
 use App\Models\JobType;
 use App\Models\Subject;
@@ -74,8 +75,8 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'check.status']], f
     Route::middleware('admin')->name('admin.')->group(function () {
         Route::resource('admin-management', AdminController::class);
         Route::put('admin-status/{id}', [AdminController::class, 'activeStatus']);
-    });    
-    
+    });
+
     // employees
     Route::middleware('admin')->controller(EmployeesController::class)->group(function(){
         Route::group(['prefix' => '/employees',], function(){
@@ -173,7 +174,7 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'check.status']], f
     Route::resource('/course', CourseController::class);
     Route::put('course-status/{id}', [CourseController::class, 'activeStatus']);
 
-    // assign 
+    // assign
     Route::resource('/assign-course', AssignController::class);
     Route::get('/assign-course/{year?}/{month?}', [AssignController::class, 'index'])->name('assign-course.index');
 
@@ -224,4 +225,7 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'check.status']], f
     // subject
     Route::resource('subject', SubjectController::class);
     Route::put('subject-status/{id}', [SubjectController::class, 'activeStatus'])->name('subject.status');
+
+    // task
+    Route::resource('task', TaskController::class);
 });
