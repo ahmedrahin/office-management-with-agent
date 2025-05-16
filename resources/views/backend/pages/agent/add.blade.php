@@ -180,17 +180,10 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <div class="mb-3">
                                             <label for="education_qualification" class="form-label">Educational Qualification</label>
                                             <input type="text" id="education_qualification" placeholder="Educational Qualification" name="education_qualification">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="study_institute" class="form-label">Institute / Study</label>
-                                            <input type="text" id="study_institute" placeholder="Institute and Study Details" name="study_institute">
                                         </div>
                                     </div>
                                 </div>
@@ -200,11 +193,11 @@
                                         <div class="mb-3">
                                             <label class="form-label">Previous Experience as Agent?</label><br>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input p-0" type="radio" name="previous_experience" id="experience_yes" value="1">
+                                                <input class="form-check-input p-0" type="radio" name="previous_experience" id="experience_yes" value="yes">
                                                 <label class="form-check-label" for="experience_yes">Yes</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input p-0" type="radio" name="previous_experience" id="experience_no" value="0" checked>
+                                                <input class="form-check-input p-0" type="radio" name="previous_experience" id="experience_no" value="no" checked>
                                                 <label class="form-check-label" for="experience_no">No</label>
                                             </div>
                                         </div>
@@ -221,8 +214,15 @@
                                  <div class="row">
                                     <div class="col-md-12">
                                         <div class="mb-3">
-                                            <label for="vo" class="form-label">Institute Name (Minmum:5)</label>
-                                            <textarea id="elm1" placeholder="Write Details.." name="details"></textarea>
+                                            <label for="study_institute" class="form-label">Institute / Study</label>
+                                            <textarea id="" placeholder="Institute and Study Details" name="study_institute" class="editor"></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <label for="vo" class="form-label">Institutes Name (Minimum:5)</label>
+                                            <textarea id="" placeholder="Write Here.." name="details" class="editor"></textarea>
                                         </div>
                                     </div>
                                 </div>

@@ -72,8 +72,8 @@ class AgentController extends Controller
 
 
     public function show(string $id){
-        $student = Agent::find($id);
-        return view('backend.pages.agent.show', compact('student'));
+        $agent = Agent::find($id);
+        return view('backend.pages.agent.show', compact('agent'));
     }
 
     public function edit(string $id){

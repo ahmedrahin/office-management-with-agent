@@ -30,7 +30,7 @@ return new class extends Migration
             $table->text('permanent_address')->nullable();
             $table->string('education_qualification')->nullable();
             $table->string('study_institute')->nullable();
-            $table->boolean('previous_experience')->default(false);
+            $table->string('previous_experience')->default('no');
             $table->integer('experience_years')->nullable();
             $table->string('email')->unique()->nullable();
             $table->string('password');
