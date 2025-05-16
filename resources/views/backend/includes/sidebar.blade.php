@@ -66,6 +66,16 @@
                 </li>
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="ri-user-2-fill"></i>
+                        <span>Employees Tasks</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{route('task.create')}}"> <i class="ri-arrow-right-s-fill"></i> Add New Task</a></li>
+                        <li><a href="{{route('task.index')}}"><i class="ri-arrow-right-s-fill"></i> Show All</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="ri-user-unfollow-line"></i>
                         <span>Attendance</span>
                     </a>

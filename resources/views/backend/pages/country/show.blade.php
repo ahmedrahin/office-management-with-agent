@@ -75,25 +75,33 @@
                         <div class="col-12">
                             <div class="card shadow-lg">
                                 <div class="card-header bg-primary text-white">
-                                    <h5 class="mb-0 text-white">Assign Student List</h5>
+                                    <h5 class="mb-0 text-white">Added Student List</h5>
                                 </div>
                                 <div class="card-body">
                                     <table class="table table-bordered">
                                         <thead class="table-dark">
                                             <tr>
                                                 <th>#</th>
-                                                <th>Name</th>
-                                                <th class="text-center">Total Cost</th>
-                                                <th class="text-center">Phone no.</th>
-                                                <th class="text-center">Actions</th>
+                                                <th>Student Name</th>
+                                                <th class="text-center">Register Date</th>
+                                                <th class="text-center">View</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            
+                                            @foreach (App\Models\Registation::where('country_id', $data->id)->latest()->get() as $index => $registration)
+                                                <tr>
+                                                    <td>{{ $index+1 }}</td>
+                                                    <td >{{ $registration->name }}</td>
+                                                    <td class="text-center">{{ $registration->created_at->format('d M Y') }}</td>
+                                                    <td class="text-center">
+                                                        <a href="{{ route('student-registration.show',$registration->id) }}">Details</a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                     @if($data->student->isEmpty())
-                                        <p class="text-center mt-3 text-danger">No student assign.</p>
+                                        <p class="text-center text-danger mt-3">No student added yet.</p>
                                     @endif
                                 </div>
                             </div>
@@ -104,25 +112,70 @@
                         <div class="col-12">
                             <div class="card shadow-lg">
                                 <div class="card-header bg-primary text-white">
-                                    <h5 class="mb-0 text-white">Assign Tourist List</h5>
+                                    <h5 class="mb-0 text-white">Added Job Inquiry</h5>
                                 </div>
                                 <div class="card-body">
                                     <table class="table table-bordered">
                                         <thead class="table-dark">
                                             <tr>
                                                 <th>#</th>
-                                                <th>Name</th>
-                                                <th class="text-center">Total Cost</th>
-                                                <th class="text-center">Phone no.</th>
-                                                <th class="text-center">Actions</th>
+                                                <th>Person Name</th>
+                                                <th class="text-center">Register Date</th>
+                                                <th class="text-center">View</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            
+                                            @foreach (App\Models\JobInquiry::where('country_id', $data->id)->latest()->get() as $index => $registration)
+                                                <tr>
+                                                    <td>{{ $index+1 }}</td>
+                                                    <td >{{ $registration->name }}</td>
+                                                    <td class="text-center">{{ $registration->created_at->format('d M Y') }}</td>
+                                                    <td class="text-center">
+                                                        <a href="{{ route('inquiry.show',$registration->id) }}">Details</a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
-                                    @if($data->student->isEmpty())
-                                        <p class="text-center mt-3 text-danger">No tourist assign.</p>
+                                    @if($data->person->isEmpty())
+                                        <p class="text-center text-danger mt-3">No person added yet.</p>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center mt-1">
+                        <div class="col-12">
+                            <div class="card shadow-lg">
+                                <div class="card-header bg-primary text-white">
+                                    <h5 class="mb-0 text-white">Added Tourist List</h5>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-bordered">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Tourist Name</th>
+                                                <th class="text-center">Register Date</th>
+                                                <th class="text-center">View</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (App\Models\Tourist::where('country_id', $data->id)->latest()->get() as $index => $registration)
+                                                <tr>
+                                                    <td>{{ $index+1 }}</td>
+                                                    <td >{{ $registration->name }}</td>
+                                                    <td class="text-center">{{ $registration->created_at->format('d M Y') }}</td>
+                                                    <td class="text-center">
+                                                        <a href="{{ route('tour-travel.show',$registration->id) }}">Details</a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                    @if($data->tourist->isEmpty())
+                                        <p class="text-center text-danger mt-3">No tourist added yet.</p>
                                     @endif
                                 </div>
                             </div>

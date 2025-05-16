@@ -103,7 +103,6 @@
 
                         <!-- ==================== Visitor Statistics ==================== -->
                         <h5 class="text-primary mt-4 mb-3">Visitor Statistics</h5>
-                        <div class="info-group"><strong>Total Visitors Added:</strong><span>{{ $agent->student->count() + $agent->person->count() + $agent->tourist->count() }}</span></div>
                         <div class="info-group"><strong>Total Students Added:</strong><span>{{ $agent->student->count() }}</span></div>
                         <div class="info-group"><strong>Total Job Inquiry Persons Added:</strong><span>{{ $agent->person->count() }}</span></div>
                         <div class="info-group"><strong>Total Tourists Added:</strong><span>{{ $agent->tourist->count() }}</span></div>
@@ -124,16 +123,62 @@
                                             <tr>
                                                 <th>#</th>
                                                 <th>Student Name</th>
-                                                <th class="text-center">Total Cost</th>
+                                                <th class="text-center">Register Date</th>
                                                 <th class="text-center">View</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-
+                                            @foreach (App\Models\Registation::where('agent_id', $agent->id)->latest()->get() as $index => $data)
+                                                <tr>
+                                                    <td>{{ $index+1 }}</td>
+                                                    <td >{{ $data->name }}</td>
+                                                    <td class="text-center">{{ $data->created_at->format('d M Y') }}</td>
+                                                    <td class="text-center">
+                                                        <a href="{{ route('student-registration.show',$data->id) }}">Details</a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                     @if($agent->student->isEmpty())
                                         <p class="text-center text-danger mt-3">No student added yet.</p>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center mt-1">
+                        <div class="col-12">
+                            <div class="card shadow-lg">
+                                <div class="card-header bg-primary text-white">
+                                    <h5 class="mb-0 text-white">Added Job Inquiry</h5>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-bordered">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Person Name</th>
+                                                <th class="text-center">Register Date</th>
+                                                <th class="text-center">View</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (App\Models\JobInquiry::where('agent_id', $agent->id)->latest()->get() as $index => $data)
+                                                <tr>
+                                                    <td>{{ $index+1 }}</td>
+                                                    <td >{{ $data->name }}</td>
+                                                    <td class="text-center">{{ $data->created_at->format('d M Y') }}</td>
+                                                    <td class="text-center">
+                                                        <a href="{{ route('inquiry.show',$data->id) }}">Details</a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                    @if($agent->person->isEmpty())
+                                        <p class="text-center text-danger mt-3">No person added yet.</p>
                                     @endif
                                 </div>
                             </div>
@@ -151,16 +196,25 @@
                                         <thead class="table-dark">
                                             <tr>
                                                 <th>#</th>
-                                                <th>tourist Name</th>
-                                                <th class="text-center">Total Cost</th>
+                                                <th>Tourist Name</th>
+                                                <th class="text-center">Register Date</th>
                                                 <th class="text-center">View</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-
+                                            @foreach (App\Models\Tourist::where('agent_id', $agent->id)->latest()->get() as $index => $data)
+                                                <tr>
+                                                    <td>{{ $index+1 }}</td>
+                                                    <td >{{ $data->name }}</td>
+                                                    <td class="text-center">{{ $data->created_at->format('d M Y') }}</td>
+                                                    <td class="text-center">
+                                                        <a href="{{ route('tour-travel.show',$data->id) }}">Details</a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
-                                    @if($agent->student->isEmpty())
+                                    @if($agent->tourist->isEmpty())
                                         <p class="text-center text-danger mt-3">No tourist added yet.</p>
                                     @endif
                                 </div>

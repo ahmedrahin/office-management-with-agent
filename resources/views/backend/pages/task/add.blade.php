@@ -1,6 +1,6 @@
 @extends('backend.layout.template')
 @section('page-title')
-    <title>Add Income || {{ \App\Models\Settings::site_title() }}</title>
+    <title>Add Expense || {{ \App\Models\Settings::site_title() }}</title>
 @endsection
 
 @section('page-css')
@@ -87,8 +87,8 @@
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-        cursor: pointer;
-        z-index: 12;
+           cursor: pointer;
+           z-index: 12;
         }
     </style>
     <link href="{{asset('backend/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}" rel="stylesheet">
@@ -109,7 +109,7 @@
                         <div class="page-title">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="{{url('/')}}">{{ \App\Models\Settings::site_title() }}</a></li>
-                                <li class="breadcrumb-item active">Add Income</li>
+                                <li class="breadcrumb-item active">Add Expense</li>
                             </ol>
                         </div>
 
@@ -122,30 +122,35 @@
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title">Add New Income</h4>
+                            <h4 class="card-title" style="display: flex;justify-content: space-between;align-items:center;">
+                                <div>
+                                    Add New Expense
+                                </div>
+                                <div>
+                                    <a href="{{ route('manage.expenses') }}" class="btn btn-primary">All Expense List</a>
+                                </div>
+                            </h4>
 
-                            <form action="{{route('store.income')}}" method="POST" class="needs-validation"  novalidate>
+                            <form action="{{route('store.expenses')}}" method="POST" class="needs-validation"  novalidate>
                                 @csrf
                                 <div class="row">
+                                    
                                     <div class="col-md-3">
                                         <div class="mb-3">
-                                            <label for="name" class="form-label">Income Title</label>
-                                            <input type="text" class="form-control" id="name" placeholder="title..." name="name" required>
-                                            <div class="invalid-feedback"></div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="mb-3">
-                                            <label for="amn" class="form-label">Income Amount</label>
-                                            <input type="text" class="form-control" id="amn" placeholder=" Amount" name="amn" required>
-                                            <div class="invalid-feedback"></div>
+                                            <label for="emp" class="form-label">Employee</label>
+                                            <select name="emp" class="form-control select2" id="emp" required>
+                                                <option value="">Select a employee</option>
+                                               @foreach ($employees as $employee)
+                                                   <option value="{{ $employee->id }}">{{ $employee->name }} - {{ $employee->employee_office_id }}</option>
+                                               @endforeach
+                                            </select>
+                                            <div id="emp" class="err"></div>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="mb-3">
                                             <label for="month" class="form-label">Month</label>
                                             <select name="month" class="form-control select2" id="month" required>
-                                                
                                                 <option value="1" {{(date('n') == 1) ? "selected" : ''}}>January</option>
                                                 <option value="2" {{(date('n') == 2) ? "selected" : ''}}>February</option>
                                                 <option value="3" {{(date('n') == 3) ? "selected" : ''}}>March</option>
@@ -165,13 +170,13 @@
                                     <div class="col-md-3">
                                         <div class="mb-3">
                                             <label for="year" class="form-label">Year</label>
-                                            <input type="text" class="form-control" id="year" placeholder="Year" name="year" value="{{date('Y')}}" required>
+                                            <input type="text" class="form-control" id="year" placeholder="Expense Year" name="year" value="{{date('Y')}}" required>
                                             <div class="invalid-feedback"></div>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="mb-3">
-                                            <label for="date" class="form-label">Income Date (optional)</label>
+                                            <label for="date" class="form-label">Expense Date (optional)</label>
                                             <div class="input-group" id="datepicker1">
                                                 <input type="text" class="form-control" placeholder="dd M, yyyy"
                                                     data-date-format="dd M, yyyy" data-date-container='#datepicker1' data-provide="datepicker" name="date" autocomplete="off" >
@@ -210,7 +215,7 @@
                                 </div>
                                 
                                 <div>
-                                    <button class="btn btn-primary" type="submit" id="addExpense"> Add Income </button>
+                                    <button class="btn btn-primary" type="submit" id="addExpense"> Add Expense </button>
                                 </div>
                             </form>
                         </div>
@@ -260,31 +265,25 @@
                      },
                      success: function(response) {
                          $("#addExpense").prop('disabled', false).html(`
-                             Add Income
+                             Add Expense
                          `);
-                         $('.needs-validation')[0].reset();
-                         $('.needs-validation').find('.form-control').removeClass('form-control');
-                         $('#datepicker1').addClass('boxIcon');
-                         $('#datepicker1 .input-group-text').addClass('dateIcon');
-                         $('#month_error').html('');
-                         $('#e_date_error').html('');
 
                          // Display SweetAlert popup
                          Swal.fire({
                              icon: 'success',
                              title: 'Success!',
-                             text: 'Add Income successfully!',
+                             text: 'Add Expense successfully!',
                          });
 
                          setTimeout(() => {
-                            window.location = ("{{ route('manage.income') }}");
+                            window.location = ("{{ route('manage.expenses') }}");
                         }, 1000);
                      },
                      error: function(xhr, textStatus, errorThrown) {
                         // Reset Bootstrap validation state
                         form.find('.form-control').removeClass('is-invalid');
                         form.find('.invalid-feedback').html('');
-                        $("#addExpense").prop('disabled', false).html(' Add Income');
+                        $("#addExpense").prop('disabled', false).html(' Add Expense');
                         
                         // Handle validation errors
                         var errors = xhr.responseJSON.errors;

@@ -114,4 +114,5 @@ class AgentController extends Controller
             'type' => $type,
         ], 200);
     }
+
 }
