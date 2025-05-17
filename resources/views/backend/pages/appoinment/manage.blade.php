@@ -1,6 +1,6 @@
 @extends('backend.layout.template')
 @section('page-title')
-    <title>My Task List  || {{ \App\Models\Settings::site_title() }} </title>
+    <title>Task List - ({{ $selectedDate }}) || {{ \App\Models\Settings::site_title() }} </title>
 @endsection
 
 @section('page-css')
@@ -24,15 +24,6 @@
             font-size: 13px;
             font-weight: 700;
         }
-        .form-check-input{
-            padding: 8px;
-            display: inline;
-            margin: 0;
-        }
-        /* #taskStatusChart{
-            width: 300px !important;
-            height: 300px !important;
-        } */
     </style>
     <link href="{{asset('backend/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css')}}" rel="stylesheet" type="text/css" />
     <link href="{{asset('backend/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css')}}" rel="stylesheet" type="text/css" />
@@ -75,12 +66,11 @@
                         <div class="card-body">
 
                             <h4 class="card-title">
-                                My Task List - {{ $filterTitle }} Tasks
-                                <div>
-                                    <span class="badge bg-dark">Total Tasks: {{ $data->count() }}</span>
-                                    <span class="badge bg-danger">Pending: {{ $pendingCount }}</span>
-                                    <span class="badge bg-success">Complete: {{ $completeCount }}</span>
-                                    <span class="badge bg-primary">Re-schedule: {{ $reScheduleCount }}</span>
+                                {{ $selectedDate }} Task List
+                                <div class="btn btn-group">
+                                    <a href="{{route('task.index', [date('Y'), (Carbon::now()->format('M'))])}}" class="btn btn-primary" style="background: #0c7dc2;">All</a>
+                                    <a href="{{route('task.today')}}" class="btn btn-primary" >Today Tasks</a>
+                                    <a href="{{route('task.week')}}" class="btn btn-primary">This Week Tasks</a>
                                 </div>
                             </h4>
                             <div class="data table-responsive">
@@ -96,9 +86,10 @@
                                                 <th>Task</th>
                                                 <th class="text-center">Date</th>
                                                 <th class="text-center">Time</th>
-                                               
+                                                <th class="text-center">Assign To</th>
                                                 <th class="text-center">Added by</th>
                                                 <th class="text-center">Status</th>
+                                                <th class="text-center">Action</th>
                                             </tr>
                                         </thead>
 
@@ -113,39 +104,32 @@
                                                     <td>{{ $v->tasks }}</td>
                                                     <td class="text-center">{{ $v->date }}</td>
                                                     <td class="text-center">{{ $v->time ?? '-' }}</td>
+                                                    <td class="text-center">{{ $v->employees->name }}</td>
                                                     <td class="text-center"><span class="badge bg-dark">{{ optional($v->user)->name ?? 'N/A' }}</td>
                                                    <td class="text-center">
-                                                        @if( $v->status === 're-schedule' )
+                                                        @if($v->status == 'pending')
+                                                            <span class="badge bg-warning">Pending</span>
+                                                        @elseif($v->status == 're-schedule')
                                                             <span class="badge bg-info">Re-schedule</span>
+                                                        @elseif($v->status == 'complete')
+                                                            <span class="badge bg-success">Complete</span>
                                                         @else
-                                                            <label class="form-check-inline">
-                                                                <input 
-                                                                    class="form-check-input status-radio" 
-                                                                    type="radio" 
-                                                                    name="status_{{ $v->id }}" 
-                                                                    value="pending"
-                                                                    data-id="{{ $v->id }}"
-                                                                    {{ $v->status == 'pending' ? 'checked' : '' }} 
-                                                                >
-                                                                Pending
-                                                            </label>
-
-                                                            <label class="form-check-inline">
-                                                                <input 
-                                                                    class="form-check-input status-radio" 
-                                                                    type="radio" 
-                                                                    name="status_{{ $v->id }}" 
-                                                                    value="complete"
-                                                                    data-id="{{ $v->id }}"
-                                                                    {{ $v->status == 'complete' ? 'checked' : '' }}
-                                                                >
-                                                                Complete
-                                                            </label>
+                                                            <span class="badge bg-secondary">Unknown</span>
                                                         @endif
+                                                    </td>
+
+                                                    <td class="action">
+                                                        <button>
+                                                            <a href="{{route('task.edit',$v->id)}}">
+                                                                <i class="ri-edit-2-fill"></i>
+                                                            </a>
+                                                        </button>
+                                                        <button class="deleteButton" data-id="{{ $v->id }}">
+                                                            <i class="ri-delete-bin-2-fill"></i>
+                                                        </button>
                                                     </td>
                                                 </tr>
                                             @endforeach
-
                                         </tbody>
                                     </table>
                                 @endif
@@ -156,28 +140,61 @@
             </div>
 
              <div class="row">
-
-               <div class="col-md-3">
-                <div class="card">
-                    <div class="card-header">
-                        <strong>Filter Your Tasks</strong>
-                    </div>
-                    <div class="card-body">
-                        <form method="GET" action="{{ route('my.tasks', auth()->user()->employees->id) }}">
-                            <select name="filter" id="taskFilter" class="form-control" onchange="this.form.submit()">
-                                <option value="today" {{ request('filter') == 'today' ? 'selected' : '' }}>Today Tasks</option>
-                                <option value="week" {{ request('filter') == 'week' ? 'selected' : '' }}>This Week Tasks</option>
-                                <option value="month" {{ request('filter') == 'month' ? 'selected' : '' }}>This Month Tasks</option>
-                                <option value="all" {{ request('filter') == 'all' ? 'selected' : '' }}>All</option>
-                            </select>
-                        </form>
+                <div class="col-md-5">
+                    <div class="card">
+                        <div class="card-header">
+                            Task List of ({{ $selectedDate }})
+                        </div>
+                
+                        <div class="card-body">
+                            <div class="row monthlyExpense">
+                                <div class="col-12">
+                                    @php
+                                        $currentMonth = date('n'); 
+                                        $selectedYear = request('year', date('Y')); 
+                                        $currentYear = date('Y');
+                                    @endphp
+                                    
+                                    @for ($i = 1; $i <= 12; $i++)
+                                        @php
+                                            $monthName = \Carbon\Carbon::create($selectedYear, $i, 1)->format('M');
+                                            $disabled = ($selectedYear == $currentYear && $i > $currentMonth) ? 'disabled' : ''; 
+                                            $buttonClass = (strtolower(request('month')) == strtolower($monthName)) ? 'btn-success' : 'btn-primary';
+                                            $isCurrentMonth = (strtolower(date('M')) == strtolower($monthName) && request('month') == null) ? 'btn-success' : '';
+                                        @endphp
+                
+                                        <a href="{{ route('task.index', ['month' => strtolower($monthName), 'year' => $selectedYear]) }}" 
+                                        class="btn {{ $buttonClass }} {{ $isCurrentMonth }} ">
+                                            {{ $monthName }}
+                                        </a>
+                                    @endfor
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-               
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header text-center">
+                            <strong>Select Year</strong>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex flex-wrap gap-3">
+                                @foreach($allYear as $availableYear)
+                                    <a href="{{ route('task.index', ['year' => $availableYear, 'month' => (Carbon::now()->format('M'))]) }}" 
+                                    class="btn btn-primary mb-2 {{ request('year') == $availableYear ? 'btn-success text-white' : '' }}"
+                                    style="width: 45%; text-align: center;">
+                                        {{ $availableYear }}
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 @if( $data->count() != 0 )
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="card">
                             <div class="card-header">
                                 <strong>Task Status Overview</strong>
@@ -198,6 +215,62 @@
 @endsection
 
 @section('page-script')
+    {{-- delete expense --}}
+    <script>
+        $(document).ready(function() {
+            $('.deleteButton').click(function() {
+                var deleteButton = $(this); 
+                
+                var id = deleteButton.data('id');
+
+                // Trigger SweetAlert confirmation dialog
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'You will not be able to recover this task data!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'Cancel',
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                }).then((result) => {
+                    // Handle the user's response
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: 'DELETE',
+                            url: '{{ route("task.destroy", ":id") }}'.replace(':id', id),
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            success: function(response) {    
+                                // Remove the row from the table
+                                deleteButton.closest('tr').fadeOut('slow', function() {
+                                    $(this).remove();
+                                });
+
+                                setTimeout(() => {
+                                    Swal.fire('Deleted!', 'Task has been deleted.', 'success');
+                                }, 1000);
+
+                            },
+                            error: function(xhr, textStatus, errorThrown) {
+                                // Handle deletion error
+                                Swal.fire('Error!', 'Failed to delete.', 'error');
+                            }
+                        });
+                    }
+                });
+            });
+
+            $(document).ready(function() {
+                $('#datepicker6').datepicker({
+                    format: "dd M, yyyy",
+                    autoclose: true
+                });
+            });
+
+        });
+    </script>
     
     <!-- Responsive examples -->
     <script src="{{asset('backend/libs/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
@@ -261,42 +334,5 @@
         });
     </script>
 
-    <script>
-        $(document).ready(function() {
-            $('.status-radio').on('change', function() {
-                var taskId = $(this).data('id');
-                var newStatus = $(this).val();
-                
-                $.ajax({
-                    url: "{{ route('task.update.status') }}", 
-                    type: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        id: taskId,
-                        status: newStatus
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Status Updated',
-                                text: 'The task status has been updated successfully!',
-                                timer: 1500,
-                                showConfirmButton: false
-                            });
-                        }
-                    },
-                    error: function(xhr) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Update Failed',
-                            text: 'There was an issue updating the status. Please try again.'
-                        });
-                    }
-                });
-            });
-        });
-
-    </script>
 
 @endsection

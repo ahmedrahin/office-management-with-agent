@@ -95,11 +95,25 @@
                     <a href="{{route('shedule.index')}}" > <i class="ri-arrow-right-s-fill"></i>Work Schedules</a>
                 </li>
 
-                @if( auth()->user()->employees )
+               @if(auth()->user()->employees)
+                    @php
+                        $today = \Carbon\Carbon::today()->format('d M, Y');
+                        $pendingTodayCount = \App\Models\Task::where('employees_id', auth()->user()->employees->id)
+                                            ->where('date', $today)
+                                            ->where('status', 'pending')
+                                            ->count();
+                    @endphp
+
                     <li>
-                        <a href="{{route('my.tasks', auth()->user()->employees)}}" > <i class="ri-arrow-right-s-fill"></i>My Task List</a>
+                        <a href="{{ route('my.tasks', auth()->user()->employees) }}">
+                            <i class="ri-arrow-right-s-fill"></i>My Task List
+                            @if($pendingTodayCount > 0)
+                                <span class="badge rounded-pill bg-danger float-end">{{ $pendingTodayCount }}</span>
+                            @endif
+                        </a>
                     </li>
                 @endif
+
 
                 <li class="menu-title">Payroll Management</li>
                 <li>
