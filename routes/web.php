@@ -229,5 +229,10 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'check.status']], f
     // task
     Route::resource('task', TaskController::class);
     Route::get('/task/{year?}/{month?}', [TaskController::class, 'manage'])->name('task.index');
+    Route::get('/task-today', [TaskController::class, 'today'])->name('task.today');
+    Route::get('/task-week', [TaskController::class, 'week'])->name('task.week');
+
+    Route::get('/my-task/{id}', [TaskController::class, 'myTasks'])->name('my.tasks');
+    Route::post('/task/update-status', [TaskController::class, 'updateStatus'])->name('task.update.status');
 
 });

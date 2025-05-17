@@ -95,6 +95,12 @@
                     <a href="{{route('shedule.index')}}" > <i class="ri-arrow-right-s-fill"></i>Work Schedules</a>
                 </li>
 
+                @if( auth()->user()->employees )
+                    <li>
+                        <a href="{{route('my.tasks', auth()->user()->employees)}}" > <i class="ri-arrow-right-s-fill"></i>My Task List</a>
+                    </li>
+                @endif
+
                 <li class="menu-title">Payroll Management</li>
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">

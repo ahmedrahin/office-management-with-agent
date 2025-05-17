@@ -1,6 +1,6 @@
 @extends('backend.layout.template')
 @section('page-title')
-    <title>Manage Year income || {{ \App\Models\Settings::site_title() }}</title>
+    <title>Week Task List || {{ \App\Models\Settings::site_title() }} </title>
 @endsection
 
 @section('page-css')
@@ -35,6 +35,10 @@
 
 @section('body-content')
 
+    @php
+        use Carbon\Carbon;
+    @endphp
+
     <!-- Start Page-content -->
     <div class="page-content">
         <div class="container-fluid">
@@ -47,7 +51,7 @@
                         <div class="page-title">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="{{url('/')}}">{{ \App\Models\Settings::site_title() }}</a></li>
-                                <li class="breadcrumb-item active">Manage Year incomes</li>
+                                <li class="breadcrumb-item active">Week Tasks</li>
                             </ol>
                         </div>
 
@@ -62,17 +66,15 @@
                         <div class="card-body">
 
                             <h4 class="card-title">
-                                Manage Incomes
-                                <span class="text-danger">({{$year}})</span>
+                                Week Task List
                                 <div class="btn btn-group">
-                                    <a href="{{route('manage.income')}}" class="btn btn-primary">All</a>
-                                    <a href="{{route('today.income')}}" class="btn btn-primary" >Today</a>
-                                    <a href="{{route('month.income')}}" class="btn btn-primary">This Month</a>
-                                    <a href="{{route('year.income')}}" class="btn btn-primary" style="background: #0c7dc2;">This Year</a>
+                                    <a href="{{route('task.index', [date('Y'), (Carbon::now()->format('M'))])}}" class="btn btn-primary" >All</a>
+                                    <a href="{{route('task.today')}}" class="btn btn-primary" >Today Tasks</a>
+                                    <a href="{{route('task.week')}}" class="btn btn-primary" style="background: #0c7dc2;">This Week Tasks</a>
                                 </div>
                             </h4>
                             <div class="data table-responsive">
-                                @if( $expenses->count() == 0 )
+                                @if( $data->count() == 0 )
                                     <div class="alert alert-danger" role="alert">
                                         No Data Found!
                                     </div>
@@ -81,55 +83,49 @@
                                         <thead>
                                             <tr>
                                                 <th>Sl.</th>
-                                                <th>Income Title</th>
-                                                <th>Amount</th>
-                                                <th>Month</th>
-                                                <th>Date</th>
-                                                <th>Added by</th>
-                                                <th>Action</th>
+                                                <th>Task</th>
+                                                
+                                                <th class="text-center">Assign To</th>
+                                                <th class="text-center">Date</th>
+                                                <th class="text-center">Time</th>
+                                                <th class="text-center">Added by</th>
+                                                <th class="text-center">Status</th>
+                                                <th class="text-center">Action</th>
                                             </tr>
                                         </thead>
 
                                         <tbody>
                                             @php
-                                                $counter = 1; // Initialize counter variable
-                                                // Define an array to map month numbers to their names
-                                                $months = [
-                                                    1 => 'January',
-                                                    2 => 'February',
-                                                    3 => 'March',
-                                                    4 => 'April',
-                                                    5 => 'May',
-                                                    6 => 'June',
-                                                    7 => 'July',
-                                                    8 => 'August',
-                                                    9 => 'September',
-                                                    10 => 'October',
-                                                    11 => 'November',
-                                                    12 => 'December',
-                                                ];
+                                                $counter = 1; 
+                                                
                                             @endphp
-                                            @foreach ($expenses as $expense)
+                                            @foreach ($data as $v)
                                                 <tr>
                                                     <td>{{$counter++}}</td>
-                                                    <td>{{ $expense->name }}</td>
-                                                    <td>{{$expense->amn}}</td>
-                                                    <td>{{$months[$expense->month]}}</td>
-                                                    <td>{{$expense->date}}</td>
-                                                    <td class="text-center"><span class="badge bg-dark">{{ optional($expense->user)->name ?? 'N/A' }}
-                                                    </span></td>
+                                                    <td>{{ $v->tasks }}</td>
+                                                    <td class="text-center">{{ $v->employees->name }}</td>
+                                                    <td class="text-center">{{ $v->date }}</td>
+                                                    <td class="text-center">{{ $v->time ?? '-' }}</td>
+                                                    <td class="text-center"><span class="badge bg-dark">{{ optional($v->user)->name ?? 'N/A' }}</td>
+                                                   <td class="text-center">
+                                                        @if($v->status == 'pending')
+                                                            <span class="badge bg-warning">Pending</span>
+                                                        @elseif($v->status == 're-schedule')
+                                                            <span class="badge bg-info">Re-schedule</span>
+                                                        @elseif($v->status == 'complete')
+                                                            <span class="badge bg-success">Complete</span>
+                                                        @else
+                                                            <span class="badge bg-secondary">Unknown</span>
+                                                        @endif
+                                                    </td>
+
                                                     <td class="action">
                                                         <button>
-                                                            <a href="{{route('show.income',$expense->id)}}" target="_blank">
-                                                                <i class="fa fa-eye" aria-hidden="true"></i>
-                                                            </a>
-                                                        </button>
-                                                        <button>
-                                                            <a href="{{route('edit.income',$expense->id)}}">
+                                                            <a href="{{route('task.edit',$v->id)}}">
                                                                 <i class="ri-edit-2-fill"></i>
                                                             </a>
                                                         </button>
-                                                        <button class="deleteButton" data-income-id="{{ $expense->id }}">
+                                                        <button class="deleteButton" data-id="{{ $v->id }}">
                                                             <i class="ri-delete-bin-2-fill"></i>
                                                         </button>
                                                     </td>
@@ -142,59 +138,6 @@
                         </div>
                     </div>
                 </div> <!-- end col -->
-            </div>
-
-            <div class="row exp_info">
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-header">
-                            This Year All Expenses Cost
-                        </div>
-                        <div class="card-body">
-                            <blockquote class="card-blockquote mb-0">
-                                <h4>Total Expenses:
-                                    <span class="text-danger" style="float: right;">
-                                        @php
-                                            $totalExpense = $expenses->count();
-                                            echo $totalExpense;
-                                        @endphp
-                                    </span>
-                                </h4>
-                                <hr>
-                                <h4>Total Expenses Amount:
-                                    <span class="text-danger" style="float: right;">
-                                        @php
-                                            $expensesCost = $expenses->sum('amn');
-                                            echo $expensesCost . "tk";
-                                        @endphp
-                                    </span>
-                                </h4>
-                            </blockquote>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-header">
-                            Select year 
-                        </div>
-                        <div class="card-body">
-                            <blockquote class="card-blockquote mb-0">
-                                <form action="{{route('year.filter')}}" method="GET">
-                                    <select name="year" onchange="this.form.submit()">
-                                      
-                                        @foreach($allYear as $year)
-                                            <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>
-                                                {{ $year }}
-                                            </option>
-                                        @endforeach
-                                   </select>
-                                </form>
-                            </blockquote>
-                        </div>
-                    </div>
-                </div>
             </div>
             
         </div> 
@@ -210,12 +153,12 @@
             $('.deleteButton').click(function() {
                 var deleteButton = $(this); 
                 
-                var expenseId = deleteButton.data('expense-id');
+                var id = deleteButton.data('id');
 
                 // Trigger SweetAlert confirmation dialog
                 Swal.fire({
                     title: 'Are you sure?',
-                    text: 'You will not be able to recover this expense data!',
+                    text: 'You will not be able to recover this task data!',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Yes, delete it!',
@@ -225,10 +168,9 @@
                 }).then((result) => {
                     // Handle the user's response
                     if (result.isConfirmed) {
-                        // Send an AJAX request to delete the customer
                         $.ajax({
                             type: 'DELETE',
-                            url: '/admin/expenses/delete/' + expenseId,
+                            url: '{{ route("task.destroy", ":id") }}'.replace(':id', id),
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
@@ -237,19 +179,28 @@
                                 deleteButton.closest('tr').fadeOut('slow', function() {
                                     $(this).remove();
                                 });
-                                // $('.exp_info').html(response.html)
+
                                 setTimeout(() => {
-                                    Swal.fire('Deleted!', 'Expense has been deleted.', 'success');
+                                    Swal.fire('Deleted!', 'Task has been deleted.', 'success');
                                 }, 1000);
+
                             },
                             error: function(xhr, textStatus, errorThrown) {
                                 // Handle deletion error
-                                Swal.fire('Error!', 'Failed to delete expenses.', 'error');
+                                Swal.fire('Error!', 'Failed to delete.', 'error');
                             }
                         });
                     }
                 });
             });
+
+            $(document).ready(function() {
+                $('#datepicker6').datepicker({
+                    format: "dd M, yyyy",
+                    autoclose: true
+                });
+            });
+
         });
     </script>
     

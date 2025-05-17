@@ -1,6 +1,6 @@
 @extends('backend.layout.template')
 @section('page-title')
-    <title>Add Task || {{ \App\Models\Settings::site_title() }}</title>
+    <title>Edit Task || {{ \App\Models\Settings::site_title() }}</title>
 @endsection
 
 @section('page-css')
@@ -41,7 +41,7 @@
                         <div class="page-title">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="{{url('/')}}">{{ \App\Models\Settings::site_title() }}</a></li>
-                                <li class="breadcrumb-item active">Add Task</li>
+                                <li class="breadcrumb-item active">Edit Task</li>
                             </ol>
                         </div>
 
@@ -56,7 +56,7 @@
                         <div class="card-body">
                             <h4 class="card-title" style="display: flex;justify-content: space-between;align-items:center;">
                                 <div>
-                                    Add New Task
+                                    Edit Task
                                 </div>
                                 
                             </h4>
@@ -119,8 +119,19 @@
                                     </div>
                                 </div>
 
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Status</label>
+                                        <select name="status" class="form-control">
+                                            <option value="pending" {{ $data->status == 'pending' ? 'selected' : '' }}>Pending</option>
+                                            <option value="re-schedule" {{ $data->status == 're-schedule' ? 'selected' : '' }}>Re-schedule</option>
+                                            <option value="complete" {{ $data->status == 'complete' ? 'selected' : '' }}>Complete</option>
+                                        </select>
+                                    </div>
+                                </div>
+
                                 <div>
-                                    <button class="btn btn-primary" type="submit" id="addExpense"> Update Task </button>
+                                    <button class="btn btn-primary" type="submit" id="addExpense"> Save Changes </button>
                                 </div>
                             </form>
 
@@ -181,20 +192,14 @@
                     },
                     success: function(response) {
                         $("#addExpense").prop('disabled', false).html(`
-                            Add Task
+                            Save Changes
                         `);
 
-                        $('.needs-validation')[0].reset();
-                        $('.needs-validation').find('.form-control').removeClass('form-control');
-                        $('.invalid-feedback').html('');
-
-                        // Display SweetAlert popup
                         Swal.fire({
                             icon: 'success',
                             title: 'Success!',
-                            text: 'Add Task successfully!',
+                            text: response.message,
                         });
-
                        
                     },
                     error: function(xhr, textStatus, errorThrown) {
@@ -207,7 +212,6 @@
                         $.each(errors, function(key, value) {
                             var input = form.find('[name="' + key + '"]');
                             
-                            // Check if input exists, if not, try to find by ID
                             if (input.length === 0) {
                                 input = $('#' + key);
                             }
