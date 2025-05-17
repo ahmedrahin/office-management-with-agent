@@ -30,6 +30,10 @@
 
                 <li class="menu-title">Admin & Agent Management</li>
 
+                 @php
+                    use Carbon\Carbon;
+                @endphp
+
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="ri-shield-user-line"></i>
@@ -71,7 +75,7 @@
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{route('task.create')}}"> <i class="ri-arrow-right-s-fill"></i> Add New Task</a></li>
-                        <li><a href="{{route('task.index')}}"><i class="ri-arrow-right-s-fill"></i> Show All</a></li>
+                        <li><a href="{{route('task.index', [date('Y'), (Carbon::now()->format('M'))])}}"><i class="ri-arrow-right-s-fill"></i> View Task List</a></li>
                     </ul>
                 </li>
                 <li>
@@ -79,9 +83,7 @@
                         <i class="ri-user-unfollow-line"></i>
                         <span>Attendance</span>
                     </a>
-                    @php
-                        use Carbon\Carbon;
-                    @endphp
+                   
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{route('take.attendance')}}"> <i class="ri-arrow-right-s-fill"></i> Take Attendence </a></li>
                         <li><a href="{{route('manage.attendance', [date('Y'), (Carbon::now()->format('M'))])}}"><i class="ri-arrow-right-s-fill"></i> All Attendences</a></li>

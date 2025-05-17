@@ -228,4 +228,6 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'check.status']], f
 
     // task
     Route::resource('task', TaskController::class);
+    Route::get('/task/{year?}/{month?}', [TaskController::class, 'manage'])->name('task.index');
+
 });

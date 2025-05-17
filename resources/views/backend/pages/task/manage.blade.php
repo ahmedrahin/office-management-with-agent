@@ -1,6 +1,6 @@
 @extends('backend.layout.template')
 @section('page-title')
-    <title>Manage Incomes || {{ \App\Models\Settings::site_title() }} </title>
+    <title>Task List - ({{ $selectedDate }}) || {{ \App\Models\Settings::site_title() }} </title>
 @endsection
 
 @section('page-css')
@@ -35,6 +35,10 @@
 
 @section('body-content')
 
+    @php
+        use Carbon\Carbon;
+    @endphp
+
     <!-- Start Page-content -->
     <div class="page-content">
         <div class="container-fluid">
@@ -47,7 +51,7 @@
                         <div class="page-title">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="{{url('/')}}">{{ \App\Models\Settings::site_title() }}</a></li>
-                                <li class="breadcrumb-item active">Manage Incomes</li>
+                                <li class="breadcrumb-item active">Tasks</li>
                             </ol>
                         </div>
 
@@ -62,7 +66,7 @@
                         <div class="card-body">
 
                             <h4 class="card-title">
-                                Manage Incomes
+                                {{ $selectedDate }} Task List
                                 <div class="btn btn-group">
                                     <a href="{{route('manage.income')}}" class="btn btn-primary" style="background: #0c7dc2;">All</a>
                                     <a href="{{route('today.income')}}" class="btn btn-primary" >Today</a>
@@ -71,7 +75,7 @@
                                 </div>
                             </h4>
                             <div class="data table-responsive">
-                                @if( $incomes->count() == 0 )
+                                @if( $data->count() == 0 )
                                     <div class="alert alert-danger" role="alert">
                                         No Data Found!
                                     </div>
@@ -80,57 +84,33 @@
                                         <thead>
                                             <tr>
                                                 <th>Sl.</th>
-                                                <th>Income Title</th>
-                                                <th>Amount</th>
-                                                <th>Month</th>
-                                                <th>Date</th>
-                                                <th> Year</th>
-                                                <th>Added by</th>
-                                                <th>Action</th>
+                                                <th>Task</th>
+                                                <th class="text-center">Date</th>
+                                                <th class="text-center">Assign To</th>
+                                                <th class="text-center">Added by</th>
+                                                <th class="text-center">Action</th>
                                             </tr>
                                         </thead>
 
                                         <tbody>
                                             @php
-                                                $counter = 1; // Initialize counter variable
-                                                // Define an array to map month numbers to their names
-                                                $months = [
-                                                    1 => 'January',
-                                                    2 => 'February',
-                                                    3 => 'March',
-                                                    4 => 'April',
-                                                    5 => 'May',
-                                                    6 => 'June',
-                                                    7 => 'July',
-                                                    8 => 'August',
-                                                    9 => 'September',
-                                                    10 => 'October',
-                                                    11 => 'November',
-                                                    12 => 'December',
-                                                ];
+                                                $counter = 1; 
+                                                
                                             @endphp
-                                            @foreach ($incomes as $income)
+                                            @foreach ($data as $v)
                                                 <tr>
                                                     <td>{{$counter++}}</td>
-                                                    <td>{{ $income->name }}</td>
-                                                    <td>{{$income->amn}}</td>
-                                                    <td>{{$months[$income->month]}}</td>
-                                                    <td>{{$income->date}}</td>
-                                                    <td>{{$income->year}}</td>
-                                                    <td class="text-center"><span class="badge bg-dark">{{ optional($income->user)->name ?? 'N/A' }}
-                                                    </span></td>
+                                                    <td>{{ $v->tasks }}</td>
+                                                    <td class="text-center">{{ $v->date }}</td>
+                                                    <td class="text-center">{{ $v->employees->name }}</td>
+                                                    <td class="text-center"><span class="badge bg-dark">{{ optional($v->user)->name ?? 'N/A' }}
                                                     <td class="action">
                                                         <button>
-                                                            <a href="{{route('show.income',$income->id)}}" target="_blank">
-                                                                <i class="fa fa-eye" aria-hidden="true"></i>
-                                                            </a>
-                                                        </button>
-                                                        <button>
-                                                            <a href="{{route('edit.income',$income->id)}}">
+                                                            <a href="{{route('task.edit',$v->id)}}">
                                                                 <i class="ri-edit-2-fill"></i>
                                                             </a>
                                                         </button>
-                                                        <button class="deleteButton" data-income-id="{{ $income->id }}">
+                                                        <button class="deleteButton" data-id="{{ $v->id }}">
                                                             <i class="ri-delete-bin-2-fill"></i>
                                                         </button>
                                                     </td>
@@ -145,32 +125,56 @@
                 </div> <!-- end col -->
             </div>
 
-            <div class="row exp_info">
-                <div class="col-md-4">
+             <div class="row">
+                <div class="col-md-5">
                     <div class="card">
                         <div class="card-header">
-                            All Incomes
+                            Task List of ({{ $selectedDate }})
+                        </div>
+                
+                        <div class="card-body">
+                            <div class="row monthlyExpense">
+                                <div class="col-12">
+                                    @php
+                                        $currentMonth = date('n'); 
+                                        $selectedYear = request('year', date('Y')); 
+                                        $currentYear = date('Y');
+                                    @endphp
+                                    
+                                    @for ($i = 1; $i <= 12; $i++)
+                                        @php
+                                            $monthName = \Carbon\Carbon::create($selectedYear, $i, 1)->format('M');
+                                            $disabled = ($selectedYear == $currentYear && $i > $currentMonth) ? 'disabled' : ''; 
+                                            $buttonClass = (strtolower(request('month')) == strtolower($monthName)) ? 'btn-success' : 'btn-primary';
+                                            $isCurrentMonth = (strtolower(date('M')) == strtolower($monthName) && request('month') == null) ? 'btn-success' : '';
+                                        @endphp
+                
+                                        <a href="{{ route('task.index', ['month' => strtolower($monthName), 'year' => $selectedYear]) }}" 
+                                        class="btn {{ $buttonClass }} {{ $isCurrentMonth }} {{ $disabled }}">
+                                            {{ $monthName }}
+                                        </a>
+                                    @endfor
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header text-center">
+                            <strong>Select Year</strong>
                         </div>
                         <div class="card-body">
-                            <blockquote class="card-blockquote mb-0">
-                                <h4>Total Incomes:
-                                    <span class="text-danger" style="float: right;">
-                                        @php
-                                            $total = $incomes->count();
-                                            echo $total;
-                                        @endphp
-                                    </span>
-                                </h4>
-                                <hr>
-                                <h4>Total Incomes Amount:
-                                    <span class="text-danger" style="float: right;">
-                                        @php
-                                            $cost = $incomes->sum('amn');
-                                            echo $cost . "tk";
-                                        @endphp
-                                    </span>
-                                </h4>
-                            </blockquote>
+                            <div class="d-flex flex-wrap gap-3">
+                                @foreach($allYear as $availableYear)
+                                    <a href="{{ route('task.index', ['year' => $availableYear, 'month' => (Carbon::now()->format('M'))]) }}" 
+                                    class="btn btn-primary mb-2 {{ request('year') == $availableYear ? 'btn-success text-white' : '' }}"
+                                    style="width: 45%; text-align: center;">
+                                        {{ $availableYear }}
+                                    </a>
+                                @endforeach
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -189,12 +193,12 @@
             $('.deleteButton').click(function() {
                 var deleteButton = $(this); 
                 
-                var expenseId = deleteButton.data('income-id');
+                var id = deleteButton.data('id');
 
                 // Trigger SweetAlert confirmation dialog
                 Swal.fire({
                     title: 'Are you sure?',
-                    text: 'You will not be able to recover this income data!',
+                    text: 'You will not be able to recover this task data!',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Yes, delete it!',
@@ -204,10 +208,9 @@
                 }).then((result) => {
                     // Handle the user's response
                     if (result.isConfirmed) {
-                        // Send an AJAX request to delete the customer
                         $.ajax({
                             type: 'DELETE',
-                            url: '/admin/income/delete/' + expenseId,
+                            url: '{{ route("task.destroy", ":id") }}'.replace(':id', id),
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
@@ -216,19 +219,28 @@
                                 deleteButton.closest('tr').fadeOut('slow', function() {
                                     $(this).remove();
                                 });
-                                // $('.exp_info').html(response.html)
+
                                 setTimeout(() => {
-                                    Swal.fire('Deleted!', 'Income has been deleted.', 'success');
+                                    Swal.fire('Deleted!', 'Task has been deleted.', 'success');
                                 }, 1000);
+
                             },
                             error: function(xhr, textStatus, errorThrown) {
                                 // Handle deletion error
-                                Swal.fire('Error!', 'Failed to delete Income.', 'error');
+                                Swal.fire('Error!', 'Failed to delete.', 'error');
                             }
                         });
                     }
                 });
             });
+
+            $(document).ready(function() {
+                $('#datepicker6').datepicker({
+                    format: "dd M, yyyy",
+                    autoclose: true
+                });
+            });
+
         });
     </script>
     

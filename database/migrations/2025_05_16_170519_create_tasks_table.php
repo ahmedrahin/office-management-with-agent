@@ -14,14 +14,15 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->longText('tasks')->nullable();
-            $table->timestamp('start_date')->nullable();
-            $table->timestamp('end_date')->nullable();
-            $table->timestamp('complete_date')->nullable();
-            $table->integer('status')->default(0);
-
+            $table->string('date')->nullable();
+            $table->string('month')->nullable();
+            $table->string('year')->nullable();
+            $table->string('time')->nullable();
+            $table->string('status')->default('pending');
+            $table->longText('note')->nullable();
             $table->unsignedBigInteger('employees_id')->nullable();
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('employees_id')->references('id')->on('employees')->onDelete('set null');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('employees_id')->references('id')->on('employees')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
             $table->timestamps();
         });

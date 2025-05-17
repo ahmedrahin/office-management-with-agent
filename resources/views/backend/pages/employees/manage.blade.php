@@ -45,7 +45,7 @@
                                     Manage Employee
                                 </div>
                                 <div>
-                                    <a href="{{ route('add.employees') }}" class="btn btn-primary">Add New</a>
+                                    <a href="{{ route('add.employees') }}" class="btn btn-primary addnew"> <i class="ri-add-line"></i> Add New</a>
                                 </div>
                             </h4>
                             <div class="data table-responsive">
