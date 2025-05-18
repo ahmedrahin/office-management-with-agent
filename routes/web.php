@@ -22,6 +22,7 @@ use App\Http\Controllers\AdminController\SubjectController;
 use App\Http\Controllers\AdminController\JobInquiryController;
 use App\Http\Controllers\AdminController\TourTravelController;
 use App\Http\Controllers\AdminController\TaskController;
+use App\Http\Controllers\AdminController\AppoinmentController;
 use App\Models\Employees;
 use App\Models\JobType;
 use App\Models\Subject;
@@ -234,5 +235,9 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'check.status']], f
 
     Route::get('/my-task/{id}', [TaskController::class, 'myTasks'])->name('my.tasks');
     Route::post('/task/update-status', [TaskController::class, 'updateStatus'])->name('task.update.status');
+
+    // appoiment
+    Route::resource('appoinment', AppoinmentController::class);
+    Route::get('/appoinment/{year?}/{month?}', [AppoinmentController::class, 'manage'])->name('appoinment.index');
 
 });

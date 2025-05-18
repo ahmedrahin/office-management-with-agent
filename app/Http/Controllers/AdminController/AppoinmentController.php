@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Task;
 use App\Models\Employees;
 
-class TaskController extends Controller
+class AppoinmentController extends Controller
 {
     public function manage($year = null, $month = null)
     {
@@ -35,7 +35,7 @@ class TaskController extends Controller
         $reScheduleCount = $data->where('status', 're-schedule')->count();
         $completeCount = $data->where('status', 'complete')->count();
 
-        return view('backend.pages.task.manage', compact('data', 'allYear', 'selectedDate', 'pendingCount', 'reScheduleCount', 'completeCount'));
+        return view('backend.pages.appoinment.manage', compact('data', 'allYear', 'selectedDate', 'pendingCount', 'reScheduleCount', 'completeCount'));
     }
 
 

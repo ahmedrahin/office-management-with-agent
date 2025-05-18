@@ -71,6 +71,16 @@
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="ri-user-2-fill"></i>
+                        <span>Appoinment</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{route('appoinment.create')}}"> <i class="ri-arrow-right-s-fill"></i> Add New Appoinment</a></li>
+                        <li><a href="{{route('appoinment.index', [date('Y'), (Carbon::now()->format('M'))])}}"><i class="ri-arrow-right-s-fill"></i> Appoinment List</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="ri-user-2-fill"></i>
                         <span>Employees Tasks</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -83,7 +93,7 @@
                         <i class="ri-user-unfollow-line"></i>
                         <span>Attendance</span>
                     </a>
-                   
+
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{route('take.attendance')}}"> <i class="ri-arrow-right-s-fill"></i> Take Attendence </a></li>
                         <li><a href="{{route('manage.attendance', [date('Y'), (Carbon::now()->format('M'))])}}"><i class="ri-arrow-right-s-fill"></i> All Attendences</a></li>
@@ -97,7 +107,7 @@
 
                @if(auth()->user()->employees)
                     @php
-                        $today = \Carbon\Carbon::today()->format('d M, Y');
+                        $today = Carbon::today()->format('d M, Y');
                         $pendingTodayCount = \App\Models\Task::where('employees_id', auth()->user()->employees->id)
                                             ->where('date', $today)
                                             ->where('status', 'pending')
@@ -195,7 +205,7 @@
                         </li>
                     </ul>
                 </li>
-                
+
                 {{-- <li class="menu-title">Course Management</li>
                 <li>
                     <a href="{{route('course.index')}}" style="padding-bottom: 0;"> <i class="ri-arrow-right-s-fill"></i>Course List</a>
