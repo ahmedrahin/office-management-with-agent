@@ -68,62 +68,88 @@
                         <li><a href="{{route('manage.employees')}}"><i class="ri-arrow-right-s-fill"></i> Show All</a></li>
                     </ul>
                 </li>
-                <li>
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="ri-user-2-fill"></i>
-                        <span>Appoinment</span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{route('appoinment.create')}}"> <i class="ri-arrow-right-s-fill"></i> Add New Appoinment</a></li>
-                        <li><a href="{{route('appoinment.index', [date('Y'), (Carbon::now()->format('M'))])}}"><i class="ri-arrow-right-s-fill"></i> Appoinment List</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="ri-user-2-fill"></i>
-                        <span>Employees Tasks</span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{route('task.create')}}"> <i class="ri-arrow-right-s-fill"></i> Add New Task</a></li>
-                        <li><a href="{{route('task.index', [date('Y'), (Carbon::now()->format('M'))])}}"><i class="ri-arrow-right-s-fill"></i> View Task List</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="ri-user-unfollow-line"></i>
-                        <span>Attendance</span>
-                    </a>
 
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{route('take.attendance')}}"> <i class="ri-arrow-right-s-fill"></i> Take Attendence </a></li>
-                        <li><a href="{{route('manage.attendance', [date('Y'), (Carbon::now()->format('M'))])}}"><i class="ri-arrow-right-s-fill"></i> All Attendences</a></li>
-                        <li><a href="{{ route('month.attendance', [date('Y'), (Carbon::now()->format('M'))]) }}"><i class="ri-arrow-right-s-fill"></i> Attendance Report</a></li>
-                    </ul>
-                </li>
-
-                <li>
-                    <a href="{{route('shedule.index')}}" > <i class="ri-arrow-right-s-fill"></i>Work Schedules</a>
-                </li>
-
-               @if(auth()->user()->employees)
-                    @php
-                        $today = Carbon::today()->format('d M, Y');
-                        $pendingTodayCount = \App\Models\Task::where('employees_id', auth()->user()->employees->id)
-                                            ->where('date', $today)
-                                            ->where('status', 'pending')
-                                            ->count();
-                    @endphp
+                 @if( auth()->user()->role_id == 2 )
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow waves-effect">
+                            <i class="ri-calendar-2-line"></i>
+                            <span>Appointment</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li><a href="{{route('appoinment.create')}}"> <i class="ri-arrow-right-s-fill"></i> Add New Appointment</a></li>
+                            <li><a href="{{route('appoinment.index', [date('Y'), (Carbon::now()->format('M'))])}}"><i class="ri-arrow-right-s-fill"></i> Appointment List</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow waves-effect">
+                            <i class="ri-task-line"></i>
+                            <span>Employees Tasks</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li><a href="{{route('task.create')}}"> <i class="ri-arrow-right-s-fill"></i> Add New Task</a></li>
+                            <li><a href="{{route('task.index', [date('Y'), (Carbon::now()->format('M'))])}}"><i class="ri-arrow-right-s-fill"></i> View Task List</a></li>
+                        </ul>
+                    </li>
 
                     <li>
-                        <a href="{{ route('my.tasks', auth()->user()->employees) }}">
-                            <i class="ri-arrow-right-s-fill"></i>My Task List
-                            @if($pendingTodayCount > 0)
-                                <span class="badge rounded-pill bg-danger float-end">{{ $pendingTodayCount }}</span>
-                            @endif
+                        <a href="javascript: void(0);" class="has-arrow waves-effect">
+                            <i class="ri-user-unfollow-line"></i>
+                            <span>Attendance</span>
                         </a>
+
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li><a href="{{route('take.attendance')}}"> <i class="ri-arrow-right-s-fill"></i> Take Attendence </a></li>
+                            <li><a href="{{route('manage.attendance', [date('Y'), (Carbon::now()->format('M'))])}}"><i class="ri-arrow-right-s-fill"></i> All Attendences</a></li>
+                            <li><a href="{{ route('month.attendance', [date('Y'), (Carbon::now()->format('M'))]) }}"><i class="ri-arrow-right-s-fill"></i> Attendance Report</a></li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="{{route('shedule.index')}}" > <i class="ri-arrow-right-s-fill"></i>Work Schedules</a>
                     </li>
                 @endif
 
+                
+
+               
+                @if(auth()->user()->employees)
+                        @php
+                            $today = Carbon::today()->format('d M, Y');
+                            $pendingTodayCount = \App\Models\Task::where('employees_id', auth()->user()->employees->id)
+                                                ->where('date', $today)
+                                                ->where('status', 'pending')
+                                                ->count();
+                        @endphp
+
+                        <li>
+                            <a href="{{ route('my.tasks', auth()->user()->employees) }}">
+                                <i class="ri-arrow-right-s-fill"></i>My Task List
+                                @if($pendingTodayCount > 0)
+                                    <span class="badge rounded-pill bg-danger float-end">{{ $pendingTodayCount }}</span>
+                                @endif
+                            </a>
+                        </li>
+                    @endif
+                    
+                @if(auth()->user()->employees)
+                @php
+                    $today = Carbon::today()->format('d M, Y');
+                    $pendingTodayCount = \App\Models\Appoinment::where('employees_id', auth()->user()->employees->id)
+                                        ->where('date', $today)
+                                        ->where('status', 'pending')
+                                        ->count();
+                @endphp
+
+                <li>
+                    <a href="{{ route('my.appoinment', auth()->user()->employees) }}">
+                        <i class="ri-arrow-right-s-fill"></i>My Appointment List
+                        @if($pendingTodayCount > 0)
+                            <span class="badge rounded-pill bg-danger float-end">{{ $pendingTodayCount }}</span>
+                        @endif
+                    </a>
+                </li>
+                @endif
+                
 
                 <li class="menu-title">Payroll Management</li>
                 <li>

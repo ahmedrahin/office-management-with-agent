@@ -71,7 +71,7 @@
                         <div class="card-body">
                             <div class="d-flex">
                                 <div class="flex-grow-1">
-                                    <p class="text-truncate font-size-14 mb-2">Employees</p>
+                                    <p class="text-truncate font-size-14 mb-2">Total Employees</p>
                                     <h4 class="mb-2">
                                         {{ App\Models\Employees::count() }}
                                     </h4>
@@ -90,7 +90,7 @@
                         <div class="card-body">
                             <div class="d-flex">
                                 <div class="flex-grow-1">
-                                    <p class="text-truncate font-size-14 mb-2">Student</p>
+                                    <p class="text-truncate font-size-14 mb-2">Total Student</p>
                                     <h4 class="mb-2">
                                         {{ App\Models\Registation::count() }}
                                     </h4>
@@ -103,7 +103,88 @@
                             </div>                                              
                         </div><!-- end cardbody -->
                     </div><!-- end card -->
-                </div><!-- end col -->
+                </div>
+
+                 <div class="col-xl-3 col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="flex-grow-1">
+                                    <p class="text-truncate font-size-14 mb-2">Total Tourist</p>
+                                    <h4 class="mb-2">
+                                        {{ App\Models\Tourist::count() }}
+                                    </h4>
+                                </div>
+                                <div class="avatar-sm">
+                                    <span class="avatar-title bg-light text-danger rounded-3">
+                                        <i class="ri-user-3-line font-size-24"></i>  
+                                    </span>
+                                </div>
+                            </div>                                              
+                        </div><!-- end cardbody -->
+                    </div><!-- end card -->
+                </div>
+
+                <div class="col-xl-3 col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="flex-grow-1">
+                                    <p class="text-truncate font-size-14 mb-2">Total Job Inquiries</p>
+                                    <h4 class="mb-2">
+                                        {{ App\Models\JobInquiry::count() }}
+                                    </h4>
+                                </div>
+                                <div class="avatar-sm">
+                                    <span class="avatar-title bg-light text-dark rounded-3">
+                                        <i class="ri-user-3-line font-size-24"></i>  
+                                    </span>
+                                </div>
+                            </div>                                              
+                        </div><!-- end cardbody -->
+                    </div><!-- end card -->
+                </div>
+
+                <div class="col-xl-3 col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="flex-grow-1">
+                                    <p class="text-truncate font-size-14 mb-2">Total Agents</p>
+                                    <h4 class="mb-2">
+                                        {{ App\Models\Agent::count() }}
+                                    </h4>
+                                </div>
+                                <div class="avatar-sm">
+                                    <span class="avatar-title bg-light text-secondary rounded-3">
+                                        <i class="ri-user-3-line font-size-24"></i>  
+                                    </span>
+                                </div>
+                            </div>                                              
+                        </div><!-- end cardbody -->
+                    </div><!-- end card -->
+                </div>
+
+                <div class="col-xl-3 col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="flex-grow-1">
+                                    <p class="text-truncate font-size-14 mb-2">Countries</p>
+                                    <h4 class="mb-2">
+                                        {{ App\Models\Country::count() }}
+                                    </h4>
+                                </div>
+                                <div class="avatar-sm">
+                                    <span class="avatar-title bg-light text-secondary rounded-3">
+                                        <i class="ri-earth-line font-size-24"></i>  
+                                    </span>
+                                </div>
+                            </div>                                              
+                        </div><!-- end cardbody -->
+                    </div><!-- end card -->
+                </div>
+
             </div><!-- end row -->
 
             

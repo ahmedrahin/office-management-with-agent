@@ -1,6 +1,6 @@
 @extends('backend.layout.template')
 @section('page-title')
-    <title>Edit Task || {{ \App\Models\Settings::site_title() }}</title>
+    <title>Edit Appointment || {{ \App\Models\Settings::site_title() }}</title>
 @endsection
 
 @section('page-css')
@@ -41,7 +41,7 @@
                         <div class="page-title">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="{{url('/')}}">{{ \App\Models\Settings::site_title() }}</a></li>
-                                <li class="breadcrumb-item active">Edit Task</li>
+                                <li class="breadcrumb-item active">Edit Appointment</li>
                             </ol>
                         </div>
 
@@ -56,20 +56,27 @@
                         <div class="card-body">
                             <h4 class="card-title" style="display: flex;justify-content: space-between;align-items:center;">
                                 <div>
-                                    Edit Task
+                                    Edit Appointment
                                 </div>
                                 
                             </h4>
 
-                            <form action="{{ route('task.update', $data->id) }}" method="POST" class="needs-validation" novalidate>
+                            <form action="{{ route('appoinment.update', $data->id) }}" method="POST" class="needs-validation" novalidate>
                                 @csrf
                                 @method('PUT')
 
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="validationName" class="form-label">Task</label>
-                                            <input type="text" class="form-control" id="validationName" placeholder="Task" name="task" value="{{ $data->tasks }}" required>
+                                            <label for="validationName" class="form-label">Person Name</label>
+                                            <input type="text" class="form-control" id="validationName" placeholder="Person Name" name="person" value="{{ $data->person_name }}" required>
+                                            <div class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="" class="form-label">Person Phone</label>
+                                            <input type="text" class="form-control" id="" placeholder="Person Phone" name="phone" value="{{ $data->phone }}" >
                                             <div class="invalid-feedback"></div>
                                         </div>
                                     </div>
@@ -126,6 +133,7 @@
                                             <option value="pending" {{ $data->status == 'pending' ? 'selected' : '' }}>Pending</option>
                                             <option value="re-schedule" {{ $data->status == 're-schedule' ? 'selected' : '' }}>Re-schedule</option>
                                             <option value="complete" {{ $data->status == 'complete' ? 'selected' : '' }}>Complete</option>
+                                            <option value="cancel" {{ $data->status == 'cancel' ? 'selected' : '' }}>Cancel</option>
                                         </select>
                                     </div>
                                 </div>

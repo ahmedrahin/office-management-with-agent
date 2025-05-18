@@ -1,6 +1,6 @@
 @extends('backend.layout.template')
 @section('page-title')
-    <title>Today Task List || {{ \App\Models\Settings::site_title() }} </title>
+    <title>Today Appointment List || {{ \App\Models\Settings::site_title() }} </title>
 @endsection
 
 @section('page-css')
@@ -51,7 +51,7 @@
                         <div class="page-title">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="{{url('/')}}">{{ \App\Models\Settings::site_title() }}</a></li>
-                                <li class="breadcrumb-item active">Today Tasks</li>
+                                <li class="breadcrumb-item active">Today Appointment </li>
                             </ol>
                         </div>
 
@@ -66,11 +66,11 @@
                         <div class="card-body">
 
                             <h4 class="card-title">
-                                Today Task List
+                                Today Appointment List
                                 <div class="btn btn-group">
-                                    <a href="{{route('task.index', [date('Y'), (Carbon::now()->format('M'))])}}" class="btn btn-primary" >All</a>
-                                    <a href="{{route('task.today')}}" class="btn btn-primary" style="background: #0c7dc2;">Today Tasks</a>
-                                    <a href="{{route('task.week')}}" class="btn btn-primary">This Week Tasks</a>
+                                    <a href="{{route('appoinment.index', [date('Y'), (Carbon::now()->format('M'))])}}" class="btn btn-primary" >All</a>
+                                    <a href="{{route('appoinment.today')}}" class="btn btn-primary" style="background: #0c7dc2;">Today Appointment </a>
+                                    <a href="{{route('appoinment.week')}}" class="btn btn-primary">This Week Appointment </a>
                                 </div>
                             </h4>
                             <div class="data table-responsive">
@@ -83,10 +83,10 @@
                                         <thead>
                                             <tr>
                                                 <th>Sl.</th>
-                                                <th>Task</th>
-                                                
-                                                <th class="text-center">Assign To</th>
+                                                <th>Person Name</th>
+                                                <th class="text-center">Person Phone</th>
                                                 <th class="text-center">Time</th>
+                                                <th class="text-center">Assign To</th>
                                                 <th class="text-center">Added by</th>
                                                 <th class="text-center">Status</th>
                                                 <th class="text-center">Action</th>
@@ -95,15 +95,16 @@
 
                                         <tbody>
                                             @php
-                                                $counter = 1; 
-                                                
+                                                $counter = 1;
+
                                             @endphp
                                             @foreach ($data as $v)
                                                 <tr>
                                                     <td>{{$counter++}}</td>
-                                                    <td>{{ $v->tasks }}</td>
-                                                    <td class="text-center">{{ $v->employees->name }}</td>
+                                                    <td>{{ $v->person_name }}</td>
+                                                    <td class="text-center">{{ $v->phone }}</td>
                                                     <td class="text-center">{{ $v->time ?? '-' }}</td>
+                                                    <td class="text-center">{{ $v->employees->name }}</td>
                                                     <td class="text-center"><span class="badge bg-dark">{{ optional($v->user)->name ?? 'N/A' }}</td>
                                                    <td class="text-center">
                                                         @if($v->status == 'pending')
@@ -112,6 +113,8 @@
                                                             <span class="badge bg-info">Re-schedule</span>
                                                         @elseif($v->status == 'complete')
                                                             <span class="badge bg-success">Complete</span>
+                                                        @elseif($v->status == 'cancel')
+                                                            <span class="badge bg-danger">Cancel</span>
                                                         @else
                                                             <span class="badge bg-secondary">Unknown</span>
                                                         @endif
@@ -119,7 +122,7 @@
 
                                                     <td class="action">
                                                         <button>
-                                                            <a href="{{route('task.edit',$v->id)}}">
+                                                            <a href="{{route('appoinment.edit',$v->id)}}">
                                                                 <i class="ri-edit-2-fill"></i>
                                                             </a>
                                                         </button>
@@ -137,6 +140,29 @@
                     </div>
                 </div> <!-- end col -->
             </div>
+
+             <div class="row">
+
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-header text-center">
+                            <strong>Appoinment Report</strong>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex flex-wrap gap-2">
+                                <span class="badge bg-dark">Total Appointment: {{ $data->count() }}</span>
+                                <span class="badge bg-warning">Pending: {{ $pendingCount }}</span>
+                                <span class="badge bg-success">Complete: {{ $completeCount }}</span>
+                                <span class="badge bg-primary">Re-schedule: {{ $reScheduleCount }}</span>
+                                <span class="badge bg-danger">Cancel: {{ $cancelCount }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+               
+            </div>
+
             
         </div> 
     </div>
@@ -145,18 +171,17 @@
 @endsection
 
 @section('page-script')
-    {{-- delete expense --}}
     <script>
         $(document).ready(function() {
             $('.deleteButton').click(function() {
-                var deleteButton = $(this); 
-                
+                var deleteButton = $(this);
+
                 var id = deleteButton.data('id');
 
                 // Trigger SweetAlert confirmation dialog
                 Swal.fire({
                     title: 'Are you sure?',
-                    text: 'You will not be able to recover this task data!',
+                    text: 'You will not be able to recover this appoinment data!',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Yes, delete it!',
@@ -168,18 +193,18 @@
                     if (result.isConfirmed) {
                         $.ajax({
                             type: 'DELETE',
-                            url: '{{ route("task.destroy", ":id") }}'.replace(':id', id),
+                            url: '{{ route("appoinment.destroy", ":id") }}'.replace(':id', id),
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            success: function(response) {    
+                            success: function(response) {
                                 // Remove the row from the table
                                 deleteButton.closest('tr').fadeOut('slow', function() {
                                     $(this).remove();
                                 });
 
                                 setTimeout(() => {
-                                    Swal.fire('Deleted!', 'Task has been deleted.', 'success');
+                                    Swal.fire('Deleted!', 'appoinment has been deleted.', 'success');
                                 }, 1000);
 
                             },

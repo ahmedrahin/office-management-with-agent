@@ -228,16 +228,21 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'check.status']], f
     Route::put('subject-status/{id}', [SubjectController::class, 'activeStatus'])->name('subject.status');
 
     // task
-    Route::resource('task', TaskController::class);
-    Route::get('/task/{year?}/{month?}', [TaskController::class, 'manage'])->name('task.index');
-    Route::get('/task-today', [TaskController::class, 'today'])->name('task.today');
-    Route::get('/task-week', [TaskController::class, 'week'])->name('task.week');
+    Route::resource('task', TaskController::class)->middleware('admin');
+    Route::get('/task/{year?}/{month?}', [TaskController::class, 'manage'])->name('task.index')->middleware('admin');
+    Route::get('/task-today', [TaskController::class, 'today'])->name('task.today')->middleware('admin');
+    Route::get('/task-week', [TaskController::class, 'week'])->name('task.week')->middleware('admin');
 
     Route::get('/my-task/{id}', [TaskController::class, 'myTasks'])->name('my.tasks');
     Route::post('/task/update-status', [TaskController::class, 'updateStatus'])->name('task.update.status');
 
     // appoiment
-    Route::resource('appoinment', AppoinmentController::class);
-    Route::get('/appoinment/{year?}/{month?}', [AppoinmentController::class, 'manage'])->name('appoinment.index');
+    Route::resource('appoinment', AppoinmentController::class)->middleware('admin');
+    Route::get('/appoinment/{year?}/{month?}', [AppoinmentController::class, 'manage'])->name('appoinment.index')->middleware('admin');
+    Route::get('/appoinment-today', [AppoinmentController::class, 'today'])->name('appoinment.today')->middleware('admin');
+    Route::get('/appoinment-week', [AppoinmentController::class, 'week'])->name('appoinment.week')->middleware('admin');
+
+    Route::get('/my-appoinment/{id}', [AppoinmentController::class, 'myTasks'])->name('my.appoinment');
+    Route::post('/appoinment/update-status', [AppoinmentController::class, 'updateStatus'])->name('appoinment.update.status');
 
 });

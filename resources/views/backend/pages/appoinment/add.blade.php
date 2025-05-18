@@ -1,6 +1,6 @@
 @extends('backend.layout.template')
 @section('page-title')
-    <title>Add Appoinment || {{ \App\Models\Settings::site_title() }}</title>
+    <title>Add Appointment || {{ \App\Models\Settings::site_title() }}</title>
 @endsection
 
 @section('page-css')
@@ -41,7 +41,7 @@
                         <div class="page-title">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="{{url('/')}}">{{ \App\Models\Settings::site_title() }}</a></li>
-                                <li class="breadcrumb-item active">Add Appoinment</li>
+                                <li class="breadcrumb-item active">Add Appointment</li>
                             </ol>
                         </div>
 
@@ -56,7 +56,7 @@
                         <div class="card-body">
                             <h4 class="card-title" style="display: flex;justify-content: space-between;align-items:center;">
                                 <div>
-                                    Add New Appoinment
+                                    Add New Appointment
                                 </div>
 
                             </h4>
@@ -65,10 +65,17 @@
                                 @csrf
                                 <div class="row">
 
-                                    <div class="col-12">
+                                    <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="validationName" class="form-label">Person Name</label>
                                             <input type="text" class="form-control" id="validationName" placeholder="Person Name" name="person" required>
+                                            <div class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="" class="form-label">Person Phone</label>
+                                            <input type="text" class="form-control" id="" placeholder="Person Phone" name="phone" >
                                             <div class="invalid-feedback"></div>
                                         </div>
                                     </div>

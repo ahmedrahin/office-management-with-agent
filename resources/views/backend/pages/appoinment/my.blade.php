@@ -1,6 +1,6 @@
 @extends('backend.layout.template')
 @section('page-title')
-    <title>My Task List  || {{ \App\Models\Settings::site_title() }} </title>
+    <title>My Appointment List  || {{ \App\Models\Settings::site_title() }} </title>
 @endsection
 
 @section('page-css')
@@ -60,7 +60,7 @@
                         <div class="page-title">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="{{url('/')}}">{{ \App\Models\Settings::site_title() }}</a></li>
-                                <li class="breadcrumb-item active">Tasks</li>
+                                <li class="breadcrumb-item active">Appointment </li>
                             </ol>
                         </div>
 
@@ -75,12 +75,13 @@
                         <div class="card-body">
 
                             <h4 class="card-title">
-                                My Task List - {{ $filterTitle }} Tasks
+                                My Appointment  List - {{ $filterTitle }} 
                                 <div>
-                                    <span class="badge bg-dark">Total Tasks: {{ $data->count() }}</span>
-                                    <span class="badge bg-danger">Pending: {{ $pendingCount }}</span>
+                                    <span class="badge bg-dark">Total Appointment: {{ $data->count() }}</span>
+                                    <span class="badge bg-warning">Pending: {{ $pendingCount }}</span>
                                     <span class="badge bg-success">Complete: {{ $completeCount }}</span>
                                     <span class="badge bg-primary">Re-schedule: {{ $reScheduleCount }}</span>
+                                    <span class="badge bg-danger">Cancel: {{ $cancelCount }}</span>
                                 </div>
                             </h4>
                             <div class="data table-responsive">
@@ -93,12 +94,14 @@
                                         <thead>
                                             <tr>
                                                 <th>Sl.</th>
-                                                <th>Task</th>
+                                                <th>Person Name</th>
+                                                <th class="text-center">Person Phone</th>
                                                 <th class="text-center">Date</th>
                                                 <th class="text-center">Time</th>
-                                               
+
                                                 <th class="text-center">Added by</th>
                                                 <th class="text-center">Status</th>
+                                                <th class="text-center">Note</th>
                                             </tr>
                                         </thead>
 
@@ -110,7 +113,8 @@
                                             @foreach ($data as $v)
                                                 <tr>
                                                     <td>{{$counter++}}</td>
-                                                    <td>{{ $v->tasks }}</td>
+                                                    <td>{{ $v->person_name }}</td>
+                                                    <td class="text-center">{{ $v->phone }}</td>
                                                     <td class="text-center">{{ $v->date }}</td>
                                                     <td class="text-center">{{ $v->time ?? '-' }}</td>
                                                     <td class="text-center"><span class="badge bg-dark">{{ optional($v->user)->name ?? 'N/A' }}</td>
@@ -141,9 +145,51 @@
                                                                 >
                                                                 Complete
                                                             </label>
+                                                            <label class="form-check-inline">
+                                                                <input 
+                                                                    class="form-check-input status-radio" 
+                                                                    type="radio" 
+                                                                    name="status_{{ $v->id }}" 
+                                                                    value="cancel"
+                                                                    data-id="{{ $v->id }}"
+                                                                    {{ $v->status == 'cancel' ? 'checked' : '' }}
+                                                                >
+                                                                Cancel
+                                                            </label>
+                                                        @endif
+                                                    </td>
+                                                    <td class="text-center">
+                                                        @if( $v->note )
+                                                            <button 
+                                                                class="btn btn-sm btn-info show-note-btn" 
+                                                                data-note="{{ $v->note ?? 'No note available.' }}" 
+                                                                data-bs-toggle="modal" 
+                                                                data-bs-target="#noteModal">
+                                                                Show Note
+                                                            </button>
                                                         @endif
                                                     </td>
                                                 </tr>
+
+                                                <!-- Modal -->
+                                                <div class="modal fade" id="noteModal" tabindex="-1" aria-labelledby="noteModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="noteModalLabel">Task Note</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body" id="noteContent">
+                                                                @php
+                                                                    echo $v->note;
+                                                                @endphp
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             @endforeach
 
                                         </tbody>
@@ -163,7 +209,7 @@
                         <strong>Filter Your Tasks</strong>
                     </div>
                     <div class="card-body">
-                        <form method="GET" action="{{ route('my.tasks', auth()->user()->employees->id) }}">
+                        <form method="GET" action="{{ route('my.appoinment', auth()->user()->employees->id) }}">
                             <select name="filter" id="taskFilter" class="form-control" onchange="this.form.submit()">
                                 <option value="today" {{ request('filter') == 'today' ? 'selected' : '' }}>Today Tasks</option>
                                 <option value="week" {{ request('filter') == 'week' ? 'selected' : '' }}>This Week Tasks</option>
@@ -174,20 +220,6 @@
                     </div>
                 </div>
             </div>
-
-               
-                @if( $data->count() != 0 )
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-header">
-                                <strong>Task Status Overview</strong>
-                            </div>
-                            <div class="card-body">
-                                <canvas id="taskStatusChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                @endif
 
             </div>
             
@@ -219,47 +251,7 @@
     <script src="{{asset('backend/libs/datatables.net-keytable/js/dataTables.keyTable.min.js')}}"></script>
     <script src="{{asset('backend/libs/datatables.net-select/js/dataTables.select.min.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const ctx = document.getElementById('taskStatusChart').getContext('2d');
 
-            new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Pending', 'Re-schedule', 'Complete'],
-                    datasets: [{
-                        label: 'Task Status',
-                        data: [{{ $pendingCount }}, {{ $reScheduleCount }}, {{ $completeCount }}],
-                        backgroundColor: [
-                            '#FFC107', 
-                            '#17A2B8', 
-                            '#28A745' 
-                        ],
-                        borderColor: '#fff',
-                        borderWidth: 2,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function (context) {
-                                    const label = context.label || '';
-                                    const value = context.raw || 0;
-                                    return label + ': ' + value;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        });
-    </script>
 
     <script>
         $(document).ready(function() {
@@ -268,7 +260,7 @@
                 var newStatus = $(this).val();
                 
                 $.ajax({
-                    url: "{{ route('task.update.status') }}", 
+                    url: "{{ route('appoinment.update.status') }}", 
                     type: 'POST',
                     data: {
                         _token: '{{ csrf_token() }}',
@@ -280,7 +272,7 @@
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Status Updated',
-                                text: 'The task status has been updated successfully!',
+                                text: 'The appointment status has been updated successfully!',
                                 timer: 1500,
                                 showConfirmButton: false
                             });

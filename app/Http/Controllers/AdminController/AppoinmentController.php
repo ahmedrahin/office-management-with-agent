@@ -34,8 +34,9 @@ class AppoinmentController extends Controller
         $pendingCount = $data->where('status', 'pending')->count();
         $reScheduleCount = $data->where('status', 're-schedule')->count();
         $completeCount = $data->where('status', 'complete')->count();
+        $cancelCount = $data->where('status', 'cancel')->count();
 
-        return view('backend.pages.appoinment.manage', compact('data', 'allYear', 'selectedDate', 'pendingCount', 'reScheduleCount', 'completeCount'));
+        return view('backend.pages.appoinment.manage', compact('data', 'allYear', 'selectedDate', 'pendingCount', 'reScheduleCount', 'completeCount', 'cancelCount'));
     }
 
 
@@ -47,7 +48,12 @@ class AppoinmentController extends Controller
                     ->latest()
                     ->get();
 
-        return view('backend.pages.appoinment.today', compact('data'));
+        $pendingCount = $data->where('status', 'pending')->count();
+        $reScheduleCount = $data->where('status', 're-schedule')->count();
+        $completeCount = $data->where('status', 'complete')->count();
+        $cancelCount = $data->where('status', 'cancel')->count();
+
+        return view('backend.pages.appoinment.today', compact('data','pendingCount', 'reScheduleCount', 'completeCount', 'cancelCount'));
     }
 
     public function week()
@@ -61,7 +67,12 @@ class AppoinmentController extends Controller
                     ->orderBy('date', 'asc')
                     ->get();
 
-        return view('backend.pages.appoinment.week', compact('data'));
+        $pendingCount = $data->where('status', 'pending')->count();
+        $reScheduleCount = $data->where('status', 're-schedule')->count();
+        $completeCount = $data->where('status', 'complete')->count();
+        $cancelCount = $data->where('status', 'cancel')->count();
+
+        return view('backend.pages.appoinment.week', compact('data','pendingCount', 'reScheduleCount', 'completeCount', 'cancelCount'));
     }
 
 
@@ -86,6 +97,7 @@ class AppoinmentController extends Controller
         Appoinment::create([
             'person_name' => $request->person,
             'date' => $request->date,
+            'phone' => $request->phone,
             'month' => $month,
             'year' => $year,
             'time' => $request->start_time,
@@ -119,6 +131,7 @@ class AppoinmentController extends Controller
 
         $task = Appoinment::findOrFail($id);
         $task->person_name = $request->person;
+        $task->phone = $request->phone;
         $task->employees_id = $request->emp;
         $task->date = Carbon::parse($request->date)->format('d M, Y');
         $task->month = Carbon::parse($request->date)->format('M');
@@ -194,15 +207,16 @@ class AppoinmentController extends Controller
         $pendingCount = $data->where('status', 'pending')->count();
         $reScheduleCount = $data->where('status', 're-schedule')->count();
         $completeCount = $data->where('status', 'complete')->count();
+        $cancelCount = $data->where('status', 'cancel')->count();
 
-        return view('backend.pages.task.my-tasks', compact('data', 'pendingCount', 'reScheduleCount', 'completeCount', 'filterTitle'));
+        return view('backend.pages.appoinment.my', compact('data', 'pendingCount', 'reScheduleCount', 'completeCount', 'filterTitle', 'cancelCount'));
     }
 
 
     public function updateStatus(Request $request)
     {
 
-        $task = Task::find($request->id);
+        $task = Appoinment::find($request->id);
         $task->status = $request->status;
 
         if ($task->save()) {

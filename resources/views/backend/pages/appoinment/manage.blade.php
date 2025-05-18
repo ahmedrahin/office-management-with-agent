@@ -1,6 +1,6 @@
 @extends('backend.layout.template')
 @section('page-title')
-    <title>Task List - ({{ $selectedDate }}) || {{ \App\Models\Settings::site_title() }} </title>
+    <title>Appointment List - ({{ $selectedDate }}) || {{ \App\Models\Settings::site_title() }} </title>
 @endsection
 
 @section('page-css')
@@ -51,7 +51,7 @@
                         <div class="page-title">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="{{url('/')}}">{{ \App\Models\Settings::site_title() }}</a></li>
-                                <li class="breadcrumb-item active">Tasks</li>
+                                <li class="breadcrumb-item active">Appointment</li>
                             </ol>
                         </div>
 
@@ -66,11 +66,11 @@
                         <div class="card-body">
 
                             <h4 class="card-title">
-                                {{ $selectedDate }} Task List
+                                {{ $selectedDate }} Appointment List
                                 <div class="btn btn-group">
-                                    <a href="{{route('task.index', [date('Y'), (Carbon::now()->format('M'))])}}" class="btn btn-primary" style="background: #0c7dc2;">All</a>
-                                    <a href="{{route('task.today')}}" class="btn btn-primary" >Today Tasks</a>
-                                    <a href="{{route('task.week')}}" class="btn btn-primary">This Week Tasks</a>
+                                    <a href="{{route('appoinment.index', [date('Y'), (Carbon::now()->format('M'))])}}" class="btn btn-primary" style="background: #0c7dc2;">All</a>
+                                    <a href="{{route('appoinment.today')}}" class="btn btn-primary" >Today Appointment</a>
+                                    <a href="{{route('appoinment.week')}}" class="btn btn-primary">This Week Appointment</a>
                                 </div>
                             </h4>
                             <div class="data table-responsive">
@@ -83,7 +83,8 @@
                                         <thead>
                                             <tr>
                                                 <th>Sl.</th>
-                                                <th>Task</th>
+                                                <th>Person Name</th>
+                                                <th class="text-center">Person Phone</th>
                                                 <th class="text-center">Date</th>
                                                 <th class="text-center">Time</th>
                                                 <th class="text-center">Assign To</th>
@@ -101,7 +102,8 @@
                                             @foreach ($data as $v)
                                                 <tr>
                                                     <td>{{$counter++}}</td>
-                                                    <td>{{ $v->tasks }}</td>
+                                                    <td>{{ $v->person_name }}</td>
+                                                    <td class="text-center">{{ $v->phone }}</td>
                                                     <td class="text-center">{{ $v->date }}</td>
                                                     <td class="text-center">{{ $v->time ?? '-' }}</td>
                                                     <td class="text-center">{{ $v->employees->name }}</td>
@@ -113,6 +115,8 @@
                                                             <span class="badge bg-info">Re-schedule</span>
                                                         @elseif($v->status == 'complete')
                                                             <span class="badge bg-success">Complete</span>
+                                                        @elseif($v->status == 'cancel')
+                                                            <span class="badge bg-danger">Cancel</span>
                                                         @else
                                                             <span class="badge bg-secondary">Unknown</span>
                                                         @endif
@@ -120,7 +124,7 @@
 
                                                     <td class="action">
                                                         <button>
-                                                            <a href="{{route('task.edit',$v->id)}}">
+                                                            <a href="{{route('appoinment.edit',$v->id)}}">
                                                                 <i class="ri-edit-2-fill"></i>
                                                             </a>
                                                         </button>
@@ -143,7 +147,7 @@
                 <div class="col-md-5">
                     <div class="card">
                         <div class="card-header">
-                            Task List of ({{ $selectedDate }})
+                            Appointment List of ({{ $selectedDate }})
                         </div>
 
                         <div class="card-body">
@@ -163,7 +167,7 @@
                                             $isCurrentMonth = (strtolower(date('M')) == strtolower($monthName) && request('month') == null) ? 'btn-success' : '';
                                         @endphp
 
-                                        <a href="{{ route('task.index', ['month' => strtolower($monthName), 'year' => $selectedYear]) }}"
+                                        <a href="{{ route('appoinment.index', ['month' => strtolower($monthName), 'year' => $selectedYear]) }}"
                                         class="btn {{ $buttonClass }} {{ $isCurrentMonth }} ">
                                             {{ $monthName }}
                                         </a>
@@ -182,12 +186,29 @@
                         <div class="card-body">
                             <div class="d-flex flex-wrap gap-3">
                                 @foreach($allYear as $availableYear)
-                                    <a href="{{ route('task.index', ['year' => $availableYear, 'month' => (Carbon::now()->format('M'))]) }}"
+                                    <a href="{{ route('appoinment.index', ['year' => $availableYear, 'month' => (Carbon::now()->format('M'))]) }}"
                                     class="btn btn-primary mb-2 {{ request('year') == $availableYear ? 'btn-success text-white' : '' }}"
                                     style="width: 45%; text-align: center;">
                                         {{ $availableYear }}
                                     </a>
                                 @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-header text-center">
+                            <strong>Appoinment Report</strong>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex flex-wrap gap-2">
+                                <span class="badge bg-dark">Total Appointment: {{ $data->count() }}</span>
+                                <span class="badge bg-warning">Pending: {{ $pendingCount }}</span>
+                                <span class="badge bg-success">Complete: {{ $completeCount }}</span>
+                                <span class="badge bg-primary">Re-schedule: {{ $reScheduleCount }}</span>
+                                <span class="badge bg-danger">Cancel: {{ $cancelCount }}</span>
                             </div>
                         </div>
                     </div>
@@ -214,7 +235,7 @@
                 // Trigger SweetAlert confirmation dialog
                 Swal.fire({
                     title: 'Are you sure?',
-                    text: 'You will not be able to recover this task data!',
+                    text: 'You will not be able to recover this appoinment data!',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Yes, delete it!',
@@ -226,7 +247,7 @@
                     if (result.isConfirmed) {
                         $.ajax({
                             type: 'DELETE',
-                            url: '{{ route("task.destroy", ":id") }}'.replace(':id', id),
+                            url: '{{ route("appoinment.destroy", ":id") }}'.replace(':id', id),
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
@@ -237,7 +258,7 @@
                                 });
 
                                 setTimeout(() => {
-                                    Swal.fire('Deleted!', 'Task has been deleted.', 'success');
+                                    Swal.fire('Deleted!', 'appoinment has been deleted.', 'success');
                                 }, 1000);
 
                             },
@@ -281,46 +302,5 @@
     <script src="{{asset('backend/libs/datatables.net-select/js/dataTables.select.min.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const ctx = document.getElementById('taskStatusChart').getContext('2d');
-
-            new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Pending', 'Re-schedule', 'Complete'],
-                    datasets: [{
-                        label: 'Task Status',
-                        data: [{{ $pendingCount }}, {{ $reScheduleCount }}, {{ $completeCount }}],
-                        backgroundColor: [
-                            '#FFC107',
-                            '#17A2B8',
-                            '#28A745'
-                        ],
-                        borderColor: '#fff',
-                        borderWidth: 2,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function (context) {
-                                    const label = context.label || '';
-                                    const value = context.raw || 0;
-                                    return label + ': ' + value;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        });
-    </script>
-
-
+   
 @endsection

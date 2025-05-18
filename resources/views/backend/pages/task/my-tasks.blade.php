@@ -99,6 +99,7 @@
                                                
                                                 <th class="text-center">Added by</th>
                                                 <th class="text-center">Status</th>
+                                                <th class="text-center">Note</th>
                                             </tr>
                                         </thead>
 
@@ -143,7 +144,39 @@
                                                             </label>
                                                         @endif
                                                     </td>
+                                                    <td class="text-center">
+                                                        @if( $v->note )
+                                                            <button 
+                                                                class="btn btn-sm btn-info show-note-btn" 
+                                                                data-note="{{ $v->note ?? 'No note available.' }}" 
+                                                                data-bs-toggle="modal" 
+                                                                data-bs-target="#noteModal">
+                                                                Show Note
+                                                            </button>
+                                                        @endif
+                                                    </td>
                                                 </tr>
+
+                                                <!-- Modal -->
+                                                <div class="modal fade" id="noteModal" tabindex="-1" aria-labelledby="noteModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="noteModalLabel">Task Note</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body" id="noteContent">
+                                                                @php
+                                                                    echo $v->note;
+                                                                @endphp
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                             @endforeach
 
                                         </tbody>
@@ -177,7 +210,7 @@
 
                
                 @if( $data->count() != 0 )
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="card">
                             <div class="card-header">
                                 <strong>Task Status Overview</strong>
