@@ -1,6 +1,6 @@
 @extends('backend.layout.template')
 @section('page-title')
-    <title>Add Task || {{ \App\Models\Settings::site_title() }}</title>
+    <title>Add Appoinment || {{ \App\Models\Settings::site_title() }}</title>
 @endsection
 
 @section('page-css')
@@ -21,7 +21,7 @@
             position: relative;
         }
     </style>
-   
+
     <link href="{{asset('backend/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}" rel="stylesheet">
     <link href="{{asset('backend/libs/select2/css/select2.min.css')}}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker/mdtimepicker.css">
@@ -41,7 +41,7 @@
                         <div class="page-title">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="{{url('/')}}">{{ \App\Models\Settings::site_title() }}</a></li>
-                                <li class="breadcrumb-item active">Add Task</li>
+                                <li class="breadcrumb-item active">Add Appoinment</li>
                             </ol>
                         </div>
 
@@ -49,30 +49,30 @@
                 </div>
             </div>
             <!-- end page title -->
-            
+
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title" style="display: flex;justify-content: space-between;align-items:center;">
                                 <div>
-                                    Add New Task
+                                    Add New Appoinment
                                 </div>
-                                
+
                             </h4>
 
-                            <form action="{{route('task.store')}}" method="POST" class="needs-validation"  novalidate>
+                            <form action="{{route('appoinment.store')}}" method="POST" class="needs-validation"  novalidate>
                                 @csrf
                                 <div class="row">
 
                                     <div class="col-12">
                                         <div class="mb-3">
-                                            <label for="validationName" class="form-label">Task</label>
-                                            <input type="text" class="form-control" id="validationName" placeholder="Task" name="task" required>
+                                            <label for="validationName" class="form-label">Person Name</label>
+                                            <input type="text" class="form-control" id="validationName" placeholder="Person Name" name="person" required>
                                             <div class="invalid-feedback"></div>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label class="form-label">Employee</label>
@@ -85,7 +85,7 @@
                                             <div class="invalid-feedback"></div>
                                         </div>
                                     </div>
-                                   
+
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label for="date" class="form-label">Date</label>
@@ -104,7 +104,7 @@
                                             <input type="text" class="form-control start_time" name="start_time" id="start_time">
                                         </div>
                                     </div>
-                                    
+
                                 </div>
 
                                 <div class="row">
@@ -115,22 +115,22 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div>
-                                    <button class="btn btn-primary" type="submit" id="addExpense"> Add Task </button>
+                                    <button class="btn btn-primary" type="submit" id="addExpense"> Add Appoinment </button>
                                 </div>
                             </form>
                         </div>
                     </div>
                     <!-- end card -->
-                </div> 
+                </div>
             </div>
             <!-- end row -->
 
-        </div> 
+        </div>
     </div>
     <!-- End Page-content -->
-                
+
 @endsection
 
 @section('page-script')
@@ -159,9 +159,9 @@
     <script>
         $(document).ready(function() {
             $('.needs-validation').submit(function(event) {
-                event.preventDefault(); 
+                event.preventDefault();
                 var form = $(this);
-                var formData = new FormData(form[0]); 
+                var formData = new FormData(form[0]);
 
                 $.ajax({
                     type: form.attr('method'),
@@ -177,7 +177,7 @@
                     },
                     success: function(response) {
                         $("#addExpense").prop('disabled', false).html(`
-                            Add Task
+                            Add Appoinment
                         `);
 
                         $('.needs-validation')[0].reset();
@@ -188,21 +188,21 @@
                         Swal.fire({
                             icon: 'success',
                             title: 'Success!',
-                            text: 'Add Task successfully!',
+                            text: 'Add Appoinment successfully!',
                         });
 
-                       
+
                     },
                     error: function(xhr, textStatus, errorThrown) {
                         form.find('.form-control').removeClass('is-invalid');
                         form.find('.invalid-feedback').html('');
-                        $("#addExpense").prop('disabled', false).html('Add Task');
+                        $("#addExpense").prop('disabled', false).html('Add Appoinment');
 
                         var errors = xhr.responseJSON.errors;
 
                         $.each(errors, function(key, value) {
                             var input = form.find('[name="' + key + '"]');
-                            
+
                             // Check if input exists, if not, try to find by ID
                             if (input.length === 0) {
                                 input = $('#' + key);

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use App\Models\Task;
+use App\Models\Appoinment;
 use App\Models\Employees;
 
 class AppoinmentController extends Controller
@@ -18,13 +18,13 @@ class AppoinmentController extends Controller
 
         $selectedDate = ucfirst($month) . ' - ' . $year;
 
-        $data = Task::with('employees')
+        $data = Appoinment::with('employees')
             ->where('year', $year)
             ->where('month', $month)
             ->latest()
             ->get();
 
-        $allYear = DB::table('tasks')
+        $allYear = DB::table('appoinments')
             ->select('year')
             ->distinct()
             ->orderBy('year', 'desc')
@@ -43,11 +43,11 @@ class AppoinmentController extends Controller
     {
         $today = Carbon::now()->format('d M, Y');
 
-        $data = Task::where('date', $today)
+        $data = Appoinment::where('date', $today)
                     ->latest()
                     ->get();
 
-        return view('backend.pages.task.today', compact('data'));
+        return view('backend.pages.appoinment.today', compact('data'));
     }
 
     public function week()
@@ -56,35 +56,35 @@ class AppoinmentController extends Controller
         $endOfWeek = Carbon::now()->endOfWeek()->format('d M, Y');
 
         // Fetch tasks within the current week range
-        $data = Task::where('date', '>=', $startOfWeek)
+        $data = Appoinment::where('date', '>=', $startOfWeek)
                     ->where('date', '<=', $endOfWeek)
                     ->orderBy('date', 'asc')
                     ->get();
 
-        return view('backend.pages.task.week', compact('data'));
+        return view('backend.pages.appoinment.week', compact('data'));
     }
 
 
     public function create(){
         $employees = Employees::orderBy('name', 'asc')->get();
-        return view('backend.pages.task.add', compact('employees'));
+        return view('backend.pages.appoinment.add', compact('employees'));
     }
 
     public function store(Request $request)
     {
-        // $request->validate([
-        //     'start_time' => 'nullable',
-        //     'emp' => 'required',
-        //     'task' => 'required',
-        //     'date' => 'required|after_or_equal:today',
-        // ]);
+        $request->validate([
+            'start_time' => 'nullable',
+            'emp' => 'required',
+            'person' => 'required',
+            'date' => 'required|after_or_equal:today',
+        ]);
 
         $date = Carbon::createFromFormat('d M, Y', $request->date);
         $month = $date->format('M');
         $year = $date->format('Y');
 
-        Task::create([
-            'tasks' => $request->task,
+        Appoinment::create([
+            'person_name' => $request->person,
             'date' => $request->date,
             'month' => $month,
             'year' => $year,
@@ -97,28 +97,28 @@ class AppoinmentController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Task added successfully!'
+            'message' => 'Appoinment added successfully!'
         ]);
     }
 
      public function edit($id){
-        $data = Task::find($id);
+        $data = Appoinment::find($id);
         $employees = Employees::orderBy('name', 'asc')->get();
          $data->date = Carbon::parse($data->date)->format('d M, Y');
-        return view('backend.pages.task.edit', compact('data','employees'));
+        return view('backend.pages.appoinment.edit', compact('data','employees'));
     }
 
 
     public function update(Request $request, $id)
     {
         $request->validate([
-            'task' => 'required',
+            'person' => 'required',
             'emp' => 'required',
             'date' => 'required|after_or_equal:today',
         ]);
 
-        $task = Task::findOrFail($id);
-        $task->tasks = $request->task;
+        $task = Appoinment::findOrFail($id);
+        $task->person_name = $request->person;
         $task->employees_id = $request->emp;
         $task->date = Carbon::parse($request->date)->format('d M, Y');
         $task->month = Carbon::parse($request->date)->format('M');
@@ -130,7 +130,7 @@ class AppoinmentController extends Controller
 
          return response()->json([
             'success' => true,
-            'message' => 'Task updated successfully!'
+            'message' => 'Appoinment updated successfully!'
         ]);
     }
 
@@ -139,12 +139,12 @@ class AppoinmentController extends Controller
     }
 
     public function destroy($id){
-        $delete = Task::find($id);
+        $delete = Appoinment::find($id);
         if ($delete) {
             $delete->delete();
 
             return response()->json([
-                'message' => 'Task deleted successfully.',
+                'message' => 'Appoinment deleted successfully.',
             ]);
         } else {
             return response()->json(['error' => ' not found.'], 404);
@@ -155,7 +155,7 @@ class AppoinmentController extends Controller
     public function myTasks($id)
     {
         $filter = request('filter', 'today');
-        $tasks = Task::where('employees_id', $id);
+        $tasks = Appoinment::where('employees_id', $id);
 
         switch ($filter) {
             case 'today':

@@ -72,12 +72,12 @@ class TaskController extends Controller
 
     public function store(Request $request)
     {
-        // $request->validate([
-        //     'start_time' => 'nullable',
-        //     'emp' => 'required',
-        //     'task' => 'required',
-        //     'date' => 'required|after_or_equal:today',
-        // ]);
+        $request->validate([
+            'start_time' => 'nullable',
+            'emp' => 'required',
+            'task' => 'required',
+            'date' => 'required|after_or_equal:today',
+        ]);
 
         $date = Carbon::createFromFormat('d M, Y', $request->date);
         $month = $date->format('M');

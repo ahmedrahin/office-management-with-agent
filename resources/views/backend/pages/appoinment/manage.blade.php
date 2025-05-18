@@ -30,7 +30,7 @@
     <link href="{{asset('backend/libs/datatables.net-select-bs4/css//select.bootstrap4.min.css')}}" rel="stylesheet" type="text/css" />
 
     <!-- Responsive datatable examples -->
-    <link href="{{asset('backend/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css')}}" rel="stylesheet" type="text/css" />     
+    <link href="{{asset('backend/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css')}}" rel="stylesheet" type="text/css" />
 @endsection
 
 @section('body-content')
@@ -95,8 +95,8 @@
 
                                         <tbody>
                                             @php
-                                                $counter = 1; 
-                                                
+                                                $counter = 1;
+
                                             @endphp
                                             @foreach ($data as $v)
                                                 <tr>
@@ -145,25 +145,25 @@
                         <div class="card-header">
                             Task List of ({{ $selectedDate }})
                         </div>
-                
+
                         <div class="card-body">
                             <div class="row monthlyExpense">
                                 <div class="col-12">
                                     @php
-                                        $currentMonth = date('n'); 
-                                        $selectedYear = request('year', date('Y')); 
+                                        $currentMonth = date('n');
+                                        $selectedYear = request('year', date('Y'));
                                         $currentYear = date('Y');
                                     @endphp
-                                    
+
                                     @for ($i = 1; $i <= 12; $i++)
                                         @php
                                             $monthName = \Carbon\Carbon::create($selectedYear, $i, 1)->format('M');
-                                            $disabled = ($selectedYear == $currentYear && $i > $currentMonth) ? 'disabled' : ''; 
+                                            $disabled = ($selectedYear == $currentYear && $i > $currentMonth) ? 'disabled' : '';
                                             $buttonClass = (strtolower(request('month')) == strtolower($monthName)) ? 'btn-success' : 'btn-primary';
                                             $isCurrentMonth = (strtolower(date('M')) == strtolower($monthName) && request('month') == null) ? 'btn-success' : '';
                                         @endphp
-                
-                                        <a href="{{ route('task.index', ['month' => strtolower($monthName), 'year' => $selectedYear]) }}" 
+
+                                        <a href="{{ route('task.index', ['month' => strtolower($monthName), 'year' => $selectedYear]) }}"
                                         class="btn {{ $buttonClass }} {{ $isCurrentMonth }} ">
                                             {{ $monthName }}
                                         </a>
@@ -182,7 +182,7 @@
                         <div class="card-body">
                             <div class="d-flex flex-wrap gap-3">
                                 @foreach($allYear as $availableYear)
-                                    <a href="{{ route('task.index', ['year' => $availableYear, 'month' => (Carbon::now()->format('M'))]) }}" 
+                                    <a href="{{ route('task.index', ['year' => $availableYear, 'month' => (Carbon::now()->format('M'))]) }}"
                                     class="btn btn-primary mb-2 {{ request('year') == $availableYear ? 'btn-success text-white' : '' }}"
                                     style="width: 45%; text-align: center;">
                                         {{ $availableYear }}
@@ -193,25 +193,13 @@
                     </div>
                 </div>
 
-                @if( $data->count() != 0 )
-                    <div class="col-md-3">
-                        <div class="card">
-                            <div class="card-header">
-                                <strong>Task Status Overview</strong>
-                            </div>
-                            <div class="card-body">
-                                <canvas id="taskStatusChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                @endif
-
+               
             </div>
-            
-        </div> 
+
+        </div>
     </div>
     <!-- End Page-content -->
-                
+
 @endsection
 
 @section('page-script')
@@ -219,8 +207,8 @@
     <script>
         $(document).ready(function() {
             $('.deleteButton').click(function() {
-                var deleteButton = $(this); 
-                
+                var deleteButton = $(this);
+
                 var id = deleteButton.data('id');
 
                 // Trigger SweetAlert confirmation dialog
@@ -242,7 +230,7 @@
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            success: function(response) {    
+                            success: function(response) {
                                 // Remove the row from the table
                                 deleteButton.closest('tr').fadeOut('slow', function() {
                                     $(this).remove();
@@ -271,7 +259,7 @@
 
         });
     </script>
-    
+
     <!-- Responsive examples -->
     <script src="{{asset('backend/libs/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
     <script src="{{asset('backend/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js')}}"></script>
@@ -292,7 +280,7 @@
     <script src="{{asset('backend/libs/datatables.net-keytable/js/dataTables.keyTable.min.js')}}"></script>
     <script src="{{asset('backend/libs/datatables.net-select/js/dataTables.select.min.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const ctx = document.getElementById('taskStatusChart').getContext('2d');
@@ -305,9 +293,9 @@
                         label: 'Task Status',
                         data: [{{ $pendingCount }}, {{ $reScheduleCount }}, {{ $completeCount }}],
                         backgroundColor: [
-                            '#FFC107', 
-                            '#17A2B8', 
-                            '#28A745' 
+                            '#FFC107',
+                            '#17A2B8',
+                            '#28A745'
                         ],
                         borderColor: '#fff',
                         borderWidth: 2,
