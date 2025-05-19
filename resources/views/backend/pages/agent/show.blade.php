@@ -57,6 +57,20 @@
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <div class="card student-card mb-4">
+                    <div>
+                        @php
+                            $setting = App\Models\Settings::first();
+                        @endphp
+                        <div class="flex items-center space-x-3">
+                            <img src="{{ asset($setting->logo ?? '') }}" class="company-logo" alt="Company Logo">
+                            <div>
+                                <h4 class="font-bold company-name">{{ $setting->company_name ?? '' }}</h4>
+                                <p class="text-sm text-muted">{{ $setting->phone1 ? $setting->phone1 . ',' : '' }} {{ $setting->address ?? '' }}</p>
+
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="card-body text-center pb-0">
                         <img src="{{ $agent->image ? asset($agent->image) : asset('backend/images/user.jpg') }}" class="student-img" alt="Student Image">
                         <h3 class="mt-3">{{ $agent->name }}</h3>

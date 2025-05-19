@@ -15,7 +15,7 @@ class SettingController extends Controller
      * Display a listing of the resource.
      */
     public function manage()
-    {   
+    {
         $setting = Settings::first();
         return view('backend.pages.settings.manage', compact('setting'));
     }
@@ -27,19 +27,19 @@ class SettingController extends Controller
     {
         $setting = Settings::find(1);
 
-        // logo 
+        // logo
         if ($request->logo) {
             // logo
             if (File::exists($setting->logo)) {
                 File::delete($setting->logo);
             }
 
-            $manager = new ImageManager(new Driver());
-            $name_gan = hexdec(uniqid()) . '.' . $request->file('logo')->getClientOriginalExtension();
-            $image = $manager->read($request->file('logo'));
-            $image->save(base_path('public/backend/images/' . $name_gan));
+            $thumbImage = $request->file('logo');
+            $thumbImageName = time() . '_' . $thumbImage->getClientOriginalName();
+            $thumbImage->move(public_path('/backend/images'), $thumbImageName);
+            $image = '/backend/images/' . $thumbImageName;
 
-            $setting->logo = 'backend/images/' . $name_gan;
+            $setting->logo = $image;
         }
 
         // fav icon
@@ -49,22 +49,22 @@ class SettingController extends Controller
                 File::delete($setting->fav);
             }
 
-            $manager = new ImageManager(new Driver());
-            $name_gan = hexdec(uniqid()) . '.' . $request->file('fav')->getClientOriginalExtension();
-            $image = $manager->read($request->file('fav'));
-            $image->save(base_path('public/backend/images/' . $name_gan));
+            $thumbImage = $request->file('fav');
+            $thumbImageName = time() . '_' . $thumbImage->getClientOriginalName();
+            $thumbImage->move(public_path('/backend/images'), $thumbImageName);
+            $image = '/backend/images/' . $thumbImageName;
 
-            $setting->fav_icon = 'backend/images/' . $name_gan;
+            $setting->fav_icon = $image;
         }
 
-        $setting->company_name  = $request->name;
-        $setting->email1        = $request->email1;
-        $setting->email2        = $request->email2;
-        $setting->phone1        = $request->phone1;
-        $setting->phone2        = $request->phone2;
-        $setting->address       = $request->address;
-        $setting->city          = $request->city;
-        $setting->zip           = $request->zip;
+        $setting->company_name = $request->name;
+        $setting->email1 = $request->email1;
+        $setting->email2 = $request->email2;
+        $setting->phone1 = $request->phone1;
+        $setting->phone2 = $request->phone2;
+        $setting->address = $request->address;
+        $setting->city = $request->city;
+        $setting->zip = $request->zip;
 
         $setting->save();
 

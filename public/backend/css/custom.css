@@ -212,7 +212,18 @@ button[type="submit"]{
     width: 20px;
 }
 
-
+.company-logo {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.company-name{
+    font-size: 20px;
+    padding-top: 5px;
+    text-shadow: 1px 1px 1px #0000004f;
+    font-weight: 700;
+}
 .preview-wrapper {
     display: flex;
     flex-wrap: wrap;
