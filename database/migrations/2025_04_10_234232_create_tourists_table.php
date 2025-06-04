@@ -22,6 +22,7 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete()->nullable();
             $table->foreignId('agent_id')->nullable()->constrained('agents')->nullOnDelete()->nullable();
             $table->integer('tourist_place_id')->nullable();
+            $table->integer('tour_packages_id')->nullable();
             $table->decimal('total_cost', 10, 2)->default(0);
             $table->decimal('due_amount', 10, 2)->default(0);
             $table->string('user_type')->default('admin');

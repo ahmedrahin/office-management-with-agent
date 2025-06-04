@@ -30,4 +30,11 @@ class Tourist extends Model
     public function images(){
         return $this->hasMany(TouristImages::class);
     }
+
+    public function tourPackage()
+    {
+        return $this->belongsTo(TourPackages::class, 'tour_packages_id');
+    }
+
+    
 }
