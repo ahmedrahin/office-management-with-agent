@@ -23,10 +23,13 @@ use App\Http\Controllers\AdminController\JobInquiryController;
 use App\Http\Controllers\AdminController\TourTravelController;
 use App\Http\Controllers\AdminController\TaskController;
 use App\Http\Controllers\AdminController\AppoinmentController;
+use App\Http\Controllers\AdminController\TourPackageController;
 use App\Models\Employees;
 use App\Models\JobType;
 use App\Models\Subject;
 use App\Models\TouristPlace;
+use App\Models\TourPackages;
+use App\Models\TourPackagePlaces;
 use App\Models\University;
 /*
 |--------------------------------------------------------------------------
@@ -69,6 +72,16 @@ Route::get('/get-job/{id}', function($id){
 
 Route::get('/get-tour-place/{id}', function($id){
     return response()->json(TouristPlace::where('country_id', $id)->where('status',1)->get());
+});
+
+Route::get('/get-tour-package/{id}', function ($id) {
+    // Find all Tour Package IDs associated with the selected place
+    $packageIds = TourPackagePlaces::where('tourist_place_id', $id)->pluck('tour_packages_id');
+
+    // Fetch all packages using those IDs
+    $packages = TourPackages::whereIn('id', $packageIds)->where('status', 1)->get();
+
+    return response()->json($packages);
 });
 
 //admin dashboard
@@ -208,6 +221,7 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'check.status']], f
     // agent
     Route::resource('agent', AgentController::class);
     Route::put('agent-status/{id}', [AgentController::class, 'activeStatus'])->name('agent.status');
+    Route::get('agent-statistics/{id}', [AgentController::class, 'statistics'])->name('agent.statistics');
 
     // country
     Route::resource('country', CountryController::class);
@@ -246,5 +260,10 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'check.status']], f
 
     Route::get('/my-appoinment/{id}', [AppoinmentController::class, 'myTasks'])->name('my.appoinment');
     Route::post('/appoinment/update-status', [AppoinmentController::class, 'updateStatus'])->name('appoinment.update.status');
+
+
+    // tour pacakge
+     Route::resource('package', TourPackageController::class);
+     Route::put('package-status/{id}', [TourPackageController::class, 'activeStatus'])->name('package.status');
 
 });

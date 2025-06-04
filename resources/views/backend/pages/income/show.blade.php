@@ -44,6 +44,7 @@
             <div class="col-xl-12">
                 <div class="card shadow-lg border-0 rounded">
                     <div class="card-body">
+                        @include('backend.includes.company')
                         <h4 class="card-title d-flex justify-content-between align-items-center">
                             <div>Income Details</div>
                             {{-- <div>

@@ -1,0 +1,8 @@
+* product details page
+1. product image slider e show first product thumb image
+2. zoom product images
+3. share
+
+* shop page error
+1. filtering data tag in new arrivles and top selling
+

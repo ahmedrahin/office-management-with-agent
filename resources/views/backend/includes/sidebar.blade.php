@@ -109,9 +109,9 @@
                     </li>
                 @endif
 
+                
 
-
-
+               
                 @if(auth()->user()->employees)
                         @php
                             $today = Carbon::today()->format('d M, Y');
@@ -130,7 +130,7 @@
                             </a>
                         </li>
                     @endif
-
+                    
                 @if(auth()->user()->employees)
                 @php
                     $today = Carbon::today()->format('d M, Y');
@@ -149,7 +149,7 @@
                     </a>
                 </li>
                 @endif
-
+                
 
                 <li class="menu-title">Payroll Management</li>
                 <li>
@@ -270,8 +270,11 @@
                         <span>Tourist Places</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{route('tourist.create')}}"> <i class="ri-arrow-right-s-fill"></i> Add New Tourist</a></li>
-                        <li><a href="{{route('tourist.index')}}"><i class="ri-arrow-right-s-fill"></i> All Tourist List</a></li>
+                        <li><a href="{{route('tourist.create')}}"> <i class="ri-arrow-right-s-fill"></i> Add New Tourism</a></li>
+                        <li><a href="{{route('tourist.index')}}"><i class="ri-arrow-right-s-fill"></i> All Tourism List</a></li>
+
+                        <li><a href="{{route('package.create')}}"> <i class="ri-arrow-right-s-fill"></i> Add New Package</a></li>
+                        <li><a href="{{route('package.index')}}"><i class="ri-arrow-right-s-fill"></i> All Packages</a></li>
                     </ul>
                 </li>
 

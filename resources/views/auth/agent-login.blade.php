@@ -61,54 +61,24 @@
                         <h4 class="text-muted text-center font-size-18"><b>Sign In</b></h4>
 
                         <div class="p-3">
-                            <form class="form-horizontal mt-3" action="{{ route('agent.login') }}" method="POST">
-                                @csrf
-                                <div class="form-group mb-3 row">
-                                    <div class="col-12">
-                                        <input class="form-control @error('email') is-invalid @enderror" type="text" required="" placeholder="Username" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-                                        @error('email')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <div class="form-group mb-3 row">
-                                    <div class="col-12">
-                                        <input type="password" required="" placeholder="Password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-                                        @error('password')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <div class="form-group mb-0 text-center row mt-3 pt-1">
-                                    <div class="col-12">
-                                        <button class="btn btn-info w-100 waves-effect waves-light" type="submit" >Log In</button>
-                                    </div>
-                                </div>
-
-                                {{-- <div class="form-group mb-0 row mt-2">
-                                    <div class="col-sm-6 mt-3">
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="remember">
-                                                {{ __('Remember Me') }}
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6 mt-3">
-                                        @if (Route::has('password.request'))
-                                            <a class="text-muted" href="{{ route('password.request') }}">
-                                                <i class="mdi mdi-lock"></i> Forgot your password?
-                                            </a>
-                                        @endif
-                                    </div>
-                                </div> --}}
-                            </form>
+                           <form method="POST" action="{{ route('agent.login') }}">
+                        @csrf
+                        <div class="form-group mb-3">
+                            <input class="form-control @error('email_agent') is-invalid @enderror" type="text" placeholder="Email" name="email_agent" value="{{ old('email_agent') }}" required>
+                            @error('email_agent')
+                                <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
+                            @enderror
+                        </div>
+                        <div class="form-group mb-3">
+                            <input type="password" class="form-control @error('password_agent') is-invalid @enderror" placeholder="Password" name="password_agent" required>
+                            @error('password_agent')
+                                <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
+                            @enderror
+                        </div>
+                        <div class="form-group text-center mt-3">
+                            <button class="btn btn-info w-100" type="submit">Log In</button>
+                        </div>
+                    </form>
                         </div>
                         <!-- end -->
                     </div>

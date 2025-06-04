@@ -57,6 +57,7 @@
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <div class="card student-card mb-4">
+                    @include('backend.includes.company')
                     <div class="card-body text-center pb-0">
                         <img src="{{ $student->image ? asset($student->image) : asset('backend/images/user.jpg') }}" class="student-img" alt="Student Image">
                         <h3 class="mt-3">{{ $student->name }}</h3>

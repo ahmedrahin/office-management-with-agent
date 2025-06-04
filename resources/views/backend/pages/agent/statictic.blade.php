@@ -1,7 +1,7 @@
 @extends('backend.layout.template')
 
 @section('page-title')
-    <title>Country Details || {{ \App\Models\Settings::site_title() }}</title>
+    <title>Agent Details || {{ \App\Models\Settings::site_title() }}</title>
 @endsection
 
 @section('page-css')
@@ -57,22 +57,26 @@
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <div class="card student-card mb-4">
+                    @include('backend.includes.company')
+
                     <div class="card-body text-center pb-0">
-                        @include('backend.includes.company')
-                        <h3 class="mt-3">Country: <span class="text-danger">{{ $data->name }}</span></h3>
+                        <img src="{{ $agent->image ? asset($agent->image) : asset('backend/images/user.jpg') }}" class="student-img" alt="Student Image">
+                        <h3 class="mt-3">{{ $agent->name }}</h3>
+                        <p class="text-muted">{{ $agent->email ?? 'No Email Provided' }}</p>
                     </div>
 
                     <div class="card-body pt-0">
-                        <div class="info-group"><strong>Total visitors in this country:</strong><span>{{ $data->student->count() + $data->person->count() + $data->tourist->count() }}</span></div>
-                        <div class="info-group"><strong>Total student assign in this country:</strong><span>{{ $data->student->count() }}</span></div>
-                        <div class="info-group"><strong>Total job inquiry person assign in this country:</strong><span>{{ $data->person->count() }}</span></div>
-                        <div class="info-group"><strong>Total tourist assign in this country:</strong><span>{{ $data->tourist->count() }}</span></div>
-                        <div class="info-group"><strong>Total university in this country:</strong><span>{{ $data->university->count() }}</span></div>
-                        <div class="info-group"><strong>Total job/company in this country:</strong><span>{{ $data->jobTypes->count() }}</span></div>
-                        <div class="info-group"><strong>Total tourist places in this country:</strong><span>{{ $data->touristPlaces->count() }}</span></div>
+                        <!-- ==================== Visitor Statistics ==================== -->
+                        <h5 class="text-primary mt-4 mb-3">Visitor Statistics</h5>
+                        <div class="info-group"><strong>Total Students Added:</strong><span>{{ $agent->student->count() }}</span></div>
+                        <div class="info-group"><strong>Total Job Inquiry Persons Added:</strong><span>{{ $agent->person->count() }}</span></div>
+                        <div class="info-group"><strong>Total Tourists Added:</strong><span>{{ $agent->tourist->count() }}</span></div>
+
+
                     </div>
 
-                   <div class="row justify-content-center mt-1">
+                     <!-- course List -->
+                    <div class="row justify-content-center mt-1">
                         <div class="col-12">
                             <div class="card shadow-lg">
                                 <div class="card-header bg-primary text-white">
@@ -89,19 +93,19 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach (App\Models\Registation::where('country_id', $data->id)->latest()->get() as $index => $registration)
+                                            @foreach (App\Models\Registation::where('agent_id', $agent->id)->latest()->get() as $index => $data)
                                                 <tr>
                                                     <td>{{ $index+1 }}</td>
-                                                    <td >{{ $registration->name }}</td>
-                                                    <td class="text-center">{{ $registration->created_at->format('d M Y') }}</td>
+                                                    <td >{{ $data->name }}</td>
+                                                    <td class="text-center">{{ $data->created_at->format('d M Y') }}</td>
                                                     <td class="text-center">
-                                                        <a href="{{ route('student-registration.show',$registration->id) }}">Details</a>
+                                                        <a href="{{ route('student-registration.show',$data->id) }}">Details</a>
                                                     </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
-                                    @if($data->student->isEmpty())
+                                    @if($agent->student->isEmpty())
                                         <p class="text-center text-danger mt-3">No student added yet.</p>
                                     @endif
                                 </div>
@@ -126,19 +130,19 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach (App\Models\JobInquiry::where('country_id', $data->id)->latest()->get() as $index => $registration)
+                                            @foreach (App\Models\JobInquiry::where('agent_id', $agent->id)->latest()->get() as $index => $data)
                                                 <tr>
                                                     <td>{{ $index+1 }}</td>
-                                                    <td >{{ $registration->name }}</td>
-                                                    <td class="text-center">{{ $registration->created_at->format('d M Y') }}</td>
+                                                    <td >{{ $data->name }}</td>
+                                                    <td class="text-center">{{ $data->created_at->format('d M Y') }}</td>
                                                     <td class="text-center">
-                                                        <a href="{{ route('inquiry.show',$registration->id) }}">Details</a>
+                                                        <a href="{{ route('inquiry.show',$data->id) }}">Details</a>
                                                     </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
-                                    @if($data->person->isEmpty())
+                                    @if($agent->person->isEmpty())
                                         <p class="text-center text-danger mt-3">No person added yet.</p>
                                     @endif
                                 </div>
@@ -163,19 +167,19 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach (App\Models\Tourist::where('country_id', $data->id)->latest()->get() as $index => $registration)
+                                            @foreach (App\Models\Tourist::where('agent_id', $agent->id)->latest()->get() as $index => $data)
                                                 <tr>
                                                     <td>{{ $index+1 }}</td>
-                                                    <td >{{ $registration->name }}</td>
-                                                    <td class="text-center">{{ $registration->created_at->format('d M Y') }}</td>
+                                                    <td >{{ $data->name }}</td>
+                                                    <td class="text-center">{{ $data->created_at->format('d M Y') }}</td>
                                                     <td class="text-center">
-                                                        <a href="{{ route('tour-travel.show',$registration->id) }}">Details</a>
+                                                        <a href="{{ route('tour-travel.show',$data->id) }}">Details</a>
                                                     </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
-                                    @if($data->tourist->isEmpty())
+                                    @if($agent->tourist->isEmpty())
                                         <p class="text-center text-danger mt-3">No tourist added yet.</p>
                                     @endif
                                 </div>
@@ -184,7 +188,7 @@
                     </div>
 
                     <div class="card-footer text-center">
-                        <a href="{{ route('country.edit', $data->id) }}" class="btn btn-warning">Edit</a>
+                        
                         <button onclick="window.print()" class="btn btn-success ms-2">
                             <i class="fa fa-print"></i> Print
                         </button>

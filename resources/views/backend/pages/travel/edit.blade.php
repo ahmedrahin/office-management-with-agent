@@ -187,12 +187,14 @@
                                     <div class="col-md-3">
                                         <div class="mb-3">
                                             <label for="emp" class="form-label">Country</label>
-                                            <select name="country_id" id="country_id" class="form-control select2" >
+                                            <select name="country_id" id="country_id" class="form-control select2">
                                                 <option value="">Select a country</option>
                                                 @foreach ($countries as $country)
-                                                    <option value="{{ $country->id }}" {{ $student->country_id == $country->id ? 'selected' : '' }}>{{ $country->name }}</option>
+                                                    <option value="{{ $country->id }}" {{ $student->country_id == $country->id ? 'selected' : '' }}>
+                                                        {{ $country->name }}
+                                                    </option>
                                                 @endforeach
-                                            </select>                                            
+                                            </select>
                                             <div id="countryErr" class="invalid-feedback"></div>
                                         </div>
                                     </div>
@@ -200,7 +202,7 @@
                                     <div class="col-md-3">
                                         <div class="mb-3">
                                             <label for="tourist_place_id" class="form-label">Tour Place</label>
-                                            <select name="tourist_place_id" id="tourist_place_id" class="form-control select2" >
+                                            <select name="tourist_place_id" id="tourist_place_id" class="form-control select2">
                                                 <option value="">Select a tour place</option>
                                             </select>
                                             <div id="universityErr" class="invalid-feedback"></div>
@@ -208,12 +210,22 @@
                                     </div>
 
                                     <div class="col-md-3">
-                                        <label class="form-label">Total Cost</label>
-                                        <input type="text" name="total_cost" id="total_cost" class="form-control" value="{{ $student->total_cost }}" >
-                                        <div class="invalid-feedback"></div>
+                                        <div class="mb-3">
+                                            <label for="package_id" class="form-label">Tour Package</label>
+                                            <select name="package_id" id="package_id" class="form-control select2">
+                                                <option value="">Select a tour package</option>
+                                            </select>
+                                            <div id="universityErr" class="invalid-feedback"></div>
+                                        </div>
                                     </div>
 
+                                    <div class="col-md-3">
+                                        <label class="form-label">Total Cost</label>
+                                        <input type="text" name="total_cost" id="total_cost" class="form-control" value="{{ $student->total_cost }}">
+                                        <div class="invalid-feedback"></div>
+                                    </div>
                                 </div>
+
 
                                 <div class="row">
                                     @php
@@ -319,14 +331,15 @@
 
     <script>
         $(document).ready(function () {
-            // Define selected values from Blade/PHP
+            // Selected values from Blade
             var selectedCountryId = "{{ $student->country_id }}";
-            var selectedUniversityId = "{{ $student->tourist_place_id }}";
-    
-            // Country change: Load universities
+            var selectedTouristPlaceId = "{{ $student->tourist_place_id }}";
+            var selectedPackageId = "{{ $student->tour_packages_id }}";
+
+            // ============ COUNTRY CHANGE ============
             $('#country_id').on('change', function () {
                 var countryId = $(this).val();
-    
+
                 if (countryId) {
                     $.ajax({
                         url: '/get-tour-place/' + countryId,
@@ -334,32 +347,69 @@
                         dataType: 'json',
                         success: function (data) {
                             $('#tourist_place_id').empty().append('<option value="">Select a tour place</option>');
-                            $.each(data, function (key, data) {
-                                var selected = (data.id == selectedUniversityId) ? 'selected' : '';
-                                $('#tourist_place_id').append('<option value="' + data.id + '" ' + selected + '>' + data.name + '</option>');
+                            $.each(data, function (key, place) {
+                                var selected = (place.id == selectedTouristPlaceId) ? 'selected' : '';
+                                $('#tourist_place_id').append('<option value="' + place.id + '" ' + selected + '>' + place.name + '</option>');
                             });
-    
-                            // Trigger change to load subjects if editing
-                            if (selectedUniversityId) {
+
+                            // Trigger load of Tour Packages if already selected
+                            if (selectedTouristPlaceId) {
                                 $('#tourist_place_id').trigger('change');
                             }
                         },
                         error: function () {
-                            alert('Error loading ');
+                            alert('Error loading Tourist Places');
                         }
                     });
                 } else {
                     $('#tourist_place_id').empty().append('<option value="">Select a tour place</option>');
                 }
             });
-    
-           
-            // ======== On Page Load (Edit Page) =========
+
+            // ============ TOURIST PLACE CHANGE ============
+            $('#tourist_place_id').on('change', function () {
+                var placeId = $(this).val();
+
+                if (placeId) {
+                    $.ajax({
+                        url: '/get-tour-package/' + placeId,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            $('#package_id').empty().append('<option value="">Select a tour package</option>');
+                            $.each(data, function (key, package) {
+                                var selected = (package.id == selectedPackageId) ? 'selected' : '';
+                                $('#package_id').append('<option value="' + package.id + '" data-price="' + package.price + '" ' + selected + '>' + package.name + '</option>');
+                            });
+
+                            // Display the cost if the package is already selected
+                            if (selectedPackageId) {
+                                var price = $('#package_id option:selected').data('price');
+                                $('#total_cost').val(price ? price: '');
+                            }
+                        },
+                        error: function () {
+                            alert('Error loading Tour Packages');
+                        }
+                    });
+                } else {
+                    $('#package_id').empty().append('<option value="">Select a tour package</option>');
+                }
+            });
+
+            // ============ PACKAGE CHANGE (Update Cost) ============
+            $('#package_id').on('change', function () {
+                var price = $('#package_id option:selected').data('price');
+                $('#total_cost').val(price ? price : '');
+            });
+
+            // ============ PAGE LOAD ============
             if (selectedCountryId) {
-                $('#country_id').val(selectedCountryId).trigger('change');
+                $('#country_id').trigger('change');
             }
         });
     </script>
+
     
 
     {{-- send employess data --}}

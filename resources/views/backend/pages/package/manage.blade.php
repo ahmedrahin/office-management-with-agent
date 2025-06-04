@@ -1,6 +1,6 @@
-@extends('agent.layout.template')
+@extends('backend.layout.template')
 @section('page-title')
-      Tourist List
+    <title>All Package List || {{ \App\Models\Settings::site_title() }}</title>
 @endsection
 
 @section('page-css')
@@ -9,8 +9,7 @@
     <link href="{{asset('backend/libs/datatables.net-select-bs4/css//select.bootstrap4.min.css')}}" rel="stylesheet" type="text/css" />
 
     <!-- Responsive datatable examples -->
-    <link href="{{asset('backend/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css')}}" rel="stylesheet" type="text/css" />   
-    <link href="{{asset('backend/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}" rel="stylesheet">  
+    <link href="{{asset('backend/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css')}}" rel="stylesheet" type="text/css" />     
 @endsection
 
 @section('body-content')
@@ -27,10 +26,10 @@
                         <div class="page-title">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="{{url('/')}}">{{ \App\Models\Settings::site_title() }}</a></li>
-                                <li class="breadcrumb-item active">Tourist List</li>
+                                <li class="breadcrumb-item active">All Package List</li>
                             </ol>
-                        </div>                    
-                        
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -43,15 +42,14 @@
 
                             <h4 class="card-title" style="display: flex;justify-content: space-between;align-items:center;">
                                 <div>
-                                    Tourist ({{ $students->count() }})
+                                    All Package List
                                 </div>
                                 <div>
-                                   
-                                    <a href="{{ route('agent-tourist.create') }}" class="btn btn-primary addnew"> <i class="ri-add-line"></i> Register New</a>
+                                    <a href="{{ route('package.create') }}" class="btn btn-primary addnew"> <i class="ri-add-line"></i> Add New</a>
                                 </div>
                             </h4>
                             <div class="data table-responsive">
-                                @if( $students->count() == 0 )
+                                @if( $data->count() == 0 )
                                     <div class="alert alert-danger" role="alert">
                                         No Data Found!
                                     </div>
@@ -60,51 +58,64 @@
                                         <thead>
                                             <tr>
                                                 <th>Sl.</th>
-                                                <th class="text-center">Image</th>
-                                                <th>Name</th>
-                                                <th>Country</th>
-                                                <th>Selected Place</th>
-                                                <th style="text-align: center;">Total Cost</th>
-                                                <th>Mobile no.</th>
-                                                <th>Register Date</th>
+                                                <th class="text-center">Package Name</th>
+                                                <th class="text-center">Day/Night</th>
+                                                <th class="text-center">Price</th>
+                                                <th class="text-center">Created_at</th>
+                                                <th class="text-center">Created_by</th>
+                                                <th class="text-center">Selected Places</th>
+                                                <th class="text-center">Status</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
 
                                         <tbody>
                                             @php
-                                                $counter = 1; 
+                                                $counter = 1;
                                             @endphp
-                                            @foreach ($students as $student)
+                                            @foreach ($data as $v)
                                                 <tr>
-                                                    <td>{{$counter++}}</td>
+                                                    <td class="text-center">{{$counter++}}</td>
+                                                    <td class="text-center">{{$v->name}}</td>
+                                                    <td class="text-center">{{$v->day_night}}</td>
+                                                    <td class="text-center">{{$v->price}}tk</td>
+
+                                                    <td class="text-center">{{ \Carbon\Carbon::parse($v->created_at)->format('d M, Y') }}</td>
                                                     <td class="text-center">
-                                                        @if( !is_null($student->image) )
-                                                            <img src="{{asset($student->image)}}" alt="" class="user-img">
+                                                        <a href="" class="badge bg-dark" target="_blank">
+                                                            {{ optional($v->user)->name ?? 'N/A' }}
+                                                        </a>
+                                                    </td>
+
+                                                   <td class="text-center">
+                                                        @if ($v->places->count() > 0)
+                                                            @foreach ($v->places as $place)
+                                                                <span class="badge bg-info">{{ optional($place->touristPlace)->name ?? 'N/A' }}</span>
+                                                            @endforeach
                                                         @else
-                                                            <img src="{{asset('backend/images/user.jpg')}}" alt="" class="user-img">
+                                                            <span class="text-muted">No places selected</span>
                                                         @endif
                                                     </td>
-                                                    <td>{{$student->name}}</td>
-                                                    <td>
-                                                        {{ optional($student->country)->name }}
+                                                    
+                                                    <td align="middle">
+                                                        @php
+                                                            $switchId = 'switch' . $counter;
+                                                        @endphp
+                                                        @if($v->status == 0)
+                                                            <input type="checkbox" id="{{ $switchId }}" class="status-toggle" data-user-id="{{ $v->id }}" switch="success" />
+                                                            <label for="{{ $switchId }}" data-on-label="Active" data-off-label="Inactive"></label>
+                                                        @else
+                                                            <input type="checkbox" id="{{ $switchId }}" class="status-toggle" data-user-id="{{ $v->id }}" switch="success" checked />
+                                                            <label for="{{ $switchId }}" data-on-label="Active" data-off-label="Inactive"></label>
+                                                        @endif
                                                     </td>
-                                                   <td>
-                                                        {{ optional($student->TouristPlace)->name }}
-                                                   </td>                                               
-                                                    
-                                                    <td align="middle">{{ $student->total_cost }}BDT</td>
-                                                    <td>{{ $student->mobile }}</td>
-                                                    
-                                                    <td class="text-center">{{ $student->created_at->format('d M Y') }}</td>
-
                                                     <td class="action">
                                                         <button>
-                                                            <a href="{{route('agent-tourist.edit',$student->id)}}">
+                                                            <a href="{{route('package.edit',$v->id)}}">
                                                                 <i class="ri-edit-2-fill"></i>
                                                             </a>
                                                         </button>
-                                                        <button class="deleteButton" data-student-id="{{ $student->id }}">
+                                                        <button class="deleteButton" data-id="{{ $v->id }}" style="opacity: .5" >
                                                             <i class="ri-delete-bin-2-fill"></i>
                                                         </button>
                                                     </td>
@@ -118,7 +129,6 @@
                     </div>
                 </div> <!-- end col -->
             </div>
-
             
         </div> 
     </div>
@@ -127,65 +137,38 @@
 @endsection
 
 @section('page-script')
-    <script src="{{asset('backend/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}"></script>
-    {{-- delete employee --}}
+   
     <script>
         $(document).ready(function() {
-            $('.deleteButton').click(function() {
-                var deleteButton = $(this); 
-                
-                var id = deleteButton.data('student-id');
+            $('.status-toggle').change(function() {
+                var id = $(this).data('user-id');
+                var status = $(this).prop('checked') ? 1 : 0;
 
-                // Trigger SweetAlert confirmation dialog
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: 'You will not be able to recover this tourist data!',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes, delete it!',
-                    cancelButtonText: 'Cancel',
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                }).then((result) => {
-                    // Handle the user's response
-                    if (result.isConfirmed) {
-                        // Send an AJAX request to delete the employee
-                        $.ajax({
-                            type: 'DELETE',
-                            url: '{{ route("agent-tourist.destroy", ":id") }}'.replace(':id', id),
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            success: function(response) {    
-                                // Remove the row from the table
-                                deleteButton.closest('tr').fadeOut('slow', function() {
-                                    $(this).remove();
-                                });
-
-                                setTimeout(() => {
-                                    Swal.fire('Deleted!', 'Tourist has been deleted.', 'success');
-                                }, 1000);
-
-                            },
-                            error: function(xhr, textStatus, errorThrown) {
-                                // Handle deletion error
-                                Swal.fire('Error!', 'Failed to delete.', 'error');
-                            }
+                // Send AJAX request
+                $.ajax({
+                    type: 'PUT',
+                    url: '/admin/package-status/' + id, 
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        status: status
+                    },
+                    success: function(response) {
+                        // Handle success response here
+                        console.log(response);
+                        Swal.fire({
+                            icon: response.type,
+                            title: response.msg,
+                            text: ''
                         });
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle error here
+                        console.error(xhr.responseText);
                     }
                 });
             });
-
-            $(document).ready(function() {
-                $('#datepicker6').datepicker({
-                    format: "dd M, yyyy",
-                    autoclose: true
-                });
-            });
-
         });
     </script>
-    
     
     <!-- Responsive examples -->
     <script src="{{asset('backend/libs/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>

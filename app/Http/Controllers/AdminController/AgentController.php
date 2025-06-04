@@ -115,4 +115,10 @@ class AgentController extends Controller
         ], 200);
     }
 
+
+    public function statistics($id){
+        $agent = Agent::find($id);
+        return view('backend.pages.agent.statictic', compact('agent'));
+    }
+
 }

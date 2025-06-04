@@ -73,6 +73,7 @@ class TourTravelController extends Controller
 
         $data->country_id = $request->country_id;
         $data->tourist_place_id = $request->tourist_place_id;
+        $data->tour_packages_id = $request->package_id ?? null;
         $data->total_cost = $request->total_cost ?? 0;
 
         $data->name = $request->name;
@@ -172,6 +173,7 @@ class TourTravelController extends Controller
 
         $data->country_id = $request->country_id;
         $data->tourist_place_id = $request->tourist_place_id;
+        $data->tour_packages_id = $request->package_id ?? null;
         $data->total_cost = $request->total_cost ?? 0;
 
         // Update Student Data

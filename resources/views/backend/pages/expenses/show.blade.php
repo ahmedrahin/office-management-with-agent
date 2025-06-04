@@ -44,6 +44,7 @@
             <div class="col-xl-12">
                 <div class="card shadow-lg border-0 rounded">
                     <div class="card-body">
+                        @include('backend.includes.company')
                         <h4 class="card-title d-flex justify-content-between align-items-center">
                             <div>Expense Details</div>
                             {{-- <div>
@@ -72,9 +73,9 @@
                                                 <div class="d-flex align-items-center">
                                                     <a href="">
                                                         @if($expense->employees->image)
-                                                            <img src="{{ asset($expense->employees->image) }}" alt="Employee Image" class="rounded-circle" width="45" height="45">
+                                                            <img src="{{ asset($expense->employees->image) }}" alt="Employee Image" class="rounded-circle image" width="45" height="45">
                                                         @else
-                                                            <img src="{{ asset('backend/images/user.jpg') }}" alt="Employee Image" class="rounded-circle" width="45" height="45">
+                                                            <img src="{{ asset('backend/images/user.jpg') }}" alt="Employee Image" class="rounded-circle image" width="45" height="45">
                                                         @endif
                                                         <span class="ml-3">{{ optional($expense->employees)->name ?? 'N/A' }}</span>
                                                     </a>
@@ -198,7 +199,7 @@
         margin-right: 10px;
     }
 
-    .rounded-circle {
+    .image {
         border: 2px solid #ddd;
         padding: 2px;
         border-radius: 50%;

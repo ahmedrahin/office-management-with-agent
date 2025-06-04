@@ -209,6 +209,16 @@
                                     </div>
 
                                     <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label for="package_id" class="form-label">Tour Place</label>
+                                            <select name="package_id" id="package_id" class="form-control select2" >
+                                                <option value="">Select a tour package</option>
+                                            </select>
+                                            <div id="universityErr" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
                                         <label class="form-label">Total Cost</label>
                                         <input type="text" name="total_cost" id="total_cost" class="form-control" >
                                         <div class="invalid-feedback"></div>
@@ -325,11 +335,12 @@
         <script src="{{asset('backend/libs/select2/js/select2.min.js')}}"></script>
         <script src="{{asset('backend/js/pages/form-advanced.init.js')}}"></script>
 
-        <script>
+       <script>
             $(document).ready(function () {
+                // Load Tourist Places based on Country
                 $('#country_id').on('change', function () {
                     var countryId = $(this).val();
-        
+
                     if (countryId) {
                         $.ajax({
                             url: '/get-tour-place/' + countryId,
@@ -337,8 +348,8 @@
                             dataType: 'json',
                             success: function (data) {
                                 $('#tourist_place_id').empty().append('<option value="">Select a tour place</option>');
-                                $.each(data, function (key, data) {
-                                    $('#tourist_place_id').append('<option value="' + data.id + '">' + data.name + '</option>');
+                                $.each(data, function (key, place) {
+                                    $('#tourist_place_id').append('<option value="' + place.id + '">' + place.name + '</option>');
                                 });
                             },
                             error: function () {
@@ -349,9 +360,39 @@
                         $('#tourist_place_id').empty().append('<option value="">Select a tour place</option>');
                     }
                 });
-            });
 
+                // Load Tour Packages based on Tourist Place
+                $('#tourist_place_id').on('change', function () {
+                    var placeId = $(this).val();
+
+                    if (placeId) {
+                        $.ajax({
+                            url: '/get-tour-package/' + placeId,
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (data) {
+                                $('#package_id').empty().append('<option value="">Select a tour package</option>');
+                                $.each(data, function (key, package) {
+                                    $('#package_id').append('<option value="' + package.id + '" data-price="' + package.price + '">' + package.name + '</option>');
+                                });
+                            },
+                            error: function () {
+                                alert('Error loading data');
+                            }
+                        });
+                    } else {
+                        $('#package_id').empty().append('<option value="">Select a tour package</option>');
+                    }
+                });
+
+                // Display the Package Price in Total Cost
+                $('#package_id').on('change', function () {
+                    var price = $('#package_id option:selected').data('price');
+                    $('#total_cost').val(price ? price : '');
+                });
+            });
         </script>
+
     
 
         {{-- send data --}}
