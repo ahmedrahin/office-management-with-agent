@@ -21,8 +21,13 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
-    {
-        return redirect()->route('admin.dashboard');
+
+    public function index(){
+        return view('welcome');
     }
+
+    // public function dashboard()
+    // {
+    //     return redirect()->route('admin.dashboard');
+    // }
 }

@@ -9,7 +9,7 @@
     <link href="{{asset('backend/libs/datatables.net-select-bs4/css//select.bootstrap4.min.css')}}" rel="stylesheet" type="text/css" />
 
     <!-- Responsive datatable examples -->
-    <link href="{{asset('backend/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css')}}" rel="stylesheet" type="text/css" />   
+    <link href="{{asset('backend/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css')}}" rel="stylesheet" type="text/css" />
     <style>
         .text-danger{
             font-size: 11px;
@@ -36,7 +36,7 @@
             height: 24px !important;
             margin-bottom: 0;
         }
-    </style>  
+    </style>
 @endsection
 
 @section('body-content')
@@ -78,7 +78,7 @@
                                         <thead>
                                             <tr>
                                                 <th>Sl.</th>
-                                                
+
                                                 <th>Name</th>
                                                 <th>Email</th>
                                                 <th>Assing date</th>
@@ -107,7 +107,7 @@
                                                         {{$user->email}}
                                                     </td>
                                                     <td>
-                                                        {{ $user->created_at->format('d-M-Y') }}
+                                                        {{ $user->created_at ? $user->created_at->format('d M, Y') : '' }}
                                                     </td>
                                                     <td class="text-center">
                                                         @if( $user->role_id == 1 )
@@ -134,7 +134,7 @@
                                                             <span class="badge bg-warning" >not change able</span>
                                                         @endif
                                                     </td>
-                                                    <td class="action"> 
+                                                    <td class="action">
                                                         {{-- <button>
                                                             <a href="" target="_blank">
                                                                 <i class="ri-eye-line"></i>
@@ -163,11 +163,11 @@
                     </div>
                 </div> <!-- end col -->
             </div>
-            
-        </div> 
+
+        </div>
     </div>
     <!-- End Page-content -->
-                
+
 @endsection
 
 @section('page-script')
@@ -175,8 +175,8 @@
     <script>
         $(document).ready(function() {
             $('.deleteButton').click(function() {
-                var deleteButton = $(this); 
-                
+                var deleteButton = $(this);
+
                 var id = deleteButton.data('user-id');
 
                 // Trigger SweetAlert confirmation dialog
@@ -199,7 +199,7 @@
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            success: function(response) {    
+                            success: function(response) {
                                 // Remove the row from the table
                                 deleteButton.closest('tr').fadeOut('slow', function() {
                                     $(this).remove();
@@ -241,7 +241,7 @@
                 // Send AJAX request
                 $.ajax({
                     type: 'PUT',
-                    url: '/admin/admin-status/' + id, 
+                    url: '/admin/admin-status/' + id,
                     data: {
                         _token: '{{ csrf_token() }}',
                         status: status
@@ -264,7 +264,7 @@
         });
 
     </script>
-    
+
     <!-- Responsive examples -->
     <script src="{{asset('backend/libs/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
     <script src="{{asset('backend/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js')}}"></script>

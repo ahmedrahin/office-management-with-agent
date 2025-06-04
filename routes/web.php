@@ -43,7 +43,9 @@ use Illuminate\Support\Facades\Auth;
 Auth::routes();
 
 // login page
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', function(){
+    return view('welcome');
+})->middleware('guest');
 
 Route::get('/get-employee/{id}', function($id) {
     return response()->json(Employees::find($id));

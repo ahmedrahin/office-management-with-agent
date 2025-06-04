@@ -16,20 +16,20 @@ class AgentLoginController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email'    => 'required|email',
-            'password' => 'required|string',
+            'email_agent'    => 'required|email',
+            'password_agent' => 'required|string',
         ]);
 
         if (Auth::guard('agent')->attempt([
-            'email' => $request->email,
-            'password' => $request->password,
+            'email' => $request->email_agent,
+            'password' => $request->password_agent,
         ], $request->filled('remember'))) {
             return redirect()->route('agent.dashboard');
         }
 
         return back()->withErrors([
-            'email' => 'Invalid credentials or account not found.',
-        ])->withInput($request->only('email'));
+            'email_agent' => 'Invalid credentials or account not found.',
+        ])->withInput($request->only('email_agent'));
     }
 
     public function logout(Request $request)
@@ -38,6 +38,6 @@ class AgentLoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('agent.login');
+        return redirect()->to('/');
     }
 }

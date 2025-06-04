@@ -22,7 +22,7 @@
             <!-- Left Menu Start -->
             <ul class="metismenu list-unstyled" id="side-menu">
                 <li>
-                    <a href="{{route('home')}}" class="waves-effect">
+                    <a href="{{route('admin.dashboard')}}" class="waves-effect">
                         {{-- <i class="ri-home-4-line"></i><span class="badge rounded-pill bg-success float-end">3</span> --}}
                         <span>Dashboard</span>
                     </a>
@@ -109,9 +109,9 @@
                     </li>
                 @endif
 
-                
 
-               
+
+
                 @if(auth()->user()->employees)
                         @php
                             $today = Carbon::today()->format('d M, Y');
@@ -130,7 +130,7 @@
                             </a>
                         </li>
                     @endif
-                    
+
                 @if(auth()->user()->employees)
                 @php
                     $today = Carbon::today()->format('d M, Y');
@@ -149,7 +149,7 @@
                     </a>
                 </li>
                 @endif
-                
+
 
                 <li class="menu-title">Payroll Management</li>
                 <li>

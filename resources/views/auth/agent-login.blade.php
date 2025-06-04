@@ -2,7 +2,7 @@
 <html lang="en">
 
     <head>
-        
+
         <meta charset="utf-8" />
         <title>Login | {{ \App\Models\Settings::site_title() }}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -52,14 +52,14 @@
                                        <img src="{{asset($logo->logo)}}" id="logo" class="logo-dark mx-auto" alt="" style="background: black;">
                                        <img src="{{asset($logo->logo)}}" height="30" class="logo-light mx-auto" alt="">
                                    @endif
-                                   
-                                   
+
+
                                </a>
                             </div>
                         </div>
-    
+
                         <h4 class="text-muted text-center font-size-18"><b>Sign In</b></h4>
-    
+
                         <div class="p-3">
                             <form class="form-horizontal mt-3" action="{{ route('agent.login') }}" method="POST">
                                 @csrf
@@ -73,7 +73,7 @@
                                         @enderror
                                     </div>
                                 </div>
-                            
+
                                 <div class="form-group mb-3 row">
                                     <div class="col-12">
                                         <input type="password" required="" placeholder="Password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
@@ -84,13 +84,13 @@
                                         @enderror
                                     </div>
                                 </div>
-                            
+
                                 <div class="form-group mb-0 text-center row mt-3 pt-1">
                                     <div class="col-12">
                                         <button class="btn btn-info w-100 waves-effect waves-light" type="submit" >Log In</button>
                                     </div>
                                 </div>
-                            
+
                                 {{-- <div class="form-group mb-0 row mt-2">
                                     <div class="col-sm-6 mt-3">
                                         <div class="custom-control custom-checkbox">
